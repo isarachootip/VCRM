@@ -7,6 +7,7 @@ import { TableView } from '@/components/TableView';
 import { KanbanView } from '@/components/KanbanView';
 import { DashboardView } from '@/components/DashboardView';
 import { ActivityLogView } from '@/components/ActivityLogView';
+import { DispatchBoardView } from '@/components/DispatchBoardView';
 import { ItemDrawer } from '@/components/ItemDrawer';
 import { ImportModal } from '@/components/ImportModal';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
@@ -463,6 +464,14 @@ export default function Home() {
 
           {activeView === 'kanban' && (
             <KanbanView
+              groups={filteredGroups}
+              onUpdateItemStatus={handleUpdateItemStatus}
+              onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
+            />
+          )}
+
+          {activeView === 'dispatch' && (
+            <DispatchBoardView
               groups={filteredGroups}
               onUpdateItemStatus={handleUpdateItemStatus}
               onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}

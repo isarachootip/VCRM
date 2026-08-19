@@ -6,6 +6,7 @@ import {
   Kanban, 
   BarChart3, 
   History, 
+  CalendarDays,
   Search, 
   UserCircle, 
   Filter, 
@@ -53,6 +54,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
   const views: { id: ActiveView; label: string; icon: LucideIcon }[] = [
     { id: 'table', label: 'Main Table', icon: Table },
     { id: 'kanban', label: 'Kanban Pipeline', icon: Kanban },
+    { id: 'dispatch', label: 'Dispatch & Schedule ⚡', icon: CalendarDays },
     { id: 'dashboard', label: 'Dashboard & Charts', icon: BarChart3 },
     { id: 'activity', label: 'Activity Log', icon: History },
   ];

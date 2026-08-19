@@ -22,6 +22,10 @@ import {
   Sparkles,
   Contact,
   Building2,
+  Truck,
+  Wrench,
+  Hammer,
+  ShieldAlert,
   LucideIcon
 } from 'lucide-react';
 import { CRMBoard } from '@/types/crm';
@@ -38,13 +42,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
   boardsCountMap = {}
 }) => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(true);
+  const [isServicesOpen, setIsServicesOpen] = useState(true);
 
-  const boards: { id: string; name: string; icon: LucideIcon; color: string; badge?: string }[] = [
+  const salesBoards: { id: string; name: string; icon: LucideIcon; color: string; badge?: string }[] = [
     { id: 'board-5030723273', name: 'Deals & Sales Pipeline', icon: Briefcase, color: 'text-blue-500', badge: 'Active' },
     { id: 'board-leads', name: 'Inbound Leads 2026', icon: Users, color: 'text-amber-500', badge: 'Funnel' },
     { id: 'board-accounts', name: 'Key Enterprise Accounts', icon: Building2, color: 'text-purple-500', badge: '360°' },
     { id: 'board-contacts', name: 'Contacts & Stakeholders', icon: Contact, color: 'text-emerald-500' },
     { id: 'board-growth', name: 'Sales Forecast & Targets', icon: TrendingUp, color: 'text-rose-500' },
+  ];
+
+  const serviceBoards: { id: string; name: string; icon: LucideIcon; color: string; badge?: string }[] = [
+    { id: 'board-delivery', name: '🚚 ส่งสินค้า (Delivery)', icon: Truck, color: 'text-amber-500', badge: 'Fleet' },
+    { id: 'board-install', name: '🛠️ ส่งและติดตั้ง (Install)', icon: Wrench, color: 'text-blue-500', badge: 'Tech' },
+    { id: 'board-renovate', name: '🏗️ ปรับปรุง/ต่อเติม (Reno)', icon: Hammer, color: 'text-purple-500', badge: 'PM' },
+    { id: 'board-maintain', name: '⚡ ซ่อมบำรุง (Maintenance)', icon: ShieldAlert, color: 'text-rose-500', badge: 'SLA' },
   ];
 
   return (
@@ -120,51 +132,102 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Boards List */}
-          <div className="px-2 py-2">
-            <div 
-              className="flex items-center justify-between px-2 py-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700"
-              onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
-            >
-              <div className="flex items-center gap-1">
-                {isWorkspaceOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                <span>CRM & Sales Modules</span>
+          <div className="px-2 py-2 space-y-3 overflow-y-auto max-h-[calc(100vh-230px)]">
+            {/* 1. CRM & Sales Section */}
+            <div>
+              <div 
+                className="flex items-center justify-between px-2 py-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700"
+                onClick={() => setIsWorkspaceOpen(!isWorkspaceOpen)}
+              >
+                <div className="flex items-center gap-1">
+                  {isWorkspaceOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  <span>CRM & Sales</span>
+                </div>
+                <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">
+                  {salesBoards.length}
+                </span>
               </div>
-              <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">
-                {boards.length}
-              </span>
+
+              {isWorkspaceOpen && (
+                <div className="mt-1 space-y-0.5">
+                  {salesBoards.map((board) => {
+                    const Icon = board.icon;
+                    const isActive = currentBoardId === board.id;
+                    const count = boardsCountMap[board.id];
+
+                    return (
+                      <div
+                        key={board.id}
+                        onClick={() => onSelectBoard(board.id)}
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
+                          isActive 
+                            ? 'bg-[#e5f2ff] text-[#0073ea] font-bold border-l-3 border-[#0073ea]' 
+                            : 'text-[#323338] hover:bg-[#f5f6f8]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 truncate">
+                          <Icon size={14} className={isActive ? 'text-[#0073ea]' : 'text-gray-400'} />
+                          <span className="truncate">{board.name}</span>
+                        </div>
+                        {typeof count === 'number' && (
+                          <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.2 rounded font-semibold ml-1">
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            {isWorkspaceOpen && (
-              <div className="mt-1 space-y-0.5">
-                {boards.map((board) => {
-                  const Icon = board.icon;
-                  const isActive = currentBoardId === board.id;
-                  const count = boardsCountMap[board.id];
-
-                  return (
-                    <div
-                      key={board.id}
-                      onClick={() => onSelectBoard(board.id)}
-                      className={`flex items-center justify-between px-2.5 py-2 rounded-md text-xs cursor-pointer transition-colors ${
-                        isActive 
-                          ? 'bg-[#e5f2ff] text-[#0073ea] font-bold border-l-3 border-[#0073ea]' 
-                          : 'text-[#323338] hover:bg-[#f5f6f8]'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 truncate">
-                        <Icon size={15} className={isActive ? 'text-[#0073ea]' : 'text-gray-400'} />
-                        <span className="truncate">{board.name}</span>
-                      </div>
-                      {typeof count === 'number' && (
-                        <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.2 rounded font-semibold ml-1">
-                          {count}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
+            {/* 2. OmniService Operations Section (New!) */}
+            <div>
+              <div 
+                className="flex items-center justify-between px-2 py-1.5 text-xs font-semibold text-indigo-600 uppercase tracking-wider cursor-pointer hover:text-indigo-800"
+                onClick={() => setIsServicesOpen(!isServicesOpen)}
+              >
+                <div className="flex items-center gap-1">
+                  {isServicesOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  <span>Field Operations ⚡</span>
+                </div>
+                <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">
+                  {serviceBoards.length}
+                </span>
               </div>
-            )}
+
+              {isServicesOpen && (
+                <div className="mt-1 space-y-0.5">
+                  {serviceBoards.map((board) => {
+                    const Icon = board.icon;
+                    const isActive = currentBoardId === board.id;
+                    const count = boardsCountMap[board.id];
+
+                    return (
+                      <div
+                        key={board.id}
+                        onClick={() => onSelectBoard(board.id)}
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition-colors ${
+                          isActive 
+                            ? 'bg-indigo-50 text-indigo-700 font-bold border-l-3 border-indigo-600' 
+                            : 'text-[#323338] hover:bg-[#f5f6f8]'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 truncate">
+                          <Icon size={14} className={isActive ? 'text-indigo-600' : 'text-gray-400'} />
+                          <span className="truncate">{board.name}</span>
+                        </div>
+                        {typeof count === 'number' && (
+                          <span className="text-[10px] bg-indigo-100/60 text-indigo-700 px-1.5 py-0.2 rounded font-semibold ml-1">
+                            {count}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

@@ -1,104 +1,112 @@
-// Prisma Schema for Enterprise Monday CRM Clone
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// Prisma Schema for OmniService CRM
 
 generator client {
   provider = "prisma-client-js"
 }
 
-enum UserRole {
-  ADMIN
-  SALES_MANAGER
-  SALES_REP
-  VIEWER
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-enum Priority {
-  CRITICAL
-  HIGH
-  MEDIUM
-  LOW
-  NONE
-}
+// =======================
+// Service CRM Models
+// =======================
 
-model User {
-  id        String     @id @default(cuid())
+model Customer {
+  id        String      @id @default(uuid())
   name      String
-  email     String     @unique
-  avatar    String?
-  role      UserRole   @default(SALES_REP)
-  deals     Deal[]
-  activities Activity[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  jobs      JobTicket[]
 }
 
-model Account {
-  id            String    @id @default(cuid())
-  name          String
-  companyName   String?
-  industry      String?
-  website       String?
-  phone         String?
-  tier          String?   // Tier 1 Enterprise, Tier 2 Growth, SME
-  annualRevenue Float?
-  contacts      Contact[]
-  deals         Deal[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+model Employee {
+  id          String          @id @default(uuid())
+  name        String
+  role        Role
+  skills      String[]        // e.g., ["AC_REPAIR", "PLUMBING"]
+  createdAt   DateTime        @default(now())
+  assignments JobAssignment[]
 }
 
-model Contact {
-  id              String   @id @default(cuid())
-  accountId       String?
-  account         Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  name            String
-  position        String?
-  stakeholderRole String?  // Decision Maker, Influencer, Gatekeeper
-  email           String
-  phone           String?
-  isPrimary       Boolean  @default(false)
-  deals           Deal[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+model JobTicket {
+  id             String            @id @default(uuid())
+  customerId     String
+  serviceType    ServiceType
+  status         JobStatus         @default(PENDING)
+  scheduledDate  DateTime?
+  description    String?
+  totalAmount    Float?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  customer       Customer          @relation(fields: [customerId], references: [id])
+  assignments    JobAssignment[]
+  milestones     ProjectMilestone[]
+  materials      JobMaterial[]
 }
 
-model Deal {
-  id                String     @id @default(cuid())
-  name              String
-  companyName       String?
-  contactPerson     String?
-  contactEmail      String?
-  contactPhone      String?
-  accountId         String?
-  account           Account?   @relation(fields: [accountId], references: [id])
-  contactId         String?
-  contact           Contact?   @relation(fields: [contactId], references: [id])
-  ownerId           String
-  owner             User       @relation(fields: [ownerId], references: [id])
-  stage             String     // New Lead, Qualified, Proposal Sent, Negotiation, Closed Won, Closed Lost
-  dealValue         Float      @default(0)
-  probability       Int        @default(50)
-  priority          Priority   @default(MEDIUM)
-  expectedCloseDate DateTime?
-  leadSource        String?
-  industry          String?
-  notes             String?
-  customFields      Json?
-  activities        Activity[]
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+model JobAssignment {
+  id          String    @id @default(uuid())
+  jobId       String
+  employeeId  String
+  startTime   DateTime?
+  endTime     DateTime?
+
+  job         JobTicket @relation(fields: [jobId], references: [id])
+  employee    Employee  @relation(fields: [employeeId], references: [id])
 }
 
-model Activity {
-  id        String   @id @default(cuid())
-  dealId    String?
-  deal      Deal?    @relation(fields: [dealId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  type      String   // NOTE, CALL, MEETING, STAGE_CHANGE, EMAIL
-  action    String
-  timestamp DateTime @default(now())
+model ProjectMilestone {
+  id           String   @id @default(uuid())
+  jobId        String
+  phaseName    String
+  status       String
+  expectedDate DateTime?
+
+  job          JobTicket @relation(fields: [jobId], references: [id])
+}
+
+model Inventory {
+  id          String        @id @default(uuid())
+  itemName    String
+  stockQty    Int           @default(0)
+  unitPrice   Float         @default(0)
+  materials   JobMaterial[]
+}
+
+model JobMaterial {
+  id          String    @id @default(uuid())
+  jobId       String
+  inventoryId String
+  quantityUsed Int
+
+  job         JobTicket @relation(fields: [jobId], references: [id])
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  DISPATCHER
+  TECHNICIAN
+  DRIVER
+}
+
+enum ServiceType {
+  DELIVERY
+  INSTALL
+  RENOVATE
+  MAINTAIN
+}
+
+enum JobStatus {
+  PENDING
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
 }

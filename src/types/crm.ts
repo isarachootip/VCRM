@@ -40,9 +40,42 @@ export interface ActivityItem {
   note?: string;
 }
 
+
+export type ActiveView = 'table' | 'kanban' | 'dashboard' | 'activity' | 'dispatch';
+
+export interface ServiceMilestone {
+  id: string;
+  phaseName: string;
+  status: 'Pending' | 'In Progress' | 'Completed';
+  expectedDate: string;
+  progressPercent: number;
+  costEstimate?: number;
+}
+
+export interface ServiceMaterial {
+  id: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  unitPrice: number;
+}
+
+export interface ServiceProof {
+  beforePhotoUrl?: string;
+  afterPhotoUrl?: string;
+  signatureUrl?: string;
+  signerName?: string;
+  signedAt?: string;
+  gpsLocation?: {
+    lat: number;
+    lng: number;
+    address: string;
+  };
+}
+
 export interface CRMItem {
   id: string;
-  name: string; // Deal Name / Lead Name / Company Name / Contact Name
+  name: string; // Deal Name / Lead Name / Service Job Title
   contactPerson: string;
   contactEmail: string;
   contactPhone?: string;
@@ -53,6 +86,8 @@ export interface CRMItem {
     name: string;
     avatar: string;
     email: string;
+    role?: string;
+    skills?: string[];
   };
   expectedCloseDate: string;
   probability: number; // 0 - 100%
@@ -67,6 +102,23 @@ export interface CRMItem {
   actualClosed?: number;
   activities?: ActivityItem[];
   createdAt: string;
+
+  // Field Service extensions
+  serviceType?: 'DELIVERY' | 'INSTALL' | 'RENOVATE' | 'MAINTAIN';
+  serviceCategory?: string;
+  scheduledTime?: string; // e.g. "09:00 - 11:30"
+  timeSlotHour?: number; // 8 to 18
+  durationHours?: number; // duration in hours
+  address?: string;
+  assignedTechnician?: string;
+  technicianAvatar?: string;
+  technicianRole?: string;
+  technicianSkills?: string[];
+  vehiclePlate?: string;
+  slaDeadline?: string;
+  milestones?: ServiceMilestone[];
+  materials?: ServiceMaterial[];
+  proof?: ServiceProof;
 }
 
 export interface CRMGroup {
@@ -79,12 +131,10 @@ export interface CRMGroup {
 
 export interface CRMBoard {
   id: string;
-  type: 'deals' | 'leads' | 'accounts' | 'contacts' | 'growth';
+  type: 'deals' | 'leads' | 'accounts' | 'contacts' | 'growth' | 'delivery' | 'install' | 'renovate' | 'maintain';
   name: string;
   description: string;
   badge: string;
   workspaceName: string;
   groups: CRMGroup[];
 }
-
-export type ActiveView = 'table' | 'kanban' | 'dashboard' | 'activity';

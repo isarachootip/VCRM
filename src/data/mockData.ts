@@ -535,39 +535,247 @@ export const INITIAL_BOARDS: Record<string, CRMBoard> = {
             notes: 'On track to exceed 100% quota with SCG + Siam Paragon deals.',
             createdAt: '2026-07-01',
             activities: []
-          },
+          }
+        ]
+      }
+    ]
+  },
+
+  // 6. 🚚 Delivery Fleet Board
+  'board-delivery': {
+    id: 'board-delivery',
+    type: 'delivery',
+    name: '🚚 Logistics & Delivery Fleet (ส่งสินค้า)',
+    description: 'Track freight dispatch, driver route optimization, drop-off time windows, and electronic Proof of Delivery (e-POD).',
+    badge: 'Logistics Fleet',
+    workspaceName: "Isarachootip's Service Ops",
+    groups: [
+      {
+        id: 'grp-del-today',
+        title: '📦 Today Dispatched Shipments (รอบวิ่งวันนี้)',
+        color: '#fdab3d',
+        isCollapsed: false,
+        items: [
           {
-            id: 'rep-2',
-            name: 'Kanya P. (Senior Sales Executive)',
-            contactPerson: 'Quota: ฿4,000,000',
-            contactEmail: 'kanya@company.com',
-            dealValue: 3950000,
-            targetQuota: 4000000,
-            actualClosed: 3950000,
-            status: 'Active',
-            priority: 'High',
-            owner: TEAM_MEMBERS[2],
-            expectedCloseDate: '2026-09-30',
-            probability: 98,
-            notes: 'Closed PTT Energy deal (฿3.1M). Close to reaching target.',
-            createdAt: '2026-07-01',
+            id: 'del-1',
+            name: 'Central World Luxury Furniture Drop-off',
+            companyName: 'Central Retail Corp',
+            contactPerson: 'K. Somkiat (Warehouse Mgr)',
+            contactEmail: 'somkiat@central.co.th',
+            contactPhone: '081-334-9988',
+            dealValue: 45000,
+            status: 'Working on it',
+            priority: 'Critical',
+            owner: { name: 'Wichai Rungruang (วิชัย)', avatar: '🚛', email: 'wichai@logistics.th', role: 'Driver' },
+            expectedCloseDate: '2026-08-19',
+            probability: 90,
+            serviceType: 'DELIVERY',
+            scheduledTime: '09:00 - 11:30',
+            address: 'Central World Loading Bay B, Pathum Wan, Bangkok',
+            vehiclePlate: '70-8912 BKK (6-Wheel Truck)',
+            notes: 'Requires loading dock permit clearance beforehand.',
+            createdAt: '2026-08-19',
             activities: []
           },
           {
-            id: 'rep-3',
-            name: 'Somchai S. (Mid-Market Executive)',
-            contactPerson: 'Quota: ฿2,500,000',
-            contactEmail: 'somchai@company.com',
-            dealValue: 1450000,
-            targetQuota: 2500000,
-            actualClosed: 1450000,
+            id: 'del-2',
+            name: 'Iconsiam Luxury Retail Display Fixtures',
+            companyName: 'Iconsiam Super Luxury',
+            contactPerson: 'K. Supaporn',
+            contactEmail: 'supaporn@iconsiam.th',
+            contactPhone: '089-992-1234',
+            dealValue: 68000,
+            status: 'Qualified',
+            priority: 'High',
+            owner: { name: 'Wichai Rungruang (วิชัย)', avatar: '🚛', email: 'wichai@logistics.th', role: 'Driver' },
+            expectedCloseDate: '2026-08-19',
+            probability: 95,
+            serviceType: 'DELIVERY',
+            scheduledTime: '14:00 - 16:30',
+            address: 'Floor 3, Iconsiam Charoen Nakhon Rd, Bangkok',
+            vehiclePlate: '70-8912 BKK',
+            notes: 'Delivered and verified e-signature with store manager.',
+            createdAt: '2026-08-19',
+            activities: []
+          }
+        ]
+      }
+    ]
+  },
+
+  // 7. 🛠️ Installation Services Board
+  'board-install': {
+    id: 'board-install',
+    type: 'install',
+    name: '🛠️ Delivery & Installation (ส่งและติดตั้ง)',
+    description: 'Manage appliance, solar system, and commercial equipment installation with skilled technician scheduling and sign-off.',
+    badge: 'Field Engineering',
+    workspaceName: "Isarachootip's Service Ops",
+    groups: [
+      {
+        id: 'grp-inst-active',
+        title: '⚡ Active Field Installations (งานติดตั้งหน้างาน)',
+        color: '#0073ea',
+        isCollapsed: false,
+        items: [
+          {
+            id: 'inst-1',
+            name: 'Sansiri Smart Home HVAC & Inverter Commissioning',
+            companyName: 'Sansiri Public Co.',
+            contactPerson: 'K. Phatchara (Site Engineer)',
+            contactEmail: 'phatchara@sansiri.com',
+            contactPhone: '086-778-9900',
+            dealValue: 120000,
             status: 'Working on it',
-            priority: 'Medium',
-            owner: TEAM_MEMBERS[1],
-            expectedCloseDate: '2026-09-30',
-            probability: 58,
-            notes: 'Focusing on Kasikorn Labs and BDMS pipeline acceleration.',
-            createdAt: '2026-07-01',
+            priority: 'High',
+            owner: { name: 'Somchai Prasert (สมชาย)', avatar: '👨‍🔧', email: 'somchai.tech@ops.th', role: 'Senior HVAC' },
+            expectedCloseDate: '2026-08-19',
+            probability: 85,
+            serviceType: 'INSTALL',
+            scheduledTime: '08:30 - 12:00',
+            address: 'Setthasiri Pattanakarn, Prawet, Bangkok',
+            notes: 'Installed 3x Daikin Inverter VRV systems. Conducting pressure test.',
+            createdAt: '2026-08-19',
+            activities: []
+          },
+          {
+            id: 'inst-2',
+            name: 'Singha Estate 10kW Solar Rooftop + Hybrid Inverter',
+            companyName: 'Singha Estate Residential',
+            contactPerson: 'Dr. Narongrit',
+            contactEmail: 'narongrit@singha.com',
+            contactPhone: '085-112-3344',
+            dealValue: 350000,
+            status: 'Proposal Sent',
+            priority: 'Critical',
+            owner: { name: 'Kittisak Solar (กิตติศักดิ์)', avatar: '☀️', email: 'kittisak@solar.th', role: 'Solar Specialist' },
+            expectedCloseDate: '2026-08-20',
+            probability: 80,
+            serviceType: 'INSTALL',
+            scheduledTime: '13:00 - 17:30',
+            address: 'Santiburi The Residences, Praditmanutham, BKK',
+            notes: 'Mounting solar panels on tile roof with micro-inverters.',
+            createdAt: '2026-08-18',
+            activities: []
+          }
+        ]
+      }
+    ]
+  },
+
+  // 8. 🏗️ Renovation & Fit-out Projects Board
+  'board-renovate': {
+    id: 'board-renovate',
+    type: 'renovate',
+    name: '🏗️ Renovation & Turnkey Fit-out (ปรับปรุง/ต่อเติม)',
+    description: 'Multi-stage renovation project management, architectural milestone tracking, BOQ estimation, and subcontractor supervision.',
+    badge: 'Turnkey Projects',
+    workspaceName: "Isarachootip's Service Ops",
+    groups: [
+      {
+        id: 'grp-reno-projects',
+        title: '🏗️ Active Turnkey Renovation Projects (โครงการที่กำลังก่อสร้าง)',
+        color: '#a25ddc',
+        isCollapsed: false,
+        items: [
+          {
+            id: 'reno-1',
+            name: 'Thonglor 55 Penthouse Complete Interior Renovation',
+            companyName: 'Private Client (K. Vorrawat)',
+            contactPerson: 'K. Vorrawat Kittipong',
+            contactEmail: 'vorrawat@private.th',
+            contactPhone: '081-555-8899',
+            dealValue: 2850000,
+            status: 'Working on it',
+            priority: 'Critical',
+            owner: { name: 'Ekachai Builder (เอกชัย)', avatar: '🏗️', email: 'ekachai@builder.th', role: 'Project Manager' },
+            expectedCloseDate: '2026-11-30',
+            probability: 95,
+            serviceType: 'RENOVATE',
+            scheduledTime: '08:00 - 17:00 (Daily)',
+            address: 'The Monument Thong Lo, Sukhumvit 55, Bangkok',
+            notes: 'Phase 2 demolition completed. Now framing ceiling and acoustic partitions.',
+            createdAt: '2026-08-01',
+            activities: []
+          },
+          {
+            id: 'reno-2',
+            name: 'Gaysorn Tower Modern Japanese Bistro Fit-out',
+            companyName: 'Gaysorn Food Group',
+            contactPerson: 'Chef Tatsuya / K. Ploy',
+            contactEmail: 'ploy@gaysornfood.th',
+            contactPhone: '084-223-4455',
+            dealValue: 1850000,
+            status: 'Negotiation',
+            priority: 'High',
+            owner: { name: 'Ekachai Builder (เอกชัย)', avatar: '🏗️', email: 'ekachai@builder.th', role: 'Project Manager' },
+            expectedCloseDate: '2026-10-15',
+            probability: 80,
+            serviceType: 'RENOVATE',
+            scheduledTime: '22:00 - 06:00 (Night Shift)',
+            address: 'Gaysorn Village Level 3, Ratchaprasong, Bangkok',
+            notes: 'Commercial kitchen exhaust ductwork & custom sushi bar carpentry.',
+            createdAt: '2026-08-12',
+            activities: []
+          }
+        ]
+      }
+    ]
+  },
+
+  // 9. ⚡ Maintenance & SLA Board
+  'board-maintain': {
+    id: 'board-maintain',
+    type: 'maintain',
+    name: '⚡ Preventive & Emergency Maintenance (ซ่อมบำรุง & SLA)',
+    description: 'Track preventive maintenance (PM) schedules, emergency breakdown ticketing, SLA response time tracking, and spare parts inventory.',
+    badge: '24/7 SLA Service',
+    workspaceName: "Isarachootip's Service Ops",
+    groups: [
+      {
+        id: 'grp-maint-tickets',
+        title: '🚨 Emergency Tickets & SLA Countdown (งานซ่อมฉุกเฉิน)',
+        color: '#df2f4a',
+        isCollapsed: false,
+        items: [
+          {
+            id: 'maint-1',
+            name: 'BDMS Hospital Chiller Plant Emergency Vibration Fault',
+            companyName: 'BDMS Hospital Bangkok',
+            contactPerson: 'Facility Eng. K. Chaiwat',
+            contactEmail: 'facility@bdms.co.th',
+            contactPhone: '081-111-4455',
+            dealValue: 180000,
+            status: 'Working on it',
+            priority: 'Critical',
+            owner: { name: 'Niran Repairman (นิรันดร์)', avatar: '⚡', email: 'niran@maintenance.th', role: 'SLA Lead' },
+            expectedCloseDate: '2026-08-19',
+            probability: 100,
+            serviceType: 'MAINTAIN',
+            scheduledTime: '08:00 - 10:30 (SLA < 2h)',
+            address: 'BDMS Building B Chiller Room, Soi Soonvijai, BKK',
+            notes: 'Replaced bearing set & recalibrated dynamic balance. System back online.',
+            createdAt: '2026-08-19',
+            activities: []
+          },
+          {
+            id: 'maint-2',
+            name: 'SCG Data Center UPS Battery Bank Preventive Maintenance',
+            companyName: 'SCG Digital HQ',
+            contactPerson: 'K. Tanaphat (DC Lead)',
+            contactEmail: 'tanaphat@scg.com',
+            contactPhone: '089-776-5544',
+            dealValue: 95000,
+            status: 'Qualified',
+            priority: 'High',
+            owner: { name: 'Niran Repairman (นิรันดร์)', avatar: '⚡', email: 'niran@maintenance.th', role: 'SLA Lead' },
+            expectedCloseDate: '2026-08-22',
+            probability: 90,
+            serviceType: 'MAINTAIN',
+            scheduledTime: '13:00 - 16:00',
+            address: 'SCG Headquarters Bangsue, Bangkok',
+            notes: 'Routine 6-month battery impedance and thermal imaging audit.',
+            createdAt: '2026-08-15',
             activities: []
           }
         ]
