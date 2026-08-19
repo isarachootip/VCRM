@@ -14,6 +14,8 @@ import {
   Paperclip, 
   Smile, 
   Clock,
+  Zap,
+  Building,
   CheckCircle2,
   Trash2
 } from 'lucide-react';
@@ -25,15 +27,19 @@ import { STATUS_CONFIGS } from '@/data/mockData';
 interface ItemDrawerProps {
   item: CRMItem | null;
   groupId: string | null;
+  boardType?: string;
   onClose: () => void;
   onUpdateItem: (groupId: string, itemId: string, updates: Partial<CRMItem>) => void;
+  onConvertLead?: (item: CRMItem, groupId: string) => void;
 }
 
 export const ItemDrawer: React.FC<ItemDrawerProps> = ({
   item,
   groupId,
+  boardType = 'deals',
   onClose,
   onUpdateItem,
+  onConvertLead,
 }) => {
   const [activeTab, setActiveTab] = useState<'updates' | 'details'>('updates');
   const [newUpdateText, setNewUpdateText] = useState('');
@@ -63,6 +69,8 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
     return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
   };
 
+  const isLead = boardType === 'leads';
+
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/30 backdrop-blur-xs flex justify-end animate-in fade-in duration-200">
       <div 
@@ -73,9 +81,20 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
         <div className="p-5 border-b border-gray-200 bg-white">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">
-                Deal Item Overview
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">
+                  {boardType.toUpperCase()} Record
+                </span>
+                {isLead && (
+                  <button
+                    onClick={() => onConvertLead && onConvertLead(item, groupId)}
+                    className="flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2.5 py-0.5 rounded-full transition-colors"
+                  >
+                    <Zap size={11} className="fill-purple-700" />
+                    <span>Convert to Active Deal</span>
+                  </button>
+                )}
+              </div>
               <input
                 type="text"
                 value={item.name}
@@ -94,14 +113,14 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
           {/* Quick Property Strip */}
           <div className="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-gray-100 text-xs">
             <div>
-              <span className="text-gray-400 block mb-1">Stage</span>
+              <span className="text-gray-400 block mb-1">Status / Stage</span>
               <StatusPicker
                 currentStatus={item.status}
                 onChange={(newSt) => onUpdateItem(groupId, item.id, { status: newSt })}
               />
             </div>
             <div>
-              <span className="text-gray-400 block mb-1">Deal Value</span>
+              <span className="text-gray-400 block mb-1">Value / Quota</span>
               <div className="font-extrabold text-sm text-emerald-600 py-1">
                 {formatCurrency(item.dealValue)}
               </div>
@@ -135,7 +154,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   : 'border-transparent text-gray-400 hover:text-gray-700'
               }`}
             >
-              Deal Details & Contact Info
+              Details & Strategic Parameters
             </button>
           </div>
         </div>
@@ -213,12 +232,30 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
             /* Details Tab */
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm space-y-4 text-xs">
               <h4 className="font-bold text-sm text-gray-900 border-b border-gray-100 pb-2">
-                Primary Contact Information
+                Company & Contact Information
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-gray-400 block mb-1">Contact Name</label>
+                  <label className="text-gray-400 block mb-1">Company / Organization</label>
+                  <input
+                    type="text"
+                    value={item.companyName || ''}
+                    onChange={(e) => onUpdateItem(groupId, item.id, { companyName: e.target.value })}
+                    className="w-full px-3 py-1.5 border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-400 block mb-1">Industry</label>
+                  <input
+                    type="text"
+                    value={item.industry || ''}
+                    onChange={(e) => onUpdateItem(groupId, item.id, { industry: e.target.value })}
+                    className="w-full px-3 py-1.5 border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-gray-400 block mb-1">Contact Person</label>
                   <input
                     type="text"
                     value={item.contactPerson}
@@ -256,7 +293,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
               </div>
 
               <h4 className="font-bold text-sm text-gray-900 border-b border-gray-100 pb-2 pt-3">
-                Deal Parameters & Forecast
+                Commercial Parameters & Forecast
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -270,7 +307,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Win Probability (%)</label>
+                  <label className="text-gray-400 block mb-1">Probability (%)</label>
                   <input
                     type="number"
                     min="0"
@@ -304,7 +341,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   rows={4}
                   value={item.notes || ''}
                   onChange={(e) => onUpdateItem(groupId, item.id, { notes: e.target.value })}
-                  placeholder="Add background info, negotiation strategies, competitors..."
+                  placeholder="Add strategic background info, competitors, negotiation plan..."
                   className="w-full px-3 py-2 border border-gray-200 rounded focus:ring-1 focus:ring-blue-500 focus:outline-none text-xs"
                 />
               </div>

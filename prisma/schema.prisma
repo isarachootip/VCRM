@@ -1,0 +1,104 @@
+// Prisma Schema for Enterprise Monday CRM Clone
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  SALES_MANAGER
+  SALES_REP
+  VIEWER
+}
+
+enum Priority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  NONE
+}
+
+model User {
+  id        String     @id @default(cuid())
+  name      String
+  email     String     @unique
+  avatar    String?
+  role      UserRole   @default(SALES_REP)
+  deals     Deal[]
+  activities Activity[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Account {
+  id            String    @id @default(cuid())
+  name          String
+  companyName   String?
+  industry      String?
+  website       String?
+  phone         String?
+  tier          String?   // Tier 1 Enterprise, Tier 2 Growth, SME
+  annualRevenue Float?
+  contacts      Contact[]
+  deals         Deal[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Contact {
+  id              String   @id @default(cuid())
+  accountId       String?
+  account         Account? @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  name            String
+  position        String?
+  stakeholderRole String?  // Decision Maker, Influencer, Gatekeeper
+  email           String
+  phone           String?
+  isPrimary       Boolean  @default(false)
+  deals           Deal[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Deal {
+  id                String     @id @default(cuid())
+  name              String
+  companyName       String?
+  contactPerson     String?
+  contactEmail      String?
+  contactPhone      String?
+  accountId         String?
+  account           Account?   @relation(fields: [accountId], references: [id])
+  contactId         String?
+  contact           Contact?   @relation(fields: [contactId], references: [id])
+  ownerId           String
+  owner             User       @relation(fields: [ownerId], references: [id])
+  stage             String     // New Lead, Qualified, Proposal Sent, Negotiation, Closed Won, Closed Lost
+  dealValue         Float      @default(0)
+  probability       Int        @default(50)
+  priority          Priority   @default(MEDIUM)
+  expectedCloseDate DateTime?
+  leadSource        String?
+  industry          String?
+  notes             String?
+  customFields      Json?
+  activities        Activity[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  dealId    String?
+  deal      Deal?    @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // NOTE, CALL, MEETING, STAGE_CHANGE, EMAIL
+  action    String
+  timestamp DateTime @default(now())
+}

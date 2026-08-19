@@ -6,12 +6,20 @@ export type StatusType =
   | 'Closed Won'
   | 'Closed Lost'
   | 'Waiting'
-  | 'New Lead';
+  | 'New Lead'
+  | 'Contacted'
+  | 'Unqualified'
+  | 'Active'
+  | 'Tier 1 Enterprise'
+  | 'Tier 2 Growth'
+  | 'Decision Maker'
+  | 'Influencer'
+  | 'Gatekeeper';
 
 export type PriorityType = 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
 
 export interface StatusConfig {
-  label: StatusType;
+  label: string;
   color: string;
   bgColor: string;
 }
@@ -34,7 +42,7 @@ export interface ActivityItem {
 
 export interface CRMItem {
   id: string;
-  name: string; // Deal / Account Name
+  name: string; // Deal Name / Lead Name / Company Name / Contact Name
   contactPerson: string;
   contactEmail: string;
   contactPhone?: string;
@@ -50,6 +58,13 @@ export interface CRMItem {
   probability: number; // 0 - 100%
   notes?: string;
   leadSource?: string;
+  industry?: string;
+  companyName?: string;
+  jobTitle?: string;
+  stakeholderRole?: string;
+  annualRevenue?: number;
+  targetQuota?: number;
+  actualClosed?: number;
   activities?: ActivityItem[];
   createdAt: string;
 }
@@ -64,8 +79,10 @@ export interface CRMGroup {
 
 export interface CRMBoard {
   id: string;
+  type: 'deals' | 'leads' | 'accounts' | 'contacts' | 'growth';
   name: string;
   description: string;
+  badge: string;
   workspaceName: string;
   groups: CRMGroup[];
 }
