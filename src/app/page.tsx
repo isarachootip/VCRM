@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { HubSpotHeader } from '@/components/HubSpotHeader';
+import { HubSpotListsView } from '@/components/HubSpotListsView';
+import { HubSpotContactsView } from '@/components/HubSpotContactsView';
 import { Sidebar } from '@/components/Sidebar';
 import { BoardHeader } from '@/components/BoardHeader';
 import { TableView } from '@/components/TableView';
@@ -13,9 +16,13 @@ import { ImportModal } from '@/components/ImportModal';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
 import { INITIAL_BOARDS, TEAM_MEMBERS } from '@/data/mockData';
 import { exportBoardToExcel } from '@/utils/excelHelper';
-import { CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Sparkles, LayoutList, Kanban, Layers } from 'lucide-react';
 
 export default function Home() {
+  // Navigation Mode: 'lists' (HubSpot Object Lists 25 items) | 'contacts' (HubSpot CRM) | 'deals' | 'companies' | 'reports'
+  const [hubspotNavTab, setHubspotNavTab] = useState<string>('lists');
+
+  // Boards State
   const [allBoards, setAllBoards] = useState<Record<string, CRMBoard>>(INITIAL_BOARDS);
   const [currentBoardId, setCurrentBoardId] = useState<string>('board-5030723273');
   const [activeView, setActiveView] = useState<ActiveView>('table');
@@ -106,37 +113,55 @@ export default function Home() {
 
       return {
         ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
       };
     });
+    showToast('Updated record successfully');
   };
 
-  // Update item status directly across any group
   const handleUpdateItemStatus = (itemId: string, newStatus: StatusType) => {
     setAllBoards((prev) => {
       const board = prev[currentBoardId];
       if (!board) return prev;
 
-      const newGroups = board.groups.map((group) => ({
-        ...group,
-        items: group.items.map((item) => {
-          if (item.id !== itemId) return item;
-          const updated = { ...item, status: newStatus };
-          if (selectedItem && selectedItem.item.id === itemId) {
-            setSelectedItem({ item: updated, groupId: group.id });
-          }
-          return updated;
-        }),
-      }));
+      let targetGroupId = '';
+      board.groups.forEach((g) => {
+        if (g.items.some((i) => i.id === itemId)) {
+          targetGroupId = g.id;
+        }
+      });
+
+      if (!targetGroupId) return prev;
+
+      const newGroups = board.groups.map((group) => {
+        if (group.id !== targetGroupId) return group;
+        return {
+          ...group,
+          items: group.items.map((item) => {
+            if (item.id !== itemId) return item;
+            const updated = { ...item, status: newStatus };
+            if (selectedItem && selectedItem.item.id === itemId) {
+              setSelectedItem({ item: updated, groupId: targetGroupId });
+            }
+            return updated;
+          }),
+        };
+      });
 
       return {
         ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
       };
     });
+    showToast(`Status updated to ${newStatus}`);
   };
 
-  // Delete item
   const handleDeleteItem = (groupId: string, itemId: string) => {
     setAllBoards((prev) => {
       const board = prev[currentBoardId];
@@ -152,39 +177,34 @@ export default function Home() {
 
       return {
         ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
       };
     });
-
-    if (selectedItem?.item.id === itemId) {
+    if (selectedItem && selectedItem.item.id === itemId) {
       setSelectedItem(null);
     }
+    showToast('Item deleted');
   };
 
-  // Add new item into a specific group
-  const handleAddItem = (groupId: string, itemName: string) => {
+  const handleAddItem = (groupId: string, name: string) => {
+    if (!name.trim()) return;
+
     const newItem: CRMItem = {
       id: `item-${Date.now()}`,
-      name: itemName,
-      contactPerson: 'Contact Person',
-      contactEmail: 'contact@domain.mock',
-      dealValue: 500000,
-      status: currentBoard.type === 'leads' ? 'New Lead' : currentBoard.type === 'accounts' ? 'Tier 2 Growth' : currentBoard.type === 'contacts' ? 'Decision Maker' : 'Working on it',
+      name,
+      contactPerson: 'New Contact',
+      contactEmail: 'contact@company.com',
+      dealValue: 50000,
+      status: 'Working on it',
       priority: 'Medium',
       owner: TEAM_MEMBERS[0],
-      expectedCloseDate: new Date().toISOString().split('T')[0],
+      expectedCloseDate: '2026-09-30',
       probability: 50,
-      leadSource: 'Direct Inbound',
       createdAt: new Date().toISOString().split('T')[0],
-      activities: [
-        {
-          id: `act-${Date.now()}`,
-          user: 'Isara Chootip',
-          avatar: '👨‍💼',
-          action: `Created new ${currentBoard.type === 'leads' ? 'lead' : 'item'} "${itemName}"`,
-          timestamp: 'Just now',
-        }
-      ]
+      notes: 'Initial discussion',
     };
 
     setAllBoards((prev) => {
@@ -201,46 +221,20 @@ export default function Home() {
 
       return {
         ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
       };
     });
+    showToast(`Added "${name}"`);
   };
 
-  // Quick Add from Board Header button
-  const handleHeaderAddNewItem = () => {
-    if (currentBoard.groups.length > 0) {
-      const firstGroupId = currentBoard.groups[0].id;
-      handleAddItem(firstGroupId, `New ${currentBoard.type === 'leads' ? 'Inbound Lead' : currentBoard.type === 'accounts' ? 'Enterprise Account' : currentBoard.type === 'contacts' ? 'Key Stakeholder' : 'Opportunity'}`);
-    }
-  };
-
-  // Toggle group collapse
-  const handleToggleGroupCollapse = (groupId: string) => {
-    setAllBoards((prev) => {
-      const board = prev[currentBoardId];
-      if (!board) return prev;
-
-      const newGroups = board.groups.map((g) =>
-        g.id === groupId ? { ...g, isCollapsed: !g.isCollapsed } : g
-      );
-
-      return {
-        ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
-      };
-    });
-  };
-
-  // Add new group
   const handleAddGroup = (title: string) => {
-    const colors = ['#0073ea', '#00c875', '#fdab3d', '#a25ddc', '#579bfc', '#e2445c'];
-    const randomColor = colors[currentBoard.groups.length % colors.length];
-
     const newGroup: CRMGroup = {
-      id: `grp-${Date.now()}`,
-      title,
-      color: randomColor,
-      isCollapsed: false,
+      id: `group-${Date.now()}`,
+      title: title || 'New Stage Group',
+      color: '#ff7a59',
       items: [],
     };
 
@@ -256,152 +250,126 @@ export default function Home() {
         },
       };
     });
+    showToast(`Added group "${title}"`);
   };
 
-  // Convert Lead -> Active Deal + Account
-  const handleConvertLead = async (leadItem: CRMItem, groupId: string) => {
-    // 1. Update local state: move lead to Qualified or remove from uncontacted
-    handleUpdateItem(groupId, leadItem.id, { status: 'Qualified' });
-
-    // 2. Add to Deals Board
-    const newDeal: CRMItem = {
-      id: `deal-conv-${Date.now()}`,
-      name: leadItem.name,
-      companyName: leadItem.companyName || leadItem.name,
-      contactPerson: leadItem.contactPerson,
-      contactEmail: leadItem.contactEmail,
-      contactPhone: leadItem.contactPhone,
-      dealValue: leadItem.dealValue || 800000,
-      status: 'Working on it',
-      priority: leadItem.priority || 'High',
-      owner: leadItem.owner || TEAM_MEMBERS[0],
-      expectedCloseDate: leadItem.expectedCloseDate,
-      probability: 60,
-      industry: leadItem.industry || 'Enterprise',
-      leadSource: `Converted Lead (${leadItem.leadSource || 'Inbound'})`,
-      notes: `Converted from Lead on ${new Date().toLocaleDateString()}. Notes: ${leadItem.notes || ''}`,
-      createdAt: new Date().toISOString().split('T')[0],
-      activities: [
-        {
-          id: `act-${Date.now()}`,
-          user: 'Isara Chootip',
-          avatar: '⚡',
-          action: `Converted Lead "${leadItem.name}" into an Active Sales Deal`,
-          timestamp: 'Just now',
-        }
-      ]
-    };
-
-    // 3. Add to Accounts Board
-    const newAccount: CRMItem = {
-      id: `acc-conv-${Date.now()}`,
-      name: leadItem.companyName || leadItem.name,
-      companyName: leadItem.companyName || leadItem.name,
-      contactPerson: leadItem.contactPerson,
-      contactEmail: leadItem.contactEmail,
-      contactPhone: leadItem.contactPhone,
-      dealValue: leadItem.dealValue || 800000,
-      status: 'Tier 2 Growth',
-      priority: leadItem.priority || 'High',
-      owner: leadItem.owner || TEAM_MEMBERS[0],
-      expectedCloseDate: leadItem.expectedCloseDate,
-      probability: 70,
-      industry: leadItem.industry || 'General Industry',
-      leadSource: leadItem.leadSource || 'Inbound Lead',
-      notes: `Account created from converted lead`,
-      createdAt: new Date().toISOString().split('T')[0],
-      activities: []
-    };
-
-    setAllBoards((prev) => {
-      const dealsBoard = prev['board-5030723273'];
-      const accountsBoard = prev['board-accounts'];
-
-      const updatedDeals = dealsBoard ? {
-        ...dealsBoard,
-        groups: dealsBoard.groups.map((g, idx) => idx === 0 ? { ...g, items: [newDeal, ...g.items] } : g)
-      } : dealsBoard;
-
-      const updatedAccounts = accountsBoard ? {
-        ...accountsBoard,
-        groups: accountsBoard.groups.map((g, idx) => idx === 0 ? { ...g, items: [newAccount, ...g.items] } : g)
-      } : accountsBoard;
-
-      return {
-        ...prev,
-        'board-5030723273': updatedDeals,
-        'board-accounts': updatedAccounts,
-      };
-    });
-
-    showToast(`⚡ Lead "${leadItem.name}" has been converted into an Active Deal and Company Account!`);
-  };
-
-  // Export to Excel handler
-  const handleExportExcel = () => {
-    exportBoardToExcel(currentBoard);
-    showToast(`📁 Exported "${currentBoard.name}" to Excel (.xlsx) successfully!`);
-  };
-
-  // Import rows handler
-  const handleImportItems = (importedItems: Partial<CRMItem>[]) => {
-    if (currentBoard.groups.length === 0) return;
-
-    const firstGroup = currentBoard.groups[0];
-    const fullItems: CRMItem[] = importedItems.map((raw, idx) => ({
-      id: `imported-${Date.now()}-${idx}`,
-      name: raw.name || 'Imported Deal',
-      companyName: raw.companyName || '',
-      contactPerson: raw.contactPerson || 'Contact Person',
-      contactEmail: raw.contactEmail || 'contact@mock.com',
-      contactPhone: raw.contactPhone || '',
-      dealValue: raw.dealValue || 250000,
-      status: (raw.status as StatusType) || 'New Lead',
-      priority: raw.priority || 'Medium',
-      owner: TEAM_MEMBERS[idx % TEAM_MEMBERS.length],
-      expectedCloseDate: raw.expectedCloseDate || new Date().toISOString().split('T')[0],
-      probability: raw.probability || 50,
-      leadSource: raw.leadSource || 'Excel Import',
-      industry: raw.industry || 'General',
-      notes: raw.notes || 'Imported batch',
-      createdAt: new Date().toISOString().split('T')[0],
-      activities: []
-    }));
-
+  const handleToggleGroupCollapse = (groupId: string) => {
     setAllBoards((prev) => {
       const board = prev[currentBoardId];
       if (!board) return prev;
 
-      const newGroups = board.groups.map((g, i) =>
-        i === 0 ? { ...g, items: [...fullItems, ...g.items] } : g
-      );
+      const newGroups = board.groups.map((group) => {
+        if (group.id !== groupId) return group;
+        return {
+          ...group,
+          isCollapsed: !group.isCollapsed,
+        };
+      });
 
       return {
         ...prev,
-        [currentBoardId]: { ...board, groups: newGroups },
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
+      };
+    });
+  };
+
+  const handleConvertLead = (leadItem: CRMItem) => {
+    const dealItem: CRMItem = {
+      ...leadItem,
+      id: `deal-${Date.now()}`,
+      status: 'Qualified',
+      notes: `Converted from Lead on ${new Date().toLocaleDateString()}`,
+    };
+
+    setAllBoards((prev) => {
+      const dealsBoard = prev['board-5030723273'];
+      if (!dealsBoard) return prev;
+
+      const targetGroup = dealsBoard.groups[0];
+      if (!targetGroup) return prev;
+
+      const updatedDealsGroups = dealsBoard.groups.map((g, idx) => {
+        if (idx === 0) {
+          return {
+            ...g,
+            items: [dealItem, ...g.items],
+          };
+        }
+        return g;
+      });
+
+      return {
+        ...prev,
+        ['board-5030723273']: {
+          ...dealsBoard,
+          groups: updatedDealsGroups,
+        },
       };
     });
 
-    showToast(`✅ Successfully imported ${fullItems.length} records into "${firstGroup.title}"!`);
+    showToast(`Converted "${leadItem.name}" to Deals Pipeline!`);
   };
 
-  // Boards counts map for sidebar
-  const boardsCountMap: Record<string, number> = {};
-  Object.keys(allBoards).forEach((key) => {
-    boardsCountMap[key] = allBoards[key]?.groups.reduce((acc, g) => acc + g.items.length, 0) || 0;
-  });
+  const handleImportItems = (items: Partial<CRMItem>[], targetGroupName: string) => {
+    setAllBoards((prev) => {
+      const board = prev[currentBoardId];
+      if (!board) return prev;
 
-  // Filter groups and items based on search and owner filter
-  const filteredGroups: CRMGroup[] = currentBoard.groups.map((group) => {
+      const formattedItems: CRMItem[] = items.map((item, idx) => ({
+        id: `import-${Date.now()}-${idx}`,
+        name: item.name || 'Imported Deal',
+        contactPerson: item.contactPerson || 'Unknown Contact',
+        contactEmail: item.contactEmail || '',
+        contactPhone: item.contactPhone || '',
+        dealValue: Number(item.dealValue) || 0,
+        status: (item.status as StatusType) || 'Working on it',
+        priority: (item.priority as any) || 'Medium',
+        owner: item.owner || TEAM_MEMBERS[0],
+        expectedCloseDate: item.expectedCloseDate || '2026-10-31',
+        probability: Number(item.probability) || 50,
+        notes: item.notes || 'Imported from Excel',
+        createdAt: new Date().toISOString().split('T')[0],
+      }));
+
+      const newGroups = board.groups.map((g) => {
+        if (g.title === targetGroupName || g.id === targetGroupName) {
+          return { ...g, items: [...g.items, ...formattedItems] };
+        }
+        return g;
+      });
+
+      return {
+        ...prev,
+        [currentBoardId]: {
+          ...board,
+          groups: newGroups,
+        },
+      };
+    });
+
+    showToast(`Successfully imported ${items.length} items!`);
+  };
+
+  const handleExportExcel = () => {
+    exportBoardToExcel(currentBoard);
+    showToast(`Exported "${currentBoard.name}" to Excel!`);
+  };
+
+  // Filter groups by search and owner
+  const filteredGroups = currentBoard.groups.map((group) => {
     const items = group.items.filter((item) => {
-      const matchesSearch = 
+      const matchSearch =
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.companyName && item.companyName.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      const matchesOwner = selectedOwner === 'ALL' || item.owner.name === selectedOwner;
-      return matchesSearch && matchesOwner;
+        item.contactEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.companyName && item.companyName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.address && item.address.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      const matchOwner = selectedOwner === 'ALL' || item.owner.name === selectedOwner;
+      return matchSearch && matchOwner;
     });
 
     return {
@@ -411,81 +379,112 @@ export default function Home() {
   });
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#f5f6f8] font-sans">
-      {/* 1. Sidebar */}
-      <Sidebar
-        currentBoardId={currentBoardId}
-        onSelectBoard={(boardId) => {
-          setCurrentBoardId(boardId);
-          setSearchTerm('');
-        }}
-        boardsCountMap={boardsCountMap}
+    <div className="flex flex-col h-screen overflow-hidden bg-white font-sans antialiased text-slate-800">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs animate-bounce border border-slate-700">
+          <CheckCircle2 size={16} className="text-[#ff7a59]" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* 1. HubSpot Global Header (Top Navigation with Hub ID: 247092555) */}
+      <HubSpotHeader
+        currentTab={hubspotNavTab}
+        onTabChange={(tab) => setHubspotNavTab(tab)}
       />
 
-      {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden bg-white relative">
-        {/* Toast Alert Banner */}
-        {toastMessage && (
-          <div className="absolute top-4 right-6 z-50 bg-[#1f2937] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl border border-gray-700 flex items-center gap-2 animate-in slide-in-from-top-2 duration-200">
-            <Sparkles size={14} className="text-amber-400" />
-            <span>{toastMessage}</span>
+      {/* 2. Main Content Body */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* VIEW 1: HubSpot Object Lists & Segments View (Clone of https://app-na2.hubspot.com/contacts/247092555/objectLists/views/all?count=25) */}
+        {hubspotNavTab === 'lists' && (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <HubSpotListsView />
           </div>
         )}
 
-        {/* Board Header & View Switcher */}
-        <BoardHeader
-          currentBoard={currentBoard}
-          activeView={activeView}
-          setActiveView={setActiveView}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedOwner={selectedOwner}
-          setSelectedOwner={setSelectedOwner}
-          onAddNewItem={handleHeaderAddNewItem}
-          onExportExcel={handleExportExcel}
-          onOpenImport={() => setIsImportOpen(true)}
-        />
+        {/* VIEW 2: HubSpot Contacts & 3-Column Profile */}
+        {hubspotNavTab === 'contacts' && (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <HubSpotContactsView />
+          </div>
+        )}
 
-        {/* View Body */}
-        <div className="flex-1 overflow-y-auto bg-[#f5f6f8]">
-          {activeView === 'table' && (
-            <TableView
-              currentBoard={currentBoard}
-              groups={filteredGroups}
-              onUpdateItem={handleUpdateItem}
-              onDeleteItem={handleDeleteItem}
-              onAddItem={handleAddItem}
-              onToggleGroupCollapse={handleToggleGroupCollapse}
-              onAddGroup={handleAddGroup}
-              onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
-              onConvertLead={handleConvertLead}
+        {/* VIEW 3: Deals / Sales Pipeline / Field Service Boards */}
+        {(hubspotNavTab === 'deals' || hubspotNavTab === 'companies' || hubspotNavTab === 'reports') && (
+          <div className="flex-1 flex overflow-hidden">
+            {/* Sidebar for Board Navigation */}
+            <Sidebar
+              currentBoardId={currentBoardId}
+              onSelectBoard={(id) => setCurrentBoardId(id)}
+              boardsCountMap={Object.keys(allBoards).reduce((acc, key) => {
+                const b = allBoards[key];
+                acc[key] = b ? b.groups.reduce((cnt, g) => cnt + g.items.length, 0) : 0;
+                return acc;
+              }, {} as Record<string, number>)}
             />
-          )}
 
-          {activeView === 'kanban' && (
-            <KanbanView
-              groups={filteredGroups}
-              onUpdateItemStatus={handleUpdateItemStatus}
-              onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
-            />
-          )}
+            {/* Board Workspace Area */}
+            <div className="flex-1 flex flex-col min-w-0 bg-[#f5f6f8] overflow-hidden">
+              <BoardHeader
+                currentBoard={currentBoard}
+                activeView={activeView}
+                setActiveView={setActiveView}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectedOwner={selectedOwner}
+                setSelectedOwner={setSelectedOwner}
+                onAddNewItem={() => {
+                  if (currentBoard.groups[0]) {
+                    handleAddItem(currentBoard.groups[0].id, 'New Item');
+                  }
+                }}
+                onExportExcel={handleExportExcel}
+                onOpenImport={() => setIsImportOpen(true)}
+              />
 
-          {activeView === 'dispatch' && (
-            <DispatchBoardView
-              groups={filteredGroups}
-              onUpdateItemStatus={handleUpdateItemStatus}
-              onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
-            />
-          )}
+              <div className="flex-1 overflow-y-auto bg-[#f5f6f8]">
+                {activeView === 'table' && (
+                  <TableView
+                    currentBoard={currentBoard}
+                    groups={filteredGroups}
+                    onUpdateItem={handleUpdateItem}
+                    onDeleteItem={handleDeleteItem}
+                    onAddItem={handleAddItem}
+                    onToggleGroupCollapse={handleToggleGroupCollapse}
+                    onAddGroup={handleAddGroup}
+                    onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
+                    onConvertLead={handleConvertLead}
+                  />
+                )}
 
-          {activeView === 'dashboard' && (
-            <DashboardView groups={currentBoard.groups} />
-          )}
+                {activeView === 'kanban' && (
+                  <KanbanView
+                    groups={filteredGroups}
+                    onUpdateItemStatus={handleUpdateItemStatus}
+                    onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
+                  />
+                )}
 
-          {activeView === 'activity' && (
-            <ActivityLogView groups={currentBoard.groups} />
-          )}
-        </div>
+                {activeView === 'dispatch' && (
+                  <DispatchBoardView
+                    groups={filteredGroups}
+                    onUpdateItemStatus={handleUpdateItemStatus}
+                    onSelectItem={(item, groupId) => setSelectedItem({ item, groupId })}
+                  />
+                )}
+
+                {activeView === 'dashboard' && (
+                  <DashboardView groups={currentBoard.groups} />
+                )}
+
+                {activeView === 'activity' && (
+                  <ActivityLogView groups={currentBoard.groups} />
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 3. Item Detail / Notes Drawer */}
@@ -504,7 +503,7 @@ export default function Home() {
       <ImportModal
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
-        onImport={handleImportItems}
+        onImport={(items) => handleImportItems(items, currentBoard.groups[0]?.title || 'First Group')}
         targetGroupName={currentBoard.groups[0]?.title || 'First Group'}
       />
     </div>

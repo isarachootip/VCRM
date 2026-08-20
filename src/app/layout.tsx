@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Monday CRM | Isarachootip's Team Global",
-  description: 'Work OS & CRM Deals Pipeline Clone',
+  title: "VCRM | Enterprise CRM & Object Lists Engine",
+  description: 'VCRM - OmniService CRM, Lists & Segments Management, and Sales Pipeline',
   icons: {
-    icon: 'https://cdn.monday.com/favicon-monday-v4.png',
+    icon: '/favicon.ico',
   },
 };
 
