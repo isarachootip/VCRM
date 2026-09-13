@@ -1,0 +1,22 @@
+{
+  "kerryMilestones": [
+    { "status": "PACKED", "location": "Central Bangna DC", "description": "Parcel packed and ready for carrier handover" },
+    { "status": "PICKED_UP", "location": "Central Bangna DC", "description": "Kerry courier picked up parcel" },
+    { "status": "IN_TRANSIT", "location": "Kerry BKK Central Sorting Hub", "description": "Sorting completed, parcel in transit" },
+    { "status": "OUT_FOR_DELIVERY", "location": "Kerry Sukhumvit Distribution Center", "description": "Courier out for delivery" },
+    { "status": "DELIVERED", "location": "Customer Residence (Sukhumvit 39)", "description": "Delivered successfully with recipient signature" }
+  ],
+  "flashMilestones": [
+    { "status": "PACKED", "location": "Central Rama 9 DC", "description": "Order packed" },
+    { "status": "PICKED_UP", "location": "Flash Hub Rama 9", "description": "Picked up by Flash Express" },
+    { "status": "IN_TRANSIT", "location": "Flash Nonthaburi Regional Hub", "description": "In transit" },
+    { "status": "OUT_FOR_DELIVERY", "location": "Flash Local Van #42", "description": "Out for delivery" },
+    { "status": "DELIVERED", "location": "Recipient Office", "description": "Handed to recipient" }
+  ],
+  "deliveryFailedMilestone": {
+    "status": "DELIVERY_FAILED",
+    "location": "Customer Delivery Address",
+    "description": "Customer unavailable / Security gate closed",
+    "notes": "Attempt 1 failed. Rescheduling next business day."
+  }
+}

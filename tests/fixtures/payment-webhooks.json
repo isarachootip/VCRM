@@ -1,0 +1,104 @@
+{
+  "mujiCreditCardSuccess": {
+    "gateway": "CREDIT_CARD",
+    "merchantId": "MERCHANT_MUJI_01",
+    "businessUnit": "MUJI",
+    "transactionNumber": "TXN-CC-2026-883920",
+    "quotationNumber": "QT-2026-1001",
+    "amount": 27890.00,
+    "currency": "THB",
+    "paymentMethod": "CREDIT_CARD",
+    "cardDetails": {
+      "brand": "VISA",
+      "maskedPan": "411111******1111",
+      "authCode": "AUTH889900",
+      "bankIssuer": "KBANK"
+    },
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:15:00.000Z",
+    "gatewayReference": "GW-REF-CC-778899"
+  },
+  "centralPromptPaySuccess": {
+    "gateway": "PROMPTPAY",
+    "merchantId": "MERCHANT_CENTRAL_01",
+    "businessUnit": "CENTRAL",
+    "transactionNumber": "TXN-PP-2026-339911",
+    "quotationNumber": "QT-2026-1002",
+    "amount": 3500.00,
+    "currency": "THB",
+    "paymentMethod": "PROMPTPAY",
+    "promptPayDetails": {
+      "billerId": "010753600026901",
+      "referenceNo1": "QT20261002",
+      "referenceNo2": "CENTRAL01",
+      "slipHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:20:00.000Z",
+    "gatewayReference": "GW-REF-PP-332211"
+  },
+  "sspCreditCardSuccess": {
+    "gateway": "CREDIT_CARD",
+    "merchantId": "MERCHANT_SSP_01",
+    "businessUnit": "SSP",
+    "transactionNumber": "TXN-CC-2026-445566",
+    "quotationNumber": "QT-2026-1003",
+    "amount": 3200.00,
+    "currency": "THB",
+    "paymentMethod": "CREDIT_CARD",
+    "cardDetails": {
+      "brand": "MASTERCARD",
+      "maskedPan": "520000******2222",
+      "authCode": "AUTH112233",
+      "bankIssuer": "SCB"
+    },
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:25:00.000Z",
+    "gatewayReference": "GW-REF-CC-990011"
+  },
+  "b2sPromptPaySuccess": {
+    "gateway": "PROMPTPAY",
+    "merchantId": "MERCHANT_B2S_01",
+    "businessUnit": "B2S",
+    "transactionNumber": "TXN-PP-2026-778899",
+    "quotationNumber": "QT-2026-1004",
+    "amount": 890.00,
+    "currency": "THB",
+    "paymentMethod": "PROMPTPAY",
+    "promptPayDetails": {
+      "billerId": "010753600026904",
+      "referenceNo1": "QT20261004",
+      "referenceNo2": "B2S01",
+      "slipHash": "a1b2c3d4e5f60718293a4b5c6d7e8f90123456789abcdef0123456789abcdef0"
+    },
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:30:00.000Z",
+    "gatewayReference": "GW-REF-PP-556677"
+  },
+  "underpaymentDiscrepancy": {
+    "gateway": "CREDIT_CARD",
+    "merchantId": "MERCHANT_MUJI_01",
+    "businessUnit": "MUJI",
+    "transactionNumber": "TXN-CC-DISCREPANCY-01",
+    "quotationNumber": "QT-2026-1001",
+    "amount": 20000.00,
+    "currency": "THB",
+    "paymentMethod": "CREDIT_CARD",
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:35:00.000Z",
+    "gatewayReference": "GW-REF-DISC-01"
+  },
+  "buMerchantMismatch": {
+    "gateway": "CREDIT_CARD",
+    "merchantId": "MERCHANT_CENTRAL_01",
+    "businessUnit": "MUJI",
+    "transactionNumber": "TXN-CC-MISMATCH-01",
+    "quotationNumber": "QT-2026-1001",
+    "amount": 27890.00,
+    "currency": "THB",
+    "paymentMethod": "CREDIT_CARD",
+    "status": "SUCCESS",
+    "paidAt": "2026-09-13T03:40:00.000Z",
+    "gatewayReference": "GW-REF-MISMATCH-01"
+  }
+}

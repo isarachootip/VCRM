@@ -13,12 +13,15 @@ import { ActivityLogView } from '@/components/ActivityLogView';
 import { DispatchBoardView } from '@/components/DispatchBoardView';
 import { ItemDrawer } from '@/components/ItemDrawer';
 import { ImportModal } from '@/components/ImportModal';
+import { SupervisorDashboard } from '@/components/supervisor/SupervisorDashboard';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
 import { INITIAL_BOARDS, TEAM_MEMBERS } from '@/data/mockData';
 import { exportBoardToExcel } from '@/utils/excelHelper';
 import { CheckCircle2, AlertCircle, Sparkles, LayoutList, Kanban, Layers } from 'lucide-react';
+import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
 
-export default function Home() {
+function HomeContent() {
+  const { t } = useLanguage();
   // Navigation Mode: 'lists' (HubSpot Object Lists 25 items) | 'contacts' (HubSpot CRM) | 'deals' | 'companies' | 'reports'
   const [hubspotNavTab, setHubspotNavTab] = useState<string>('lists');
 
@@ -119,7 +122,7 @@ export default function Home() {
         },
       };
     });
-    showToast('Updated record successfully');
+    showToast(t('toast_updated_success'));
   };
 
   const handleUpdateItemStatus = (itemId: string, newStatus: StatusType) => {
@@ -159,7 +162,7 @@ export default function Home() {
         },
       };
     });
-    showToast(`Status updated to ${newStatus}`);
+    showToast(`${t('toast_status_updated')} ${t(newStatus)}`);
   };
 
   const handleDeleteItem = (groupId: string, itemId: string) => {
@@ -186,7 +189,7 @@ export default function Home() {
     if (selectedItem && selectedItem.item.id === itemId) {
       setSelectedItem(null);
     }
-    showToast('Item deleted');
+    showToast(t('toast_item_deleted'));
   };
 
   const handleAddItem = (groupId: string, name: string) => {
@@ -227,7 +230,7 @@ export default function Home() {
         },
       };
     });
-    showToast(`Added "${name}"`);
+    showToast(`${t('toast_added')} "${name}"`);
   };
 
   const handleAddGroup = (title: string) => {
@@ -250,7 +253,7 @@ export default function Home() {
         },
       };
     });
-    showToast(`Added group "${title}"`);
+    showToast(`${t('toast_added_group')} "${title}"`);
   };
 
   const handleToggleGroupCollapse = (groupId: string) => {
@@ -310,7 +313,7 @@ export default function Home() {
       };
     });
 
-    showToast(`Converted "${leadItem.name}" to Deals Pipeline!`);
+    showToast(`${t('toast_converted')} "${leadItem.name}" ${t('toast_to_deals')}`);
   };
 
   const handleImportItems = (items: Partial<CRMItem>[], targetGroupName: string) => {
@@ -350,12 +353,12 @@ export default function Home() {
       };
     });
 
-    showToast(`Successfully imported ${items.length} items!`);
+    showToast(`${t('toast_imported')} ${items.length} ${t('items')}!`);
   };
 
   const handleExportExcel = () => {
     exportBoardToExcel(currentBoard);
-    showToast(`Exported "${currentBoard.name}" to Excel!`);
+    showToast(`${t('toast_exported')} "${t(currentBoard.id) || currentBoard.name}" ${t('toast_to_excel')}`);
   };
 
   // Filter groups by search and owner
@@ -407,6 +410,13 @@ export default function Home() {
         {hubspotNavTab === 'contacts' && (
           <div className="flex-1 flex flex-col overflow-hidden">
             <HubSpotContactsView />
+          </div>
+        )}
+
+        {/* VIEW: Supervisor Workforce & Adherence Center */}
+        {hubspotNavTab === 'supervisor' && (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <SupervisorDashboard />
           </div>
         )}
 
@@ -507,5 +517,13 @@ export default function Home() {
         targetGroupName={currentBoard.groups[0]?.title || 'First Group'}
       />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <LanguageProvider>
+      <HomeContent />
+    </LanguageProvider>
   );
 }

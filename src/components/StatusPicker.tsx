@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { StatusType } from '@/types/crm';
 import { STATUS_CONFIGS } from '@/data/mockData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface StatusPickerProps {
   currentStatus: StatusType;
@@ -12,6 +13,7 @@ interface StatusPickerProps {
 export const StatusPicker: React.FC<StatusPickerProps> = ({ currentStatus, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const currentConfig = STATUS_CONFIGS[currentStatus] || {
     label: currentStatus,
@@ -54,7 +56,7 @@ export const StatusPicker: React.FC<StatusPickerProps> = ({ currentStatus, onCha
         className="w-full h-8 px-2 flex items-center justify-center font-medium text-xs text-white rounded transition-transform active:scale-95 shadow-sm truncate hover:brightness-105"
         style={{ backgroundColor: currentConfig.bgColor }}
       >
-        <span className="truncate">{currentConfig.label}</span>
+        <span className="truncate">{t(currentConfig.label)}</span>
       </button>
 
       {isOpen && (
@@ -63,10 +65,10 @@ export const StatusPicker: React.FC<StatusPickerProps> = ({ currentStatus, onCha
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-[10px] uppercase font-semibold text-gray-400 px-2 py-1">
-            Change Stage
+            {t('Stage / Status')}
           </div>
           {statuses.map((st) => {
-            const config = STATUS_CONFIGS[st];
+            const config = STATUS_CONFIGS[st] || { label: st, bgColor: '#c4c4c4' };
             const isSelected = st === currentStatus;
             return (
               <button
@@ -80,7 +82,7 @@ export const StatusPicker: React.FC<StatusPickerProps> = ({ currentStatus, onCha
                 }`}
                 style={{ backgroundColor: config.bgColor }}
               >
-                <span>{config.label}</span>
+                <span>{t(config.label)}</span>
                 {isSelected && <span className="text-[10px]">✓</span>}
               </button>
             );

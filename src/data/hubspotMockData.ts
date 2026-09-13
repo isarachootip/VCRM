@@ -11,303 +11,303 @@ export const HUBSPOT_DEFAULT_VIEWS: HubSpotViewTab[] = [
 export const HUBSPOT_OBJECT_LISTS: HubSpotList[] = [
   {
     id: 'list-1',
-    name: '🌟 High Intent Enterprise Leads (2026)',
-    description: 'Active list filtering enterprise contacts with company size > 50 and active engagement in last 30 days',
+    name: '🌟 รายชื่อผู้ติดต่อองค์กรความสนใจสูง (2026)',
+    description: 'รายการอัปเดตอัตโนมัติของบริษัทขนาดใหญ่ที่มีพนักงาน > 50 คน และมีการโต้ตอบล่าสุดใน 30 วัน',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 248,
     createdDate: '2026-01-15',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 14:32',
-    folder: 'Enterprise Segments'
+    folder: 'กลุ่มองค์กรใหญ่'
   },
   {
     id: 'list-2',
-    name: '📊 Inbound Demo Requests Q3',
-    description: 'Form submission on pricing and product demo request landing page',
+    name: '📊 ผู้ขอสาธิตระบบขาเข้า ไตรมาส 3',
+    description: 'ลูกค้ากรอกแบบฟอร์มขอทดลองใช้ระบบในหน้าราคาหรือหน้าตัวอย่างสินค้า',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 112,
     createdDate: '2026-07-01',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 09:15',
-    folder: 'Inbound Campaigns'
+    folder: 'แคมเปญขาเข้า'
   },
   {
     id: 'list-3',
-    name: '🏢 Key Account CXOs & VP Level',
-    description: 'Static list of C-level decision makers from Top 100 SET listed corporations',
+    name: '🏢 รายชื่อผู้บริหารระดับสูง CXO และ VP',
+    description: 'รายชื่อผู้มีอำนาจตัดสินใจระดับ C-Level จาก 100 บริษัทชั้นนำในตลาดหลักทรัพย์ SET',
     objectType: 'CONTACTS',
     listType: 'STATIC',
     size: 95,
     createdDate: '2026-03-10',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-18 16:40',
-    folder: 'VIP Lists'
+    folder: 'กลุ่มลูกค้า VIP'
   },
   {
     id: 'list-4',
-    name: '🤝 Deals in Final Negotiation (> ฿1M)',
-    description: 'Active list tracking deals currently at proposal review or legal signing stage',
+    name: '🤝 ข้อตกลงอยู่ระหว่างเจรจาสุดท้าย (> ฿1M)',
+    description: 'รายการติดตามข้อตกลงที่อยู่ในขั้นตอนทบทวนใบเสนอราคาหรือกำลังเซ็นสัญญาทางกฎหมาย',
     objectType: 'DEALS',
     listType: 'ACTIVE',
     size: 18,
     createdDate: '2026-05-20',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 10:00',
-    folder: 'Pipeline'
+    folder: 'กระบวนการขาย'
   },
   {
     id: 'list-5',
-    name: '🏬 Retail & FMCG Companies Thailand',
-    description: 'Companies in Retail, Supermarket, and Fast Moving Consumer Goods industry',
+    name: '🏬 บริษัทค้าปลีกและสินค้าอุปโภคบริโภคในไทย',
+    description: 'บริษัทต่าง ๆ ในอุตสาหกรรมค้าปลีก ซูเปอร์มาร์เก็ต และสินค้าอุปโภคบริโภคทั่วไป',
     objectType: 'COMPANIES',
     listType: 'ACTIVE',
     size: 142,
     createdDate: '2026-02-18',
     createdBy: { name: 'Nattawut K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-17 11:20',
-    folder: 'Industry Segments'
+    folder: 'กลุ่มอุตสาหกรรม'
   },
   {
     id: 'list-6',
-    name: '💼 Q3 Bangkok Expo 2026 Attendees',
-    description: 'Imported list of booth visitors scanned via QR code at Queen Sirikit National Convention Center',
+    name: '💼 ผู้ร่วมงานสัมมนา Q3 Bangkok Expo 2026',
+    description: 'รายชื่อนำเข้าของผู้เข้าชมบูธที่สแกน QR Code ณ ศูนย์การประชุมแห่งชาติสิริกิติ์',
     objectType: 'CONTACTS',
     listType: 'STATIC',
     size: 340,
     createdDate: '2026-07-25',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-07-28 17:05',
-    folder: 'Event Leads'
+    folder: 'ลูกค้าจากอีเวนต์'
   },
   {
     id: 'list-7',
-    name: '⚡ Inactive Contacts (> 90 Days)',
-    description: 'Contacts with zero email opens or sales touchpoints in the past 3 months for re-engagement',
+    name: '⚡ รายชื่อผู้ติดต่อที่ไม่เคลื่อนไหว (> 90 วัน)',
+    description: 'รายชื่อผู้ติดต่อที่ไม่มีการเปิดอ่านอีเมลหรือติดต่อฝ่ายขายเลยใน 3 เดือนที่ผ่านมา เพื่อวางแผนส่งเสริมความสัมพันธ์ใหม่',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 512,
     createdDate: '2026-04-12',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 02:00',
-    folder: 'Nurturing'
+    folder: 'กระตุ้นความสนใจ'
   },
   {
     id: 'list-8',
-    name: '🎯 Qualified Marketing Leads (MQL)',
-    description: 'Contacts that scored > 70 in marketing attribution and visited pricing page twice',
+    name: '🎯 ลูกค้าเป้าหมายฝ่ายการตลาดผ่านเกณฑ์ (MQL)',
+    description: 'รายชื่อที่มีคะแนนพฤติกรรม > 70 คะแนน และเข้ามาดูหน้าราคามากกว่าสองครั้ง',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 184,
     createdDate: '2026-03-01',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 18:45',
-    folder: 'Marketing Funnel'
+    folder: 'การตลาดและกรวยขาย'
   },
   {
     id: 'list-9',
-    name: '🏗️ Construction & Developer Clients',
-    description: 'Companies engaged in condominium, commercial building, and real estate development',
+    name: '🏗️ ลูกค้ากลุ่มรับเหมาก่อสร้างและพัฒนาอสังหาฯ',
+    description: 'บริษัทที่ทำธุรกิจโครงการคอนโดมิเนียม อาคารพาณิชย์ และการพัฒนาอสังหาริมทรัพย์',
     objectType: 'COMPANIES',
     listType: 'ACTIVE',
     size: 68,
     createdDate: '2026-04-05',
     createdBy: { name: 'Nattawut K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-15 14:10',
-    folder: 'Industry Segments'
+    folder: 'กลุ่มอุตสาหกรรม'
   },
   {
     id: 'list-10',
-    name: '🏆 Closed Won Deals 2026 (YTD)',
-    description: 'All closed won deals across enterprise and mid-market sales teams',
+    name: '🏆 ปิดการขายสำเร็จ 2026 (สะสมต้นปีถึงปัจจุบัน)',
+    description: 'ข้อตกลงที่ปิดการขายสำเร็จแล้วทั้งหมดของฝ่ายขายลูกค้าองค์กรและตลาดระดับกลาง',
     objectType: 'DEALS',
     listType: 'ACTIVE',
     size: 47,
     createdDate: '2026-01-01',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 08:30',
-    folder: 'Pipeline'
+    folder: 'กระบวนการขาย'
   },
   {
     id: 'list-11',
-    name: '🔔 Unassigned Inbound Leads',
-    description: 'New contacts created without a designated sales representative owner',
+    name: '🔔 ผู้ติดต่อขาเข้าที่ยังไม่ได้จัดสรร',
+    description: 'รายชื่อผู้ติดต่อใหม่ที่ยังไม่ได้ถูกกำหนดมอบหมายให้เซลส์คนใดดูแล',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 29,
     createdDate: '2026-06-15',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 11:00',
-    folder: 'Lead Routing'
+    folder: 'การส่งต่อลีด'
   },
   {
     id: 'list-12',
-    name: '💌 Monthly Newsletter Subscribers',
-    description: 'Opted-in email subscribers for technical updates and monthly promotions',
+    name: '💌 ผู้ติดตามรับจดหมายข่าวรายเดือน',
+    description: 'ผู้ลงทะเบียนสมัครอีเมลรับข่าวสารอัปเดตทางเทคนิคและโปรโมชันรายเดือน',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 1450,
     createdDate: '2026-01-10',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 20:00',
-    folder: 'Email Marketing'
+    folder: 'อีเมลการตลาด'
   },
   {
     id: 'list-13',
-    name: '💎 VIP Gold & Platinum Accounts',
-    description: 'Accounts with annual contract value (ACV) exceeding ฿3,000,000',
+    name: '💎 บัญชีลูกค้า VIP ระดับ Gold & Platinum',
+    description: 'บัญชีบริษัทที่มีมูลค่าสัญญารายปี (ACV) สูงกว่า 3,000,000 บาท',
     objectType: 'COMPANIES',
     listType: 'STATIC',
     size: 32,
     createdDate: '2026-02-01',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-10 13:00',
-    folder: 'VIP Lists'
+    folder: 'กลุ่มลูกค้า VIP'
   },
   {
     id: 'list-14',
-    name: '🚚 Service & Installation Work Orders Pending',
-    description: 'Tickets and field service dispatches waiting for technician scheduling',
+    name: '🚚 คิวงานช่างบริการและติดตั้งที่รอดำเนินการ',
+    description: 'ใบงานแจ้งซ่อมบำรุงและงานบริการหน้างานที่กำลังรอช่างเข้าไปจัดการ',
     objectType: 'TICKETS',
     listType: 'ACTIVE',
     size: 19,
     createdDate: '2026-06-01',
     createdBy: { name: 'Nattawut K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 10:45',
-    folder: 'Operations'
+    folder: 'งานปฏิบัติการ'
   },
   {
     id: 'list-15',
-    name: '📱 WhatsApp & LINE Official Inquiries',
-    description: 'Omnichannel leads synced from official LINE @ account and WhatsApp Business',
+    name: '📱 ลูกค้าติดต่อผ่าน WhatsApp & LINE Official',
+    description: 'ผู้ติดต่อช่องทางออมนิแชนเนลที่ซิงค์จาก LINE Official Account และ WhatsApp Business',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 382,
     createdDate: '2026-03-22',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-20 09:50',
-    folder: 'Inbound Campaigns'
+    folder: 'แคมเปญขาเข้า'
   },
   {
     id: 'list-16',
-    name: '📑 Contract Renewal Due in 60 Days',
-    description: 'Existing customer deals approaching annual maintenance and license renewals',
+    name: '📑 สัญญากำลังจะหมดอายุใน 60 วัน',
+    description: 'ลูกค้าปัจจุบันที่มีข้อตกลงใกล้ถึงกำหนดเวลาต่ออายุสัญญาซ่อมบำรุงและลิขสิทธิ์รายปี',
     objectType: 'DEALS',
     listType: 'ACTIVE',
     size: 24,
     createdDate: '2026-04-18',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 15:10',
-    folder: 'Retention'
+    folder: 'รักษาความสัมพันธ์'
   },
   {
     id: 'list-17',
-    name: '🏥 Healthcare & Hospital Sector Accounts',
-    description: 'Private hospitals, clinics, and medical research institutes',
+    name: '🏥 บัญชีลูกค้ากลุ่มโรงพยาบาลและสาธารณสุข',
+    description: 'โรงพยาบาลเอกชน คลินิก และสถาบันวิจัยทางการแพทย์',
     objectType: 'COMPANIES',
     listType: 'ACTIVE',
     size: 45,
     createdDate: '2026-05-11',
     createdBy: { name: 'Nattawut K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-12 11:15',
-    folder: 'Industry Segments'
+    folder: 'กลุ่มอุตสาหกรรม'
   },
   {
     id: 'list-18',
-    name: '⚠️ High Risk / Attrition Warning Customers',
-    description: 'Customers with low product usage and negative NPS survey responses',
+    name: '⚠️ ลูกค้าที่มีความเสี่ยงสูง/เตือนโอกาสยกเลิกบริการ',
+    description: 'ลูกค้าที่ใช้งานระบบน้อยกว่าเกณฑ์ปกติ และมีคะแนนความพึงพอใจ NPS ต่ำ',
     objectType: 'CONTACTS',
     listType: 'ACTIVE',
     size: 14,
     createdDate: '2026-06-28',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-18 17:30',
-    folder: 'Retention'
+    folder: 'รักษาความสัมพันธ์'
   },
   {
     id: 'list-19',
-    name: '🛠️ Completed Warranty Service Checks',
-    description: 'Closed maintenance tickets with positive customer signoff in August 2026',
+    name: '🛠️ ใบตรวจสอบบริการหลังการขาย/รับประกันเสร็จสิ้น',
+    description: 'ใบงานบำรุงรักษาที่เสร็จสมบูรณ์เรียบร้อยแล้วและลูกค้าเซ็นยอมรับในเดือนสิงหาคม 2026',
     objectType: 'TICKETS',
     listType: 'STATIC',
     size: 88,
     createdDate: '2026-08-01',
     createdBy: { name: 'Nattawut K.', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 16:20',
-    folder: 'Operations'
+    folder: 'งานปฏิบัติการ'
   },
   {
     id: 'list-20',
-    name: '💻 Tech Startups & SaaS Scaleups',
-    description: 'Technology companies with seed to Series B venture funding in Southeast Asia',
+    name: '💻 กลุ่มบริษัทเทคโนโลยีสตาร์ทอัปและ SaaS',
+    description: 'บริษัทเทคโนโลยีระดับเริ่มต้น Seed ถึง Series B ในภูมิภาคเอเชียตะวันออกเฉียงใต้',
     objectType: 'COMPANIES',
     listType: 'STATIC',
     size: 73,
     createdDate: '2026-03-30',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-07-15 09:40',
-    folder: 'Industry Segments'
+    folder: 'กลุ่มอุตสาหกรรม'
   },
   {
     id: 'list-21',
-    name: '🎪 Webinar: Modern CRM & AI Automation Leads',
-    description: 'Attendees who stayed for > 40 minutes during live webinar on Zoom',
+    name: '🎪 รายชื่อผู้ลงทะเบียนสัมมนา CRM & AI อัตโนมัติ',
+    description: 'ผู้เข้าร่วมสัมมนาออนไลน์ที่ร่วมรับฟังนานกว่า 40 นาทีผ่านทาง Zoom',
     objectType: 'CONTACTS',
     listType: 'STATIC',
     size: 215,
     createdDate: '2026-08-05',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-06 10:10',
-    folder: 'Event Leads'
+    folder: 'ลูกค้าจากอีเวนต์'
   },
   {
     id: 'list-22',
-    name: '💰 Deals Closed Lost - Budget Constraints',
-    description: 'Deals lost due to pricing/budget; candidate for discount campaign in Q4',
+    name: '💰 ข้อตกลงที่พลาดเป้าเนื่องจากงบประมาณ',
+    description: 'ดีลการขายที่พลาดไปเนื่องจากเรื่องราคาหรืองบประมาณ เพื่อวางแผนจัดแคมเปญลดราคาส่วนลดใน Q4',
     objectType: 'DEALS',
     listType: 'ACTIVE',
     size: 31,
     createdDate: '2026-02-14',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-14 18:00',
-    folder: 'Pipeline'
+    folder: 'กระบวนการขาย'
   },
   {
     id: 'list-23',
-    name: '🌏 Multinational Regional APAC HQs',
-    description: 'Global companies with regional headquarters located in Bangkok and Singapore',
+    name: '🌏 บริษัทข้ามชาติสำนักงานใหญ่ภูมิภาค APAC',
+    description: 'บริษัทระดับโลกที่มีสำนักงานใหญ่ประจำภูมิภาคตั้งอยู่ในกรุงเทพฯ หรือสิงคโปร์',
     objectType: 'COMPANIES',
     listType: 'STATIC',
     size: 56,
     createdDate: '2026-04-20',
     createdBy: { name: 'Somchai P.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-07-22 14:50',
-    folder: 'VIP Lists'
+    folder: 'กลุ่มลูกค้า VIP'
   },
   {
     id: 'list-24',
-    name: '🎓 Education & Universities Contact List',
-    description: 'Deans, procurement heads, and IT directors from private and public universities',
+    name: '🎓 รายชื่อผู้ติดต่อกลุ่มสถาบันการศึกษาและมหาวิทยาลัย',
+    description: 'รายชื่อคณบดี หัวหน้าฝ่ายจัดซื้อ และผู้อำนวยการฝ่ายไอทีของมหาวิทยาลัยรัฐและเอกชน',
     objectType: 'CONTACTS',
     listType: 'STATIC',
     size: 83,
     createdDate: '2026-05-02',
     createdBy: { name: 'Pimchanok S.', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-06-18 11:30',
-    folder: 'Industry Segments'
+    folder: 'กลุ่มอุตสาหกรรม'
   },
   {
     id: 'list-25',
-    name: '🚀 Product Launch Beta Testers 2026',
-    description: 'Early adopter customers enrolled in feature preview and feedback program',
+    name: '🚀 กลุ่มผู้ร่วมทดสอบผลิตภัณฑ์ใหม่ Beta Testers 2026',
+    description: 'ลูกค้ากลุ่มแรกที่เข้าร่วมโครงการทดสอบฟีเจอร์ใหม่และให้คำแนะนำในการพัฒนา',
     objectType: 'CONTACTS',
     listType: 'STATIC',
     size: 64,
     createdDate: '2026-07-10',
     createdBy: { name: 'Thanakorn W.', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces' },
     lastUpdated: '2026-08-19 12:00',
-    folder: 'Nurturing'
+    folder: 'กระตุ้นความสนใจ'
   }
 ];
 

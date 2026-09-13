@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { CRMGroup } from '@/types/crm';
-import { History, User, Clock, CheckCircle, ArrowRightCircle } from 'lucide-react';
+import { History, Clock } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ActivityLogViewProps {
   groups: CRMGroup[];
@@ -16,6 +17,7 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({ groups }) => {
     action: string;
     timestamp: string;
   }[] = [];
+  const { t } = useLanguage();
 
   groups.forEach((g) => {
     g.items.forEach((item) => {
@@ -37,10 +39,10 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({ groups }) => {
         <div className="flex items-center justify-between pb-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <History className="text-[#0073ea]" size={20} />
-            <h3 className="font-bold text-base text-gray-900">Board Activity & Audit Trail</h3>
+            <h3 className="font-bold text-base text-gray-900">{t('Board Activity & Audit Trail')}</h3>
           </div>
           <span className="text-xs text-gray-400">
-            {allActivities.length} Historical logs recorded
+            {allActivities.length} {t('logs_recorded')}
           </span>
         </div>
 
@@ -60,7 +62,7 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({ groups }) => {
                   </span>
                 </div>
                 <div className="text-gray-700 mt-1">
-                  {act.action}
+                  {t(act.action)}
                 </div>
                 <div className="mt-1.5 text-[11px] font-semibold text-[#0073ea] bg-blue-50/80 inline-block px-2 py-0.5 rounded">
                   📌 {act.dealName}
@@ -71,7 +73,7 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({ groups }) => {
 
           {allActivities.length === 0 && (
             <div className="py-12 text-center text-xs text-gray-400">
-              No activity logged yet.
+              {t('No activity logged yet.')}
             </div>
           )}
         </div>

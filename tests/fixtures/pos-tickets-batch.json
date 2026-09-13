@@ -1,0 +1,63 @@
+{
+  "fileName": "pos-tickets-batch.csv",
+  "uploadedBy": "supervisor_chidlom_01",
+  "businessUnit": "CENTRAL",
+  "totalRows": 5,
+  "tickets": [
+    {
+      "storeBranchId": "BRANCH-CHIDLOM-01",
+      "registerId": "REG-01",
+      "posTerminalId": "POS-TERM-01",
+      "ticketNumber": "TKT-2026-9081",
+      "amount": 27890.00,
+      "saleDateTime": "2026-09-13T03:30:00.000Z",
+      "transactionDate": "2026-09-13T03:30:00.000Z",
+      "quotationNumber": "QT-2026-1001",
+      "cashierId": "CASHIER-101"
+    },
+    {
+      "storeBranchId": "BRANCH-MUJI-SAMYAN-01",
+      "registerId": "REG-02",
+      "posTerminalId": "POS-TERM-04",
+      "ticketNumber": "TKT-2026-9082",
+      "amount": 1450.00,
+      "saleDateTime": "2026-09-13T03:35:00.000Z",
+      "transactionDate": "2026-09-13T03:35:00.000Z",
+      "quotationNumber": "QT-2026-1002",
+      "cashierId": "CASHIER-102"
+    },
+    {
+      "storeBranchId": "BRANCH-CHIDLOM-01",
+      "registerId": "REG-01",
+      "posTerminalId": "POS-TERM-01",
+      "ticketNumber": "TKT-2026-9083",
+      "amount": 500.00,
+      "saleDateTime": "2026-09-13T03:40:00.000Z",
+      "transactionDate": "2026-09-13T03:40:00.000Z",
+      "quotationNumber": "QT-NON-EXISTENT",
+      "cashierId": "CASHIER-101"
+    },
+    {
+      "storeBranchId": "BRANCH-SSP-CENTRALWORLD-01",
+      "registerId": "REG-03",
+      "posTerminalId": "POS-TERM-09",
+      "ticketNumber": "TKT-2026-9084",
+      "amount": 3200.00,
+      "saleDateTime": "2026-09-13T03:45:00.000Z",
+      "transactionDate": "2026-09-13T03:45:00.000Z",
+      "quotationNumber": "QT-2026-1003",
+      "cashierId": "CASHIER-103"
+    },
+    {
+      "storeBranchId": "BRANCH-B2S-CENTRALWORLD-01",
+      "registerId": "REG-01",
+      "posTerminalId": "POS-TERM-02",
+      "ticketNumber": "TKT-2026-9085",
+      "amount": 890.00,
+      "saleDateTime": "2026-09-13T03:50:00.000Z",
+      "transactionDate": "2026-09-13T03:50:00.000Z",
+      "quotationNumber": "QT-2026-1004",
+      "cashierId": "CASHIER-104"
+    }
+  ]
+}

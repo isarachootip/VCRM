@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PriorityType } from '@/types/crm';
 import { PRIORITY_CONFIGS } from '@/data/mockData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface PriorityPickerProps {
   currentPriority: PriorityType;
@@ -12,6 +13,7 @@ interface PriorityPickerProps {
 export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const currentConfig = PRIORITY_CONFIGS[currentPriority] || {
     label: currentPriority,
@@ -48,7 +50,7 @@ export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority,
           color: currentPriority === 'None' ? '#676879' : '#ffffff'
         }}
       >
-        <span className="truncate">{currentConfig.label}</span>
+        <span className="truncate">{t(currentConfig.label)}</span>
       </button>
 
       {isOpen && (
@@ -57,10 +59,10 @@ export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority,
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-[10px] uppercase font-semibold text-gray-400 px-2 py-1">
-            Priority
+            {t('Priority')}
           </div>
           {priorities.map((p) => {
-            const config = PRIORITY_CONFIGS[p];
+            const config = PRIORITY_CONFIGS[p] || { label: p, bgColor: '#c4c4c4' };
             const isSelected = p === currentPriority;
             return (
               <button
@@ -77,7 +79,7 @@ export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority,
                   color: p === 'None' ? '#4a5568' : '#ffffff'
                 }}
               >
-                <span>{config.label}</span>
+                <span>{t(config.label)}</span>
                 {isSelected && <span className="text-[10px]">✓</span>}
               </button>
             );

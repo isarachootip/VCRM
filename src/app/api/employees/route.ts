@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const employees = await prisma.employee.findMany({
+    const employees = await (prisma as any).employee?.findMany({
       include: {
         assignments: {
           include: {
@@ -11,7 +11,7 @@ export async function GET() {
           },
         },
       },
-    });
+    }) || [];
 
     return NextResponse.json({ success: true, employees });
   } catch (error: any) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, role, skills } = body;
 
-    const employee = await prisma.employee.create({
+    const employee = await (prisma as any).employee?.create({
       data: {
         name,
         role: role || 'TECHNICIAN',

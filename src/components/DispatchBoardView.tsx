@@ -5,28 +5,18 @@ import {
   Calendar as CalendarIcon, 
   Clock, 
   MapPin, 
-  UserCheck, 
   Truck, 
-  Wrench, 
-  Hammer, 
-  ShieldAlert, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Plus, 
-  Filter, 
-  Sparkles, 
   ChevronLeft, 
   ChevronRight,
   ExternalLink,
   Camera,
-  FileSignature,
   Package,
   Layers,
   Phone,
-  Eye
+  CheckCircle2
 } from 'lucide-react';
 import { CRMGroup, CRMItem, StatusType } from '@/types/crm';
-import { STATUS_CONFIGS, PRIORITY_CONFIGS } from '@/data/mockData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface DispatchBoardViewProps {
   groups: CRMGroup[];
@@ -108,9 +98,9 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
   onUpdateItemStatus,
   onSelectItem,
 }) => {
-  const [selectedDate, setSelectedDate] = useState<string>('2026-08-19');
   const [filterType, setFilterType] = useState<string>('ALL');
   const [activeJobPreview, setActiveJobPreview] = useState<CRMItem | null>(null);
+  const { t, language } = useLanguage();
 
   // Extract all service items across groups
   const allItems = groups.flatMap((g) => g.items.map(item => ({ item, groupId: g.id })));
@@ -125,15 +115,15 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
   const getServiceBadge = (type?: string) => {
     switch (type) {
       case 'DELIVERY':
-        return { label: '🚚 Delivery', bg: 'bg-amber-100 text-amber-800 border-amber-300' };
+        return { label: t('board-delivery'), bg: 'bg-amber-100 text-amber-800 border-amber-300' };
       case 'INSTALL':
-        return { label: '🛠️ Install', bg: 'bg-blue-100 text-blue-800 border-blue-300' };
+        return { label: t('board-install'), bg: 'bg-blue-100 text-blue-800 border-blue-300' };
       case 'RENOVATE':
-        return { label: '🏗️ Renovate', bg: 'bg-purple-100 text-purple-800 border-purple-300' };
+        return { label: t('board-renovate'), bg: 'bg-purple-100 text-purple-800 border-purple-300' };
       case 'MAINTAIN':
-        return { label: '⚡ Maintenance', bg: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
+        return { label: t('board-maintain'), bg: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
       default:
-        return { label: '📋 Service Job', bg: 'bg-gray-100 text-gray-800 border-gray-300' };
+        return { label: t('Service Job'), bg: 'bg-gray-100 text-gray-800 border-gray-300' };
     }
   };
 
@@ -153,6 +143,20 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
     }
   };
 
+  const formatCurrency = (val: number) => {
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
+  };
+
+  const getTodayLabel = () => {
+    if (language === 'th') return 'วันนี้: วันพุธที่ 19 ส.ค. 2026';
+    if (language === 'zh') return '今天: 2026年8月19日 星期三';
+    return 'Today: Wednesday, 19 Aug 2026';
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Top Banner & Control Bar */}
@@ -165,7 +169,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
             </button>
             <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
               <CalendarIcon size={15} className="text-[#0073ea]" />
-              <span>Today: Wednesday, 19 Aug 2026</span>
+              <span>{getTodayLabel()}</span>
             </div>
             <button className="text-gray-500 hover:text-gray-800 p-1">
               <ChevronRight size={16} />
@@ -175,21 +179,21 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
           <div className="flex items-center gap-2 text-xs">
             <span className="flex items-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              GPS Live Dispatch
+              {t('GPS Live Dispatch')}
             </span>
             <span className="text-gray-400">|</span>
-            <span className="text-gray-600 font-medium">{TECHNICIANS.length} Active Field Units</span>
+            <span className="text-gray-600 font-medium">{TECHNICIANS.length} {t('Active Field Units')}</span>
           </div>
         </div>
 
         {/* Right: Service Type Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto">
           {[
-            { id: 'ALL', label: 'All Services (ทั้งหมด)' },
-            { id: 'DELIVERY', label: '🚚 ส่งสินค้า (Delivery)' },
-            { id: 'INSTALL', label: '🛠️ ติดตั้ง (Install)' },
-            { id: 'RENOVATE', label: '🏗️ รีโนเวท (Renovate)' },
-            { id: 'MAINTAIN', label: '⚡ ซ่อมบำรุง (Maintenance)' },
+            { id: 'ALL', label: t('All Services') },
+            { id: 'DELIVERY', label: t('board-delivery') },
+            { id: 'INSTALL', label: t('board-install') },
+            { id: 'RENOVATE', label: t('board-renovate') },
+            { id: 'MAINTAIN', label: t('board-maintain') },
           ].map((pill) => (
             <button
               key={pill.id}
@@ -212,8 +216,8 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
         <div className="border-b border-[#e6e9ef] bg-gray-50/75 grid grid-cols-12 text-xs font-bold text-gray-700 select-none">
           {/* Technician / Resource Column */}
           <div className="col-span-3 p-3 border-r border-[#e6e9ef] flex items-center justify-between">
-            <span>FIELD TECHNICIAN & VEHICLE</span>
-            <span className="text-[10px] text-gray-400 font-normal">Skills / Vehicle</span>
+            <span>{t('FIELD TECHNICIAN & VEHICLE')}</span>
+            <span className="text-[10px] text-gray-400 font-normal">{t('Skills / Vehicle')}</span>
           </div>
 
           {/* Time Slots (08:00 - 18:00) */}
@@ -229,12 +233,10 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
         {/* Matrix Rows (Technicians) */}
         <div className="divide-y divide-[#e6e9ef]">
           {TECHNICIANS.map((tech, idx) => {
-            // Find jobs assigned to this technician (or mock distribution)
             const techJobs = filteredJobs.filter(({ item }) => {
               if (item.assignedTechnician) {
                 return item.assignedTechnician.toLowerCase().includes(tech.name.split(' ')[0].toLowerCase());
               }
-              // Fallback demo mapping by index
               return item.owner.name.includes(tech.name.split(' ')[0]) || (allItems.indexOf({ item, groupId: '' }) % TECHNICIANS.length === idx);
             });
 
@@ -258,7 +260,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                         tech.status === 'busy' ? 'bg-blue-100 text-blue-800' :
                         'bg-amber-100 text-amber-800'
                       }`}>
-                        {tech.status}
+                        {t(tech.status)}
                       </span>
                     </div>
 
@@ -287,17 +289,14 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
 
                 {/* 2. Timeline Grid & Assigned Jobs */}
                 <div className="col-span-9 grid grid-cols-11 relative divide-x divide-gray-100 bg-[#fafbfc]">
-                  {/* Subtle vertical hour guide lines */}
-                  {TIME_SLOTS.map((t) => (
-                    <div key={t} className="h-full border-r border-dashed border-gray-200/60 pointer-events-none"></div>
+                  {TIME_SLOTS.map((tSlot) => (
+                    <div key={tSlot} className="h-full border-r border-dashed border-gray-200/60 pointer-events-none"></div>
                   ))}
 
-                  {/* Render Assigned Job Cards Over Timeline */}
                   {techJobs.slice(0, 2).map(({ item, groupId }, jobIdx) => {
                     const badge = getServiceBadge(item.serviceType);
                     const cardTheme = getCardColor(item.serviceType);
                     
-                    // Simulated time placement
                     const startSlot = jobIdx === 0 ? (idx % 2 === 0 ? 1 : 2) : 6;
                     const spanSlots = item.durationHours || (item.serviceType === 'RENOVATE' ? 4 : item.serviceType === 'INSTALL' ? 3 : 2);
                     const timeRange = `${TIME_SLOTS[startSlot]} - ${TIME_SLOTS[Math.min(startSlot + spanSlots, TIME_SLOTS.length - 1)]}`;
@@ -330,10 +329,10 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                         <div className="flex items-center justify-between text-[10px] text-gray-600 mt-1">
                           <span className="truncate flex items-center gap-1">
                             <MapPin size={11} className="text-rose-500 shrink-0" />
-                            {item.address || item.companyName || 'Bangkok Site'}
+                            {item.address || item.companyName || t('Bangkok Site')}
                           </span>
                           <span className="font-bold text-gray-800">
-                            ฿{(item.dealValue || 0).toLocaleString()}
+                            {formatCurrency(item.dealValue || 0)}
                           </span>
                         </div>
                       </div>
@@ -357,7 +356,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                   <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/30 text-blue-200 border border-blue-400/40">
                     {getServiceBadge(activeJobPreview.serviceType).label}
                   </span>
-                  <span className="text-xs text-gray-300">Ticket ID: {activeJobPreview.id}</span>
+                  <span className="text-xs text-gray-300">{t('Ticket ID')}: {activeJobPreview.id}</span>
                 </div>
                 <h3 className="text-lg font-bold mt-1 text-white">{activeJobPreview.name}</h3>
                 <p className="text-xs text-gray-300 flex items-center gap-1 mt-1">
@@ -378,14 +377,14 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
               {/* 1. Customer & Time Info */}
               <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3.5 rounded-xl border border-gray-200 text-xs">
                 <div>
-                  <span className="text-gray-400 font-semibold">Customer Contact:</span>
+                  <span className="text-gray-400 font-semibold">{t('Customer Contact')}:</span>
                   <p className="font-bold text-gray-800 mt-0.5">{activeJobPreview.contactPerson} ({activeJobPreview.contactPhone || '081-234-5678'})</p>
                   <p className="text-gray-500">{activeJobPreview.contactEmail}</p>
                 </div>
                 <div>
-                  <span className="text-gray-400 font-semibold">Scheduled Appointment:</span>
+                  <span className="text-gray-400 font-semibold">{t('Scheduled Appointment')}:</span>
                   <p className="font-bold text-gray-800 mt-0.5">{activeJobPreview.expectedCloseDate} | {activeJobPreview.scheduledTime || '09:00 - 11:30'}</p>
-                  <p className="text-[#0073ea] font-medium">Assigned: {activeJobPreview.assignedTechnician || 'Somchai Prasert'}</p>
+                  <p className="text-[#0073ea] font-medium">{t('Assigned')}: {activeJobPreview.assignedTechnician || 'Somchai Prasert'}</p>
                 </div>
               </div>
 
@@ -393,37 +392,37 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-2 mb-2.5">
                   <Camera size={15} className="text-blue-600" />
-                  Proof of Work / Delivery (หลักฐานหน้างาน & ลายเซ็น)
+                  {t('Proof of Work')}
                 </h4>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="bg-slate-100 rounded-lg p-2.5 border border-dashed border-gray-300 text-center">
-                    <p className="text-[10px] font-bold text-gray-500 mb-1">📸 Before Work (ก่อนทำ)</p>
+                    <p className="text-[10px] font-bold text-gray-500 mb-1">{t('Before Work')}</p>
                     <div className="h-24 bg-slate-200 rounded flex items-center justify-center text-xs text-gray-400">
-                      Photo Captured
+                      {t('Photo Captured')}
                     </div>
                   </div>
                   <div className="bg-slate-100 rounded-lg p-2.5 border border-dashed border-gray-300 text-center">
-                    <p className="text-[10px] font-bold text-gray-500 mb-1">📸 After Work (หลังทำ)</p>
+                    <p className="text-[10px] font-bold text-gray-500 mb-1">{t('After Work')}</p>
                     <div className="h-24 bg-slate-200 rounded flex items-center justify-center text-xs text-gray-400">
-                      Photo Captured
+                      {t('Photo Captured')}
                     </div>
                   </div>
                   <div className="bg-slate-100 rounded-lg p-2.5 border border-dashed border-gray-300 text-center">
-                    <p className="text-[10px] font-bold text-gray-500 mb-1">✍️ E-Signature (ลูกค้าเซ็น)</p>
+                    <p className="text-[10px] font-bold text-gray-500 mb-1">{t('E-Signature')}</p>
                     <div className="h-24 bg-white rounded border border-gray-200 flex flex-col items-center justify-center text-[10px] text-gray-500 font-semibold p-1">
                       <span className="italic text-blue-700 font-serif text-sm">Thanaporn S.</span>
-                      <span className="text-[9px] text-emerald-600 mt-1">✓ Verified E-Sign</span>
+                      <span className="text-[9px] text-emerald-600 mt-1">{t('Verified E-Sign')}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* 3. Milestones (If Renovate) or Spare Parts (If Maintenance/Install) */}
+              {/* 3. Milestones or Spare Parts */}
               {activeJobPreview.serviceType === 'RENOVATE' ? (
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-2 mb-2">
                     <Layers size={15} className="text-purple-600" />
-                    Project Phase Milestones (งวดงานรีโนเวท)
+                    {t('Project Milestones')}
                   </h4>
                   <div className="space-y-2">
                     {[
@@ -438,7 +437,7 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                           <span className={`text-[10px] px-2 py-0.5 rounded-full ${
                             phase.status === 'Completed' ? 'bg-emerald-100 text-emerald-800' :
                             phase.status === 'In Progress' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-600'
-                          }`}>{phase.status} ({phase.progress}%)</span>
+                          }`}>{t(phase.status)} ({phase.progress}%)</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2 overflow-hidden">
                           <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: `${phase.progress}%` }}></div>
@@ -451,16 +450,16 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-2 mb-2">
                     <Package size={15} className="text-emerald-600" />
-                    Spare Parts & Materials Used (อะไหล่/วัสดุที่ใช้)
+                    {t('Spare Parts Used')}
                   </h4>
                   <div className="border border-gray-200 rounded-lg overflow-hidden text-xs">
                     <table className="w-full text-left">
                       <thead className="bg-gray-100 text-gray-600 font-semibold">
                         <tr>
-                          <th className="p-2">Item / Part Name</th>
-                          <th className="p-2 text-center">Qty</th>
-                          <th className="p-2 text-right">Unit Price</th>
-                          <th className="p-2 text-right">Total</th>
+                          <th className="p-2">{t('Item / Part Name')}</th>
+                          <th className="p-2 text-center">{t('Qty')}</th>
+                          <th className="p-2 text-right">{t('Unit Price')}</th>
+                          <th className="p-2 text-right">{t('Total')}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200">
@@ -492,24 +491,24 @@ export const DispatchBoardView: React.FC<DispatchBoardViewProps> = ({
                 className="flex items-center gap-1.5 text-xs font-bold text-[#0073ea] hover:underline"
               >
                 <ExternalLink size={14} />
-                Open Google Maps Live Route
+                {t('Open Google Maps')}
               </a>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveJobPreview(null)}
                   className="px-4 py-2 text-xs font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
                 >
-                  Close
+                  {t('close')}
                 </button>
                 <button
                   onClick={() => {
-                    alert('Job status updated to COMPLETED! Client notified via LINE OA.');
+                    alert(language === 'th' ? 'อัปเดตสถานะใบงานเป็น เสร็จสิ้น แล้ว! แจ้งเตือนลูกค้าผ่าน LINE OA เรียบร้อย' : language === 'zh' ? '工单状态已更新为已完成！已通过微信/LINE通知客户。' : 'Job status updated to COMPLETED! Client notified via LINE OA.');
                     setActiveJobPreview(null);
                   }}
                   className="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm flex items-center gap-1.5"
                 >
                   <CheckCircle2 size={15} />
-                  Approve & Close Job
+                  {t('Approve & Close Job')}
                 </button>
               </div>
             </div>

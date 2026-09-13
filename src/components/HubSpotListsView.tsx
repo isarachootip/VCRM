@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   Search, 
   Plus, 
@@ -38,6 +39,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
   onSelectList,
   onOpenCreateList
 }) => {
+  const { t } = useLanguage();
   const [lists, setLists] = useState<HubSpotList[]>(HUBSPOT_OBJECT_LISTS);
   const [activeTab, setActiveTab] = useState<'all' | 'contacts' | 'companies' | 'deals' | 'my'>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -169,12 +171,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               <span>/</span>
               <span className="text-slate-700">Contacts & Objects</span>
               <span>/</span>
-              <span className="text-orange-600 font-semibold">Lists</span>
+              <span className="text-orange-600 font-semibold">{t('lists_segments')}</span>
             </div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Lists</h1>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{t('lists_segments')}</h1>
               <span className="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200">
-                {lists.length} lists total
+                {lists.length} {t('items')}
               </span>
             </div>
           </div>
@@ -188,7 +190,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
             >
               <Download size={14} className="text-slate-500" />
-              <span>Export lists</span>
+              <span>{t('export_excel')}</span>
             </button>
 
             <button 
@@ -196,7 +198,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
             >
               <Upload size={14} className="text-slate-500" />
-              <span>Import</span>
+              <span>{t('import_excel')}</span>
             </button>
 
             <button
@@ -204,7 +206,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-sm transition-all active:scale-95"
             >
               <Plus size={15} strokeWidth={2.5} />
-              <span>Create list</span>
+              <span>{t('create')}</span>
               <ChevronDown size={12} className="opacity-80" />
             </button>
           </div>
@@ -220,7 +222,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                 : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
-            <span>All lists</span>
+            <span>{t('all_lists')}</span>
             <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">{lists.length}</span>
           </button>
 
@@ -233,7 +235,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             }`}
           >
             <Users size={13} />
-            <span>Contact lists</span>
+            <span>{t('contacts')}</span>
             <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'CONTACTS').length}
             </span>
@@ -248,7 +250,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             }`}
           >
             <Building2 size={13} />
-            <span>Company lists</span>
+            <span>{t('companies')}</span>
             <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'COMPANIES').length}
             </span>
@@ -263,7 +265,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             }`}
           >
             <Briefcase size={13} />
-            <span>Deal lists</span>
+            <span>{t('sales_pipeline')}</span>
             <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'DEALS').length}
             </span>
@@ -278,7 +280,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             }`}
           >
             <Pin size={13} />
-            <span>My lists</span>
+            <span>{t('My lists')}</span>
             <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.createdBy.name.includes('Thanakorn')).length}
             </span>
@@ -297,7 +299,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by list name, description, or owner..."
+                placeholder={t('search_lists')}
                 className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded shadow-xs focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 placeholder-slate-400"
               />
               {searchTerm && (
@@ -309,31 +311,31 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
 
             {/* Object Type Filter */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium hidden lg:inline">Object:</span>
+              <span className="text-slate-500 font-medium hidden lg:inline">{t('Object Type')}:</span>
               <select
                 value={selectedObjectType}
                 onChange={(e) => setSelectedObjectType(e.target.value)}
                 className="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500"
               >
-                <option value="ALL">All objects</option>
-                <option value="CONTACTS">Contacts</option>
-                <option value="COMPANIES">Companies</option>
-                <option value="DEALS">Deals</option>
-                <option value="TICKETS">Tickets</option>
+                <option value="ALL">{t('All objects') || 'All objects'}</option>
+                <option value="CONTACTS">{t('contacts')}</option>
+                <option value="COMPANIES">{t('companies')}</option>
+                <option value="DEALS">{t('sales_pipeline')}</option>
+                <option value="TICKETS">{t('Tickets') || 'Tickets'}</option>
               </select>
             </div>
 
             {/* List Type Filter */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium hidden lg:inline">Type:</span>
+              <span className="text-slate-500 font-medium hidden lg:inline">{t('List Type')}:</span>
               <select
                 value={selectedListType}
                 onChange={(e) => setSelectedListType(e.target.value)}
                 className="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500"
               >
-                <option value="ALL">All types</option>
-                <option value="ACTIVE">Active (Dynamic)</option>
-                <option value="STATIC">Static (Snapshot)</option>
+                <option value="ALL">{t('All types') || 'All types'}</option>
+                <option value="ACTIVE">{t('Active') || 'Active'}</option>
+                <option value="STATIC">{t('Static') || 'Static'}</option>
               </select>
             </div>
           </div>
@@ -386,33 +388,33 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                 className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
               >
                 <div className="flex items-center gap-1.5">
-                  <span>Name</span>
+                  <span>{t('col_item_name')}</span>
                   <ArrowUpDown size={12} className="text-slate-400" />
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Object Type</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">List Type</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Object Type')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('List Type')}</th>
               <th 
                 onClick={() => handleSort('size')}
                 className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
               >
                 <div className="flex items-center gap-1.5">
-                  <span>Size (Records)</span>
+                  <span>{t('records')}</span>
                   <ArrowUpDown size={12} className="text-slate-400" />
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Folder</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Created by</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Folder') || 'Folder'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Created by') || 'Created by'}</th>
               <th 
                 onClick={() => handleSort('lastUpdated')}
                 className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
               >
                 <div className="flex items-center gap-1.5">
-                  <span>Last updated</span>
+                  <span>{t('last_updated')}</span>
                   <ArrowUpDown size={12} className="text-slate-400" />
                 </div>
               </th>
-              <th className="py-3 px-4 text-right">Actions</th>
+              <th className="py-3 px-4 text-right">{t('col_action')}</th>
             </tr>
           </thead>
 

@@ -1,4 +1,5 @@
-// Prisma Schema for OmniService CRM
+// Authoritative Prisma Schema for Central Chat & Shop (Omnichannel Social Commerce CRM)
+// Covers Phase 0 (R1–R6) and 42-Feature CRM Roadmap
 
 generator client {
   provider = "prisma-client-js"
@@ -9,104 +10,812 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// =======================
-// Service CRM Models
-// =======================
+// ==========================================
+// 1. ENUMS
+// ==========================================
 
-model Customer {
-  id        String      @id @default(uuid())
-  name      String
-  phone     String?
-  email     String?
-  address   String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  jobs      JobTicket[]
-}
-
-model Employee {
-  id          String          @id @default(uuid())
-  name        String
-  role        Role
-  skills      String[]        // e.g., ["AC_REPAIR", "PLUMBING"]
-  createdAt   DateTime        @default(now())
-  assignments JobAssignment[]
-}
-
-model JobTicket {
-  id             String            @id @default(uuid())
-  customerId     String
-  serviceType    ServiceType
-  status         JobStatus         @default(PENDING)
-  scheduledDate  DateTime?
-  description    String?
-  totalAmount    Float?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-
-  customer       Customer          @relation(fields: [customerId], references: [id])
-  assignments    JobAssignment[]
-  milestones     ProjectMilestone[]
-  materials      JobMaterial[]
-}
-
-model JobAssignment {
-  id          String    @id @default(uuid())
-  jobId       String
-  employeeId  String
-  startTime   DateTime?
-  endTime     DateTime?
-
-  job         JobTicket @relation(fields: [jobId], references: [id])
-  employee    Employee  @relation(fields: [employeeId], references: [id])
-}
-
-model ProjectMilestone {
-  id           String   @id @default(uuid())
-  jobId        String
-  phaseName    String
-  status       String
-  expectedDate DateTime?
-
-  job          JobTicket @relation(fields: [jobId], references: [id])
-}
-
-model Inventory {
-  id          String        @id @default(uuid())
-  itemName    String
-  stockQty    Int           @default(0)
-  unitPrice   Float         @default(0)
-  materials   JobMaterial[]
-}
-
-model JobMaterial {
-  id          String    @id @default(uuid())
-  jobId       String
-  inventoryId String
-  quantityUsed Int
-
-  job         JobTicket @relation(fields: [jobId], references: [id])
-  inventory   Inventory @relation(fields: [inventoryId], references: [id])
-}
-
-enum Role {
+enum UserRole {
   ADMIN
-  DISPATCHER
-  TECHNICIAN
-  DRIVER
+  SUPERVISOR
+  AGENT
+  AUDITOR
 }
 
-enum ServiceType {
-  DELIVERY
-  INSTALL
-  RENOVATE
-  MAINTAIN
+enum PresenceStatus {
+  ONLINE
+  OFFLINE
+  LUNCH
+  BREAK
 }
 
-enum JobStatus {
-  PENDING
-  SCHEDULED
+enum ChannelType {
+  LINE
+  FACEBOOK
+  INSTAGRAM
+  WEB
+}
+
+enum BusinessUnit {
+  CENTRAL
+  CDS
+  CENTRAL_BEAUTY_CLUB
+  MUJI
+  SSP
+  B2S
+}
+
+enum CaseStatus {
+  OPEN
   IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum PriorityLevel {
+  CRITICAL
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  VIDEO
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum MessageAuthorType {
+  CUSTOMER
+  AGENT
+  SYSTEM
+  BOT
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+  INTERNAL_ONLY
+}
+
+enum SurveyDispatchStatus {
+  PENDING
+  DISPATCHED
+  SENT
+  FAILED
+  FAILED_RETRY
+  EXEMPT
+  SKIPPED
+  RESPONDED
+}
+
+enum QuotationStatus {
+  DRAFT
+  PENDING_PAYMENT
+  PAID
+  PRINTED
   COMPLETED
+  VOID
+  CANCEL
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  PROMPTPAY
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING_VERIFICATION
+  PAID
+  DISCREPANCY
+  REFUNDED
+  FAILED
+  EXPIRED
+}
+
+enum POSTicketStatus {
+  UNRECONCILED
+  UNMATCHED
+  RECONCILED
+  DISCREPANCY
+  MANUALLY_MATCHED
+}
+
+enum QueueTeam {
+  CHAT_AND_SHOP
+  E_ORDERING
+  SOCIAL_MEDIA
+}
+
+enum RoutingAlgorithm {
+  LEAST_ACTIVE
+  MOST_AVAILABLE
+}
+
+enum SlaPendingFlag {
+  NONE
+  PENDING_15M
+  PENDING_30M
+}
+
+enum ShippingCarrier {
+  KERRY
+  FLASH
+  CENTRAL_EXPRESS
+}
+
+enum ShippingStatus {
+  PENDING
+  LABEL_GENERATED
+  PACKED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  DELIVERY_FAILED
   CANCELLED
 }
+
+enum ShippingLabelFormat {
+  A4
+  THERMAL_4X6
+}
+
+enum PromotionDiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+// ==========================================
+// 2. USER & WORKFORCE MANAGEMENT
+// ==========================================
+
+model User {
+  id                 String               @id @default(uuid())
+  email              String               @unique
+  name               String
+  role               UserRole             @default(AGENT)
+  businessUnits      BusinessUnit[]
+  presence           PresenceStatus       @default(OFFLINE)
+  maxChatCapacity    Int                  @default(5)
+  maxConcurrentChats Int                  @default(5)
+  activeChatCount    Int                  @default(0)
+  lastAssignedAt     DateTime?
+  isVipEligible      Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  agentProfile       AgentProfile?
+  assignedCases      Case[]               @relation("CaseOwner")
+  sentMessages       Message[]            @relation("MessageAuthor")
+  auditLogs          AuditLog[]           @relation("AuditActor")
+  assignedQueues     QueueMember[]
+  csatResponses      CSATResponse[]       @relation("AgentCSAT")
+  verifiedPayments   PaymentTransaction[] @relation("PaymentVerifier")
+
+  @@index([presence])
+  @@index([role])
+  @@index([isVipEligible])
+}
+
+model AgentProfile {
+  id                 String         @id @default(uuid())
+  userId             String         @unique
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role               UserRole       @default(AGENT)
+  presence           PresenceStatus @default(OFFLINE)
+  maxConcurrentChats Int            @default(5)
+  activeChatCount    Int            @default(0)
+  lastAssignedAt     DateTime?
+  isVipEligible      Boolean        @default(false)
+  breakExpectedEndAt DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([presence])
+  @@index([role])
+  @@index([isVipEligible])
+}
+
+model Queue {
+  id               String           @id @default(uuid())
+  name             String           @unique
+  code             String           @unique
+  businessUnit     BusinessUnit
+  team             QueueTeam        @default(CHAT_AND_SHOP)
+  routingAlgorithm RoutingAlgorithm @default(LEAST_ACTIVE)
+  description      String?
+  slaResponseMin   Int              @default(15)
+  slaResolveMin    Int              @default(120)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  members          QueueMember[]
+  cases            Case[]
+  surveyConfigs    SurveyConfig[]
+
+  @@index([businessUnit])
+  @@index([team])
+}
+
+model QueueMember {
+  id        String   @id @default(uuid())
+  queueId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  queue     Queue    @relation(fields: [queueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([queueId, userId])
+  @@index([queueId])
+  @@index([userId])
+}
+
+// ==========================================
+// 3. CUSTOMER & SESSION TRAFFIC (R1)
+// ==========================================
+
+model Customer {
+  id            String           @id @default(uuid())
+  externalId    String           @unique // LINE Uid, FB PSID, or IG senderId
+  lineUserId    String?          @unique
+  fbPsid        String?          @unique
+  igUsername    String?
+  channel       ChannelType
+  displayName   String
+  name          String?
+  avatarUrl     String?
+  phone         String?
+  email         String?
+  the1CardNumber String?
+  the1Mobile     String?
+  the1Points     Int?             @default(0)
+  the1Tier       String?          @default("CLASSIC")
+  the1SyncedAt   DateTime?
+  isVip          Boolean          @default(false)
+  vipTier        String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  cases         Case[]
+  sessions      SessionTraffic[]
+  quotations    Quotation[]
+  csatResponses CSATResponse[]
+
+  @@index([externalId, channel])
+  @@index([lineUserId])
+  @@index([fbPsid])
+  @@index([the1CardNumber])
+  @@index([the1Mobile])
+  @@index([isVip])
+}
+
+model SessionTraffic {
+  id             String       @id @default(uuid())
+  sessionId      String       @unique
+  customerId     String
+  channel        ChannelType
+  inboundChannel ChannelType?
+  inboundSource  String       // e.g. "LINE_OA_RICH_MENU", "FB_AD", "IG_DM"
+  pageId         String
+  businessUnit   BusinessUnit
+  startDateTime  DateTime     @default(now())
+  endDateTime    DateTime?
+  createdAt      DateTime     @default(now())
+
+  customer       Customer     @relation(fields: [customerId], references: [id])
+  cases          Case[]
+
+  @@index([sessionId])
+  @@index([customerId])
+  @@index([businessUnit])
+}
+
+// ==========================================
+// 4. CASE & OPPORTUNITY MANAGEMENT (R3)
+// ==========================================
+
+model Case {
+  id                 String           @id @default(uuid())
+  caseNumber         String           @unique // e.g. CAS-2026-0001
+  title              String
+  businessUnit       BusinessUnit
+  channel            ChannelType
+  pageId             String
+  page               String?          // e.g. "Central Beauty Club", "Muji Thailand"
+  status             CaseStatus       @default(OPEN)
+  priority           PriorityLevel    @default(MEDIUM)
+  queueId            String
+  ownerId            String?
+  customerId         String
+  sessionId          String?
+  resolutionCategory String?
+  resolutionNotes    String?
+  firstResponseAt    DateTime?
+  resolvedAt         DateTime?
+  closedAt           DateTime?
+
+  // Specialized E-Ordering (EOR) fields
+  eorTicketNumber      String?
+  sellingStoreName     String?
+  sellingStoreStaffId  String?
+  eorMetadata          Json?
+
+  // SLA & Monitoring fields
+  lastCustomerMessageAt DateTime?
+  lastAgentMessageAt    DateTime?
+  slaPendingFlag        SlaPendingFlag   @default(NONE)
+  slaBreachedAt         DateTime?
+  closureReason         String?
+  idleWarningSentAt     DateTime?
+  isVip                 Boolean          @default(false)
+  queuePriority         Int              @default(0)
+
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  queue              Queue            @relation(fields: [queueId], references: [id])
+  owner              User?            @relation("CaseOwner", fields: [ownerId], references: [id])
+  customer           Customer         @relation(fields: [customerId], references: [id])
+  sessionTraffic     SessionTraffic?  @relation(fields: [sessionId], references: [sessionId])
+  messages           Message[]
+  auditLogs          AuditLog[]
+  surveyDispatches   SurveyDispatch[]
+  csatResponse       CSATResponse?
+  quotations         Quotation[]
+
+  @@index([status])
+  @@index([businessUnit])
+  @@index([queueId])
+  @@index([ownerId])
+  @@index([sessionId])
+  @@index([customerId])
+  @@index([eorTicketNumber])
+  @@index([slaPendingFlag])
+  @@index([isVip])
+  @@index([queuePriority])
+  @@index([idleWarningSentAt])
+}
+
+// ==========================================
+// 5. MULTI-FORMAT MESSAGING & NOTES (R2)
+// ==========================================
+
+model Message {
+  id             String             @id @default(uuid())
+  messageId      String?            @unique // Unique external/Zwiz message identifier
+  caseId         String
+  authorId       String?
+  authorType     MessageAuthorType?
+  senderId       String?
+  senderName     String?
+  direction      MessageDirection?  @default(INBOUND)
+  type           MessageType        @default(TEXT)
+  content        String?            @db.Text
+  mediaUrl       String?
+  fileName       String?
+  mimeType       String?
+  fileSize       Int?
+  mediaMetadata  Json?              // { sizeBytes, mimeType, width, height, fileName }
+  isInternal     Boolean            @default(false)
+  deliveryStatus DeliveryStatus     @default(PENDING)
+  zwizMessageId  String?
+  createdAt      DateTime           @default(now())
+
+  case           Case               @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  author         User?              @relation("MessageAuthor", fields: [authorId], references: [id])
+
+  @@index([caseId])
+  @@index([isInternal])
+  @@index([createdAt])
+  @@index([messageId])
+  @@index([authorId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  caseId     String?
+  actorId    String?
+  actorName  String?
+  action     String?  // e.g. "STATUS_CHANGE", "ASSIGNMENT", "NOTE_ADDED"
+  actionType String?  // Compatibility alias
+  entityType String?  // e.g. "Case", "Quotation", "PaymentTransaction"
+  entityId   String?  // Target record identifier
+  details    String?  @db.Text
+  field      String?
+  oldValue   String?  @db.Text
+  newValue   String?  @db.Text
+  timestamp  DateTime @default(now())
+
+  case       Case?    @relation(fields: [caseId], references: [id], onDelete: SetNull)
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id])
+
+  @@index([caseId])
+  @@index([timestamp])
+  @@index([entityType, entityId])
+  @@index([actorId])
+}
+
+// ==========================================
+// 6. QUALTRICS CSAT SURVEY INTEGRATION (R4)
+// ==========================================
+
+model SurveyConfig {
+  id                String       @id @default(uuid())
+  queueId           String
+  businessUnit      BusinessUnit
+  qualtricsSurveyId String
+  surveyId          String?      // Convenience alias for surveyId
+  isActive          Boolean      @default(true)
+  cooldownHours     Int          @default(24) // Do not survey same customer within 24h
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  queue             Queue        @relation(fields: [queueId], references: [id])
+
+  @@unique([queueId, businessUnit])
+  @@index([businessUnit])
+}
+
+model SurveyDispatch {
+  id             String               @id @default(uuid())
+  caseId         String
+  surveyId       String
+  distributionId String?
+  status         SurveyDispatchStatus @default(PENDING)
+  dispatchedAt   DateTime?
+  errorMessage   String?
+  retryCount     Int                  @default(0)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  case           Case                 @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@index([status])
+  @@index([surveyId])
+}
+
+model CSATResponse {
+  id                  String        @id @default(uuid())
+  caseId              String        @unique
+  responseId          String?       @unique // Unique response identifier
+  qualtricsResponseId String?       @unique
+  distributionId      String?
+  customerId          String?
+  agentId             String?
+  businessUnit        BusinessUnit?
+  csatScore           Int           // 1 to 5
+  npsScore            Int?          // 0 to 10
+  cesScore            Int?          // 1 to 5
+  comment             String?       @db.Text
+  feedbackComments    String?       @db.Text
+  submittedAt         DateTime?
+  completedAt         DateTime?     @default(now())
+  createdAt           DateTime      @default(now())
+
+  case                Case          @relation(fields: [caseId], references: [id])
+  customer            Customer?     @relation(fields: [customerId], references: [id])
+  agent               User?         @relation("AgentCSAT", fields: [agentId], references: [id])
+
+  @@index([csatScore])
+  @@index([agentId])
+  @@index([businessUnit])
+  @@index([distributionId])
+  @@index([customerId])
+}
+
+// ==========================================
+// 7. QUOTATION & E-ORDERING (R5 - Phase 1)
+// ==========================================
+
+model Quotation {
+  id                 String               @id @default(uuid())
+  quotationNumber    String               @unique // e.g. QT-2026-0001
+  caseId             String
+  customerId         String
+  businessUnit       BusinessUnit
+  status             QuotationStatus      @default(DRAFT)
+  subtotal           Decimal              @db.Decimal(12, 2)
+  discountTotal      Decimal              @default(0) @db.Decimal(12, 2)
+  vatAmount          Decimal              @db.Decimal(12, 2) // 7% VAT
+  grandTotal         Decimal              @db.Decimal(12, 2)
+  totalAmount        Decimal?             @db.Decimal(12, 2) // Total alias
+  paymentLinkUrl     String?
+  issuedAt           DateTime?
+  expiresAt          DateTime?            // 24h expiration timestamp
+  printedAt          DateTime?
+  isLocked           Boolean              @default(false)
+  voidReason         String?
+  printCount         Int                  @default(0)
+  printedById        String?
+  the1CardNumber     String?
+  the1PointsEarned   Int?                 @default(0)
+  the1PointsRedeemed Int?                 @default(0)
+  the1Discount       Float?               @default(0)
+  createdById        String?
+  posTicketNumber    String?
+  isReconciled       Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  case               Case                 @relation(fields: [caseId], references: [id])
+  customer           Customer             @relation(fields: [customerId], references: [id])
+  items              QuotationItem[]
+  payments           PaymentTransaction[]
+  posTickets         POSTicket[]          @relation("QuotationPosTicket")
+  matchedPosTickets  POSTicket[]          @relation("MatchedQuotationPosTicket")
+  shippingFulfillment ShippingFulfillment?
+
+  @@index([quotationNumber])
+  @@index([status])
+  @@index([caseId])
+  @@index([expiresAt])
+  @@index([customerId])
+  @@index([businessUnit])
+}
+
+model QuotationItem {
+  id          String    @id @default(uuid())
+  quotationId String
+  sku         String
+  productName String
+  quantity    Int       @default(1)
+  unitPrice   Decimal   @db.Decimal(12, 2)
+  discount    Decimal   @default(0) @db.Decimal(12, 2)
+  totalPrice  Decimal   @db.Decimal(12, 2)
+  createdAt   DateTime  @default(now())
+
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId])
+  @@index([sku])
+}
+
+// ==========================================
+// 8. PAYMENT STATUS RECONCILIATION (R5 - Phase 2)
+// ==========================================
+
+model PaymentTransaction {
+  id                String         @id @default(uuid())
+  transactionNumber String?        @unique
+  quotationId       String
+  businessUnit      BusinessUnit?
+  paymentMethod     PaymentMethod
+  amount            Decimal        @db.Decimal(12, 2)
+  status            PaymentStatus  @default(UNPAID)
+  referenceNo       String?
+  gatewayReference  String?        // 2C2P/K-Bank transaction ref
+  slipUrl           String?
+  slipVerifiedAt    DateTime?
+  verifiedById      String?
+  discrepancyNote   String?
+  paidAt            DateTime?
+  currency          String         @default("THB")
+  merchantId        String?
+  channel           String?
+  rawPayload        String?        @db.Text
+  expectedAmount    Float?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  quotation         Quotation      @relation(fields: [quotationId], references: [id])
+  verifiedBy        User?          @relation("PaymentVerifier", fields: [verifiedById], references: [id])
+
+  @@index([quotationId])
+  @@index([status])
+  @@index([transactionNumber])
+  @@index([businessUnit])
+  @@index([verifiedById])
+}
+
+// ==========================================
+// 9. POS TICKET RECONCILIATION (R5 - Phase 3)
+// ==========================================
+
+model POSBatchUpload {
+  id              String      @id @default(uuid())
+  fileName        String
+  uploadedBy      String
+  businessUnit    String      @default("Central")
+  status          String      @default("COMPLETED")
+  totalRows       Int         @default(0)
+  matchedRows     Int         @default(0)
+  discrepancyRows Int         @default(0)
+  errorRows       Int         @default(0)
+  summary         String?     @db.Text
+  createdAt       DateTime    @default(now())
+
+  tickets         POSTicket[]
+}
+
+model POSTicket {
+  id                 String          @id @default(uuid())
+  ticketNumber       String          // Cash register receipt ID
+  quotationId        String?
+  matchedQuotationId String?
+  registerId         String?
+  cashierId          String?
+  storeBranchId      String?         // e.g. "BRANCH-CHIDLOM-01"
+  posTerminalId      String?         // Terminal ID
+  amount             Decimal         @db.Decimal(12, 2)
+  expectedAmount     Float?
+  amountDiff         Float?
+  discrepancyReason  String?
+  saleDateTime       DateTime?       @default(now())
+  reconciledAt       DateTime?
+  reconciledById     String?
+  status             POSTicketStatus @default(UNRECONCILED)
+  batchUploadId      String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  quotation          Quotation?      @relation("QuotationPosTicket", fields: [quotationId], references: [id])
+  matchedQuotation   Quotation?      @relation("MatchedQuotationPosTicket", fields: [matchedQuotationId], references: [id])
+  batchUpload        POSBatchUpload? @relation(fields: [batchUploadId], references: [id])
+
+  @@unique([storeBranchId, registerId, ticketNumber])
+  @@index([status])
+  @@index([quotationId])
+  @@index([matchedQuotationId])
+  @@index([ticketNumber])
+  @@index([batchUploadId])
+}
+
+// ==========================================
+// 10. SHIPPING FULFILLMENT & LOGISTICS (R4 - Phase 2)
+// ==========================================
+
+model ShippingFulfillment {
+  id              String              @id @default(uuid())
+  quotationId     String              @unique
+  carrier         ShippingCarrier
+  trackingNumber  String              @unique
+  recipientName   String
+  recipientPhone  String
+  shippingAddress String
+  postalCode      String
+  weightKg        Float               @default(1.0)
+  status          ShippingStatus      @default(PENDING)
+  labelFormat     ShippingLabelFormat @default(THERMAL_4X6)
+  labelUrl        String?
+  trackingUrl     String?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  quotation       Quotation           @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  trackingEvents  ShippingTrackingEvent[]
+
+  @@index([trackingNumber])
+  @@index([status])
+  @@index([carrier])
+}
+
+// ==========================================
+// 11. PROMOTION MANAGEMENT HUB (R6 - Phase 2)
+// ==========================================
+
+model Promotion {
+  id            String                @id @default(uuid())
+  code          String                @unique
+  name          String
+  description   String?
+  discountType  PromotionDiscountType
+  discountValue Float
+  bannerUrl     String?
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean               @default(true)
+  applicableBUs String[]
+  metadata      Json?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  @@index([code])
+  @@index([isActive])
+  @@index([startDate, endDate])
+}
+
+// ==========================================
+// 12. SHIPPING TRACKING TIMELINE (R2 - Phase 3)
+// ==========================================
+
+model ShippingTrackingEvent {
+  id                    String              @id @default(uuid())
+  shippingFulfillmentId String
+  trackingNumber        String
+  carrier               ShippingCarrier
+  status                ShippingStatus
+  statusCode            String?
+  location              String?
+  description           String?
+  estimatedDelivery     DateTime?
+  timestamp             DateTime            @default(now())
+  rawPayload            Json?
+  metadata              Json?
+  createdAt             DateTime            @default(now())
+
+  shippingFulfillment   ShippingFulfillment @relation(fields: [shippingFulfillmentId], references: [id], onDelete: Cascade)
+
+  @@index([shippingFulfillmentId])
+  @@index([trackingNumber])
+  @@index([status])
+  @@index([timestamp])
+}
+
+// ==========================================
+// 13. ENTERPRISE OPERATIONS PORTAL HUB (R4 - Phase 3)
+// ==========================================
+
+model PortalLink {
+  id            String   @id @default(uuid())
+  title         String
+  description   String?
+  url           String
+  icon          String?
+  category      String?  @default("GENERAL")
+  businessUnits String[]
+  allowedRoles  String[] @default([])
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdBy     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([order])
+  @@index([category])
+}
+
+// ==========================================
+// 14. AGENT BREAK SESSIONS & SHIFTS (R3 - Phase 3)
+// ==========================================
+
+model AgentBreakSession {
+  id             String         @id @default(uuid())
+  agentId        String
+  status         PresenceStatus
+  startedAt      DateTime       @default(now())
+  expectedEndAt  DateTime
+  endedAt        DateTime?
+  isAutoReverted Boolean        @default(false)
+  overrunSeconds Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+
+  @@index([agentId])
+  @@index([status])
+  @@index([startedAt])
+  @@index([expectedEndAt])
+}
+
+model AgentShift {
+  id                    String   @id @default(uuid())
+  agentId               String
+  date                  String
+  shiftStart            DateTime
+  shiftEnd              DateTime
+  scheduledBreakMinutes Int      @default(75)
+  actualBreakMinutes    Int      @default(0)
+  overrunMinutes        Int      @default(0)
+  adherenceScore        Float    @default(100.0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
+
+  @@index([agentId])
+  @@index([date])
+}
+

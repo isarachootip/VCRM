@@ -1,0 +1,86 @@
+{
+  "centralVip5Star": {
+    "eventId": "evt_csat_cds_001",
+    "surveyId": "SV_qualtrics_central_vip",
+    "responseId": "R_qualtrics_sub_001",
+    "distributionId": "EMD_dist_cds_001",
+    "caseId": "case_cds_vip_001",
+    "submittedAt": "2026-09-12T14:52:15.000Z",
+    "metrics": {
+      "csatScore": 5,
+      "npsScore": 10,
+      "cesScore": 1
+    },
+    "feedback": {
+      "comment": "คุณ Sarah ให้บริการรวดเร็วมาก เช็คสต็อกชิดลมและจองสินค้าใน VIP vault ให้ทันที ประทับใจมากครับ"
+    },
+    "embeddedData": {
+      "businessUnit": "Central",
+      "queueId": "queue_central_luxury_vip",
+      "agentId": "agent_sarah_01"
+    }
+  },
+  "beautyClub4Star": {
+    "eventId": "evt_csat_beauty_002",
+    "surveyId": "SV_qualtrics_beauty_club",
+    "responseId": "R_qualtrics_sub_002",
+    "distributionId": "EMD_dist_beauty_002",
+    "caseId": "case_beauty_002",
+    "submittedAt": "2026-09-12T14:53:00.000Z",
+    "metrics": {
+      "csatScore": 4,
+      "npsScore": 9,
+      "cesScore": 2
+    },
+    "feedback": {
+      "comment": "คำแนะนำโทนเนอร์ละเอียดดีค่ะ มีคูปองลด 10% ให้ด้วย รอรับสินค้าค่ะ"
+    },
+    "embeddedData": {
+      "businessUnit": "Central Beauty Club",
+      "queueId": "queue_beauty_advisory",
+      "agentId": "agent_ploi_02"
+    }
+  },
+  "muji5Star": {
+    "eventId": "evt_csat_muji_003",
+    "surveyId": "SV_qualtrics_muji_standard",
+    "responseId": "R_qualtrics_sub_003",
+    "distributionId": "EMD_dist_muji_003",
+    "caseId": "case_muji_003",
+    "submittedAt": "2026-09-12T15:05:00.000Z",
+    "metrics": {
+      "csatScore": 5,
+      "npsScore": 10,
+      "cesScore": 1
+    },
+    "feedback": {
+      "comment": "Fast response and clear PDF guide for Oak Dining Table assembly."
+    },
+    "embeddedData": {
+      "businessUnit": "Muji",
+      "queueId": "queue_muji_furniture",
+      "agentId": "agent_ken_03"
+    }
+  },
+  "lowScoreAlert1Star": {
+    "eventId": "evt_csat_alert_004",
+    "surveyId": "SV_qualtrics_ssp_standard",
+    "responseId": "R_qualtrics_sub_004",
+    "distributionId": "EMD_dist_ssp_004",
+    "caseId": "case_ssp_004",
+    "submittedAt": "2026-09-12T15:30:00.000Z",
+    "metrics": {
+      "csatScore": 1,
+      "npsScore": 2,
+      "cesScore": 5
+    },
+    "feedback": {
+      "comment": "ส่งสินค้าผิดไซส์และติดต่อเจ้าหน้าที่ยากมาก ต้องการเปลี่ยนของด่วนครับ"
+    },
+    "embeddedData": {
+      "businessUnit": "SSP",
+      "queueId": "queue_ssp_specialist",
+      "agentId": "agent_boy_04"
+    }
+  }
+}

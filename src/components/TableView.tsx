@@ -8,15 +8,12 @@ import {
   MessageSquare, 
   MoreHorizontal, 
   Trash2,
-  Zap,
-  ArrowRight,
-  CheckCircle2,
-  Building,
-  UserCheck
+  Zap
 } from 'lucide-react';
 import { CRMGroup, CRMItem, CRMBoard } from '@/types/crm';
 import { StatusPicker } from './StatusPicker';
 import { PriorityPicker } from './PriorityPicker';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface TableViewProps {
   currentBoard: CRMBoard;
@@ -44,9 +41,14 @@ export const TableView: React.FC<TableViewProps> = ({
   const [newRowInputs, setNewRowInputs] = useState<Record<string, string>>({});
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroupTitle, setNewGroupTitle] = useState('');
+  const { t, language } = useLanguage();
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
   };
 
   const handleAddNewItemSubmit = (groupId: string) => {
@@ -95,16 +97,16 @@ export const TableView: React.FC<TableViewProps> = ({
                   className="font-bold text-sm tracking-tight"
                   style={{ color: group.color }}
                 >
-                  {group.title}
+                  {t(group.title) || group.title}
                 </h2>
                 <span className="text-xs text-gray-400 font-normal">
-                  ({group.items.length} {group.items.length === 1 ? 'record' : 'records'})
+                  ({group.items.length} {t('items')})
                 </span>
               </div>
 
               <div className="flex items-center gap-4 text-xs">
                 <span className="font-semibold text-gray-600">
-                  Total Value: <span className="text-emerald-600 font-bold">{formatCurrency(totalValue)}</span>
+                  {t('total_pipeline_value')}: <span className="text-emerald-600 font-bold">{formatCurrency(totalValue)}</span>
                 </span>
                 <button 
                   onClick={(e) => {
@@ -130,42 +132,42 @@ export const TableView: React.FC<TableViewProps> = ({
                       
                       {/* Dynamic Column Headers */}
                       <th className="px-4 py-2 min-w-[240px] font-semibold text-gray-600">
-                        {isLeadsBoard ? 'Lead / Opportunity' : isAccountsBoard ? 'Company / Account' : isContactsBoard ? 'Contact Name' : isGrowthBoard ? 'Sales Representative' : 'Deal / Account'}
+                        {t(isLeadsBoard ? 'Lead / Opportunity' : isAccountsBoard ? 'Company / Account' : isContactsBoard ? 'Contact Name' : isGrowthBoard ? 'Sales Representative' : 'Deal / Account')}
                       </th>
 
                       {isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">Job Title / Role</th>
+                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">{t('Job Title / Role')}</th>
                       )}
 
                       {isAccountsBoard && (
-                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">Industry</th>
+                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">{t('Industry')}</th>
                       )}
 
                       <th className="px-3 py-2 min-w-[140px] font-semibold text-gray-600 text-center">
-                        {isAccountsBoard ? 'Account Tier' : isContactsBoard ? 'Role Type' : 'Stage / Status'}
+                        {t(isAccountsBoard ? 'Account Tier' : isContactsBoard ? 'Role Type' : 'Stage / Status')}
                       </th>
 
                       <th className="px-3 py-2 min-w-[130px] font-semibold text-gray-600 text-right">
-                        {isGrowthBoard ? 'Target Quota (THB)' : 'Value (THB)'}
+                        {t(isGrowthBoard ? 'Target Quota (THB)' : 'Value')}
                       </th>
 
                       {!isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[140px] font-semibold text-gray-600">Primary Contact</th>
+                        <th className="px-3 py-2 min-w-[140px] font-semibold text-gray-600">{t('Primary Contact')}</th>
                       )}
 
                       {isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[160px] font-semibold text-gray-600">Organization / Company</th>
+                        <th className="px-3 py-2 min-w-[160px] font-semibold text-gray-600">{t('Organization / Company')}</th>
                       )}
 
-                      <th className="px-3 py-2 min-w-[110px] font-semibold text-gray-600 text-center">Priority</th>
-                      <th className="px-3 py-2 min-w-[130px] font-semibold text-gray-600 text-center">Owner</th>
-                      <th className="px-3 py-2 min-w-[120px] font-semibold text-gray-600 text-center">Close Date</th>
+                      <th className="px-3 py-2 min-w-[110px] font-semibold text-gray-600 text-center">{t('Priority')}</th>
+                      <th className="px-3 py-2 min-w-[130px] font-semibold text-gray-600 text-center">{t('Owner')}</th>
+                      <th className="px-3 py-2 min-w-[120px] font-semibold text-gray-600 text-center">{t('Close Date')}</th>
                       <th className="px-3 py-2 min-w-[110px] font-semibold text-gray-600 text-center">
-                        {isGrowthBoard ? 'Achievement %' : 'Probability'}
+                        {t(isGrowthBoard ? 'Achievement %' : 'Probability')}
                       </th>
 
                       {isLeadsBoard && (
-                        <th className="px-3 py-2 min-w-[130px] font-semibold text-purple-600 text-center">Convert</th>
+                        <th className="px-3 py-2 min-w-[130px] font-semibold text-purple-600 text-center">{t('convert')}</th>
                       )}
 
                       <th className="w-10 px-2 py-2 text-center"></th>
@@ -330,7 +332,7 @@ export const TableView: React.FC<TableViewProps> = ({
                               title="Convert Lead into Active Deal & Company Account"
                             >
                               <Zap size={11} className="text-amber-500 fill-amber-500" />
-                              <span>Convert</span>
+                              <span>{t('convert')}</span>
                             </button>
                           </td>
                         )}
@@ -356,7 +358,7 @@ export const TableView: React.FC<TableViewProps> = ({
                       <td colSpan={isLeadsBoard ? 11 : isContactsBoard || isAccountsBoard ? 11 : 10} className="px-2 py-1.5">
                         <input
                           type="text"
-                          placeholder={`+ Add new ${isLeadsBoard ? 'lead' : isAccountsBoard ? 'account' : isContactsBoard ? 'contact' : 'item'}...`}
+                          placeholder={`+ ${t('add_item')}...`}
                           value={newRowInputs[group.id] || ''}
                           onChange={(e) => setNewRowInputs({ ...newRowInputs, [group.id]: e.target.value })}
                           onKeyDown={(e) => {
@@ -373,16 +375,16 @@ export const TableView: React.FC<TableViewProps> = ({
                     <tr className="bg-[#fcfdfe] text-xs font-semibold text-gray-600 border-t border-[#e6e9ef]">
                       <td className="px-3 py-2 text-center">Σ</td>
                       <td className="px-4 py-2 text-gray-500 font-normal">
-                        Count: <strong>{group.items.length} items</strong>
+                        {t('records')}: <strong>{group.items.length} {t('items')}</strong>
                       </td>
                       <td className="px-3 py-2 text-center text-gray-400">
-                        Summary
+                        {t('Summary')}
                       </td>
                       <td className="px-3 py-2 text-right text-emerald-600 font-bold">
                         {formatCurrency(totalValue)}
                       </td>
                       <td colSpan={8} className="px-3 py-2 text-gray-400 text-right">
-                        Average: {group.items.length ? formatCurrency(totalValue / group.items.length) : '฿0'}
+                        {t('Average')}: {group.items.length ? formatCurrency(totalValue / group.items.length) : formatCurrency(0)}
                       </td>
                     </tr>
                   </tfoot>
@@ -409,14 +411,14 @@ export const TableView: React.FC<TableViewProps> = ({
               type="submit" 
               className="bg-[#0073ea] text-white text-xs px-3 py-1.5 rounded font-medium hover:bg-[#0060b9]"
             >
-              Add Group
+              {t('add_group')}
             </button>
             <button 
               type="button" 
               onClick={() => setIsAddingGroup(false)}
               className="text-gray-500 text-xs px-2 py-1.5 hover:bg-gray-100 rounded"
             >
-              Cancel
+              {t('Cancel')}
             </button>
           </form>
         ) : (
@@ -425,7 +427,7 @@ export const TableView: React.FC<TableViewProps> = ({
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-gray-300 text-gray-600 hover:border-[#0073ea] hover:text-[#0073ea] hover:bg-blue-50/40 text-xs font-semibold transition-all shadow-sm bg-white"
           >
             <Plus size={16} />
-            <span>Add New Group</span>
+            <span>{t('Add New Group')}</span>
           </button>
         )}
       </div>

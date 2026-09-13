@@ -17,14 +17,13 @@ import {
   MoreHorizontal, 
   Star, 
   Bot, 
-  Plug,
   ChevronDown,
-  FileSpreadsheet,
-  Upload,
   Download,
+  Upload,
   LucideIcon
 } from 'lucide-react';
 import { ActiveView, CRMBoard } from '@/types/crm';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface BoardHeaderProps {
   currentBoard: CRMBoard;
@@ -51,12 +50,14 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
   onExportExcel,
   onOpenImport,
 }) => {
+  const { t, language } = useLanguage();
+
   const views: { id: ActiveView; label: string; icon: LucideIcon }[] = [
-    { id: 'table', label: 'Main Table', icon: Table },
-    { id: 'kanban', label: 'Kanban Pipeline', icon: Kanban },
-    { id: 'dispatch', label: 'Dispatch & Schedule ⚡', icon: CalendarDays },
-    { id: 'dashboard', label: 'Dashboard & Charts', icon: BarChart3 },
-    { id: 'activity', label: 'Activity Log', icon: History },
+    { id: 'table', label: t('view_table'), icon: Table },
+    { id: 'kanban', label: t('view_kanban'), icon: Kanban },
+    { id: 'dispatch', label: t('view_dispatch'), icon: CalendarDays },
+    { id: 'dashboard', label: t('view_dashboard'), icon: BarChart3 },
+    { id: 'activity', label: t('view_activity'), icon: History },
   ];
 
   // Total board metrics
@@ -64,7 +65,23 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
   const totalValue = allItems.reduce((sum, i) => sum + (i.dealValue || 0), 0);
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
+  };
+
+  const getNewItemLabel = () => {
+    if (currentBoard.type === 'leads') {
+      return t('action_new_lead');
+    } else if (currentBoard.type === 'accounts') {
+      return t('action_new_account');
+    } else if (currentBoard.type === 'contacts') {
+      return t('action_new_contact');
+    } else {
+      return t('action_new_deal');
+    }
   };
 
   return (
@@ -73,11 +90,11 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-[#323338] tracking-tight flex items-center gap-2">
-            {currentBoard.name}
+            {t(currentBoard.id) || currentBoard.name}
             <Star size={18} className="text-gray-300 hover:text-amber-400 cursor-pointer transition-colors" />
           </h1>
           <span className="text-xs bg-blue-50 text-[#0073ea] font-medium px-2.5 py-0.5 rounded-full border border-blue-200/60">
-            {currentBoard.badge || 'CRM Module'}
+            {t(currentBoard.badge || 'CRM Module')}
           </span>
         </div>
 
@@ -90,7 +107,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
             title="Export to Excel (.xlsx)"
           >
             <Download size={14} className="text-emerald-600" />
-            <span>Export Excel</span>
+            <span>{t('export_excel')}</span>
           </button>
 
           {/* Excel / CSV Import Button */}
@@ -100,17 +117,17 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
             title="Import Excel or CSV file"
           >
             <Upload size={14} className="text-blue-600" />
-            <span>Import CSV</span>
+            <span>{t('import_excel')}</span>
           </button>
 
           <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
             <Bot size={14} className="text-[#0073ea]" />
-            <span>Automate / 3</span>
+            <span>{t('Automate')} / 3</span>
           </button>
           
           <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
             <Share2 size={14} />
-            <span>Share</span>
+            <span>{t('Share')}</span>
           </button>
 
           <button className="p-1.5 text-gray-500 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
@@ -121,7 +138,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
 
       {/* Description */}
       <div className="text-xs text-gray-500 pb-4">
-        {currentBoard.description}
+        {t(currentBoard.description || '') || currentBoard.description}
       </div>
 
       {/* View Tabs */}
@@ -156,7 +173,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
               className="bg-[#0073ea] hover:bg-[#0060b9] text-white px-3.5 py-1.5 rounded-l-md text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
               <Plus size={15} />
-              <span>New {currentBoard.type === 'leads' ? 'Lead' : currentBoard.type === 'accounts' ? 'Account' : currentBoard.type === 'contacts' ? 'Contact' : 'Deal'}</span>
+              <span>{getNewItemLabel()}</span>
             </button>
             <button className="bg-[#0060b9] hover:bg-[#0050a0] text-white px-2 py-1.5 rounded-r-md text-xs border-l border-blue-400">
               <ChevronDown size={14} />
@@ -168,7 +185,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder={`Search in ${currentBoard.name}...`}
+              placeholder={`${t('search_items')}`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-8 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white w-64 transition-all"
@@ -183,7 +200,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
               onChange={(e) => setSelectedOwner(e.target.value)}
               className="bg-transparent text-xs focus:outline-none cursor-pointer"
             >
-              <option value="ALL">All Owners</option>
+              <option value="ALL">{t('all_owners')}</option>
               <option value="Isara Chootip">Isara Chootip</option>
               <option value="Somchai S.">Somchai S.</option>
               <option value="Kanya P.">Kanya P.</option>
@@ -194,18 +211,18 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
           {/* Filter & Sort Buttons */}
           <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-700 hover:bg-gray-100 transition-colors">
             <Filter size={13} />
-            <span>Filter</span>
+            <span>{t('Filter')}</span>
           </button>
           <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-700 hover:bg-gray-100 transition-colors">
             <ArrowUpDown size={13} />
-            <span>Sort</span>
+            <span>{t('Sort')}</span>
           </button>
         </div>
 
         {/* Metrics Summary Badge */}
         <div className="flex items-center gap-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">
           <Sparkles size={13} />
-          <span>Total Records Value: <strong>{formatCurrency(totalValue)}</strong> ({allItems.length} records)</span>
+          <span>{t('total_pipeline_value')}: <strong>{formatCurrency(totalValue)}</strong> ({allItems.length} {t('items')})</span>
         </div>
       </div>
     </div>

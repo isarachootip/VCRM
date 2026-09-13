@@ -4,7 +4,6 @@ import React from 'react';
 import { CRMGroup, CRMItem } from '@/types/crm';
 import { 
   TrendingUp, 
-  DollarSign, 
   Award, 
   PieChart, 
   Target, 
@@ -12,6 +11,7 @@ import {
   CheckCircle,
   Briefcase
 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface DashboardViewProps {
   groups: CRMGroup[];
@@ -19,6 +19,7 @@ interface DashboardViewProps {
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
   const allItems: CRMItem[] = groups.flatMap((g) => g.items);
+  const { t, language } = useLanguage();
 
   const totalPipelineValue = allItems.reduce((sum, i) => sum + (i.dealValue || 0), 0);
   const wonItems = allItems.filter((i) => i.status === 'Closed Won');
@@ -27,7 +28,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
   const avgDealSize = allItems.length ? Math.round(totalPipelineValue / allItems.length) : 0;
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
   };
 
   // Group by Stage
@@ -59,13 +64,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Pipeline Value
+              {t('total_pipeline_value')}
             </span>
             <div className="text-2xl font-black text-gray-900 mt-1">
               {formatCurrency(totalPipelineValue)}
             </div>
             <span className="text-[11px] text-blue-600 font-medium mt-1 inline-block">
-              {allItems.length} Active Deals
+              {allItems.length} {t('active_deals_count')}
             </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -77,13 +82,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Closed Won Revenue
+              {t('Closed Won')}
             </span>
             <div className="text-2xl font-black text-emerald-600 mt-1">
               {formatCurrency(wonValue)}
             </div>
             <span className="text-[11px] text-emerald-600 font-medium mt-1 inline-block">
-              {wonItems.length} Deals Closed
+              {wonItems.length} {t('items')}
             </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -95,13 +100,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Conversion / Win Rate
+              {t('win_rate')}
             </span>
             <div className="text-2xl font-black text-purple-600 mt-1">
               {winRate}%
             </div>
             <span className="text-[11px] text-gray-400 font-medium mt-1 inline-block">
-              Won vs Total Opportunities
+              {t('Won vs Total Opportunities')}
             </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
@@ -113,13 +118,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
           <div>
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Average Deal Size
+              {t('avg_deal_value')}
             </span>
             <div className="text-2xl font-black text-gray-900 mt-1">
               {formatCurrency(avgDealSize)}
             </div>
             <span className="text-[11px] text-gray-400 font-medium mt-1 inline-block">
-              Across all pipeline stages
+              {t('Across all stages')}
             </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
@@ -134,7 +139,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
           <h3 className="font-bold text-sm text-gray-800 mb-4 flex items-center gap-2">
             <PieChart size={16} className="text-blue-600" />
-            Pipeline Distribution by Stage
+            {t('deals_value_by_stage')}
           </h3>
 
           <div className="space-y-3.5">
@@ -143,7 +148,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
               return (
                 <div key={stage}>
                   <div className="flex justify-between text-xs font-medium mb-1">
-                    <span className="text-gray-700 font-semibold">{stage} ({stat.count})</span>
+                    <span className="text-gray-700 font-semibold">{t(stage)} ({stat.count})</span>
                     <span className="text-gray-900 font-bold">{formatCurrency(stat.value)} ({percentage}%)</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
@@ -162,7 +167,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
           <h3 className="font-bold text-sm text-gray-800 mb-4 flex items-center gap-2">
             <Users size={16} className="text-purple-600" />
-            Sales Rep Pipeline Breakdown
+            {t('team_contribution')}
           </h3>
 
           <div className="space-y-4">
@@ -173,12 +178,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
                     <span className="text-2xl">{stat.avatar}</span>
                     <div>
                       <h4 className="text-xs font-bold text-gray-900">{name}</h4>
-                      <span className="text-[11px] text-gray-500">{stat.count} Active Deals Managed</span>
+                      <span className="text-[11px] text-gray-500">{stat.count} {t('Active Deals Managed')}</span>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs font-black text-gray-900">{formatCurrency(stat.value)}</div>
-                    <span className="text-[10px] text-emerald-600 font-bold">Quota on track</span>
+                    <span className="text-[10px] text-emerald-600 font-bold">{t('Quota on track')}</span>
                   </div>
                 </div>
               );
@@ -191,18 +196,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
       <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
         <h3 className="font-bold text-sm text-gray-800 mb-3 flex items-center gap-2">
           <Award size={16} className="text-amber-500" />
-          Top High-Value Deals in Pipeline
+          {t('Top High-Value Deals')}
         </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="border-b border-gray-200 text-gray-400 font-semibold">
-                <th className="py-2.5">Deal Name</th>
-                <th className="py-2.5">Stage</th>
-                <th className="py-2.5 text-right">Value</th>
-                <th className="py-2.5 text-center">Probability</th>
-                <th className="py-2.5">Owner</th>
+                <th className="py-2.5">{t('col_item_name')}</th>
+                <th className="py-2.5">{t('col_status')}</th>
+                <th className="py-2.5 text-right">{t('Value')}</th>
+                <th className="py-2.5 text-center">{t('col_probability')}</th>
+                <th className="py-2.5">{t('col_owner')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -214,7 +219,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ groups }) => {
                     <td className="py-2.5 font-bold text-gray-800">{deal.name}</td>
                     <td className="py-2.5">
                       <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[10px] font-semibold">
-                        {deal.status}
+                        {t(deal.status)}
                       </span>
                     </td>
                     <td className="py-2.5 text-right font-extrabold text-emerald-600">

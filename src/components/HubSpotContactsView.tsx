@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   Search, 
   Plus, 
@@ -31,6 +32,7 @@ interface HubSpotContactsViewProps {
 }
 
 export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
+  const { t } = useLanguage();
   const [contacts, setContacts] = useState<HubSpotContactRecord[]>(HUBSPOT_CONTACTS_DATA);
   const [views, setViews] = useState<HubSpotViewTab[]>(HUBSPOT_DEFAULT_VIEWS);
   const [activeViewId, setActiveViewId] = useState<string>('view-all');
@@ -113,12 +115,12 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
             <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1">
               <span>CRM</span>
               <span>/</span>
-              <span className="text-orange-600 font-semibold">Contacts</span>
+              <span className="text-orange-600 font-semibold">{t('contacts')}</span>
             </div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Contacts</h1>
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{t('contacts')}</h1>
               <span className="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200">
-                {contacts.length} records
+                {contacts.length} {t('records')}
               </span>
             </div>
           </div>
@@ -129,7 +131,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
             >
               <Download size={14} className="text-slate-500" />
-              <span>Export</span>
+              <span>{t('export_excel')}</span>
             </button>
 
             <button 
@@ -137,7 +139,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
             >
               <Upload size={14} className="text-slate-500" />
-              <span>Import</span>
+              <span>{t('import_excel')}</span>
             </button>
 
             <button
@@ -145,7 +147,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-sm transition-all active:scale-95"
             >
               <Plus size={15} strokeWidth={2.5} />
-              <span>Create contact</span>
+              <span>{t('New Contact')}</span>
             </button>
           </div>
         </div>
@@ -162,7 +164,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
-              <span>{view.name}</span>
+              <span>{t(view.name)}</span>
             </button>
           ))}
           <button 
@@ -170,7 +172,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
             className="pb-2 text-xs font-medium text-slate-400 hover:text-slate-600 flex items-center gap-1"
           >
             <Plus size={12} />
-            <span>Add view</span>
+            <span>{t('Add View') || 'Add View'}</span>
           </button>
         </div>
       </div>
@@ -186,20 +188,20 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search contacts, company, email..."
+                placeholder={t('search_contacts') || 'Search contacts, company, email...'}
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded shadow-2xs focus:outline-none focus:ring-1 focus:ring-orange-500"
               />
             </div>
 
             {/* Contact Owner Filter Chip */}
             <div className="flex items-center bg-white border border-slate-300 rounded px-2.5 py-1.5 shadow-2xs">
-              <span className="text-slate-500 mr-1.5 font-medium">Contact owner:</span>
+              <span className="text-slate-500 mr-1.5 font-medium">{t('col_owner')}:</span>
               <select
                 value={selectedOwner}
                 onChange={(e) => setSelectedOwner(e.target.value)}
                 className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer"
               >
-                <option value="ALL">All owners</option>
+                <option value="ALL">{t('all_owners')}</option>
                 <option value="Thanakorn">Thanakorn W.</option>
                 <option value="Pimchanok">Pimchanok S.</option>
                 <option value="Somchai">Somchai P.</option>
@@ -209,18 +211,18 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
 
             {/* Lifecycle Stage Filter Chip */}
             <div className="flex items-center bg-white border border-slate-300 rounded px-2.5 py-1.5 shadow-2xs">
-              <span className="text-slate-500 mr-1.5 font-medium">Lifecycle stage:</span>
+              <span className="text-slate-500 mr-1.5 font-medium">{t('Stage / Status')}:</span>
               <select
                 value={selectedStage}
                 onChange={(e) => setSelectedStage(e.target.value)}
                 className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer"
               >
-                <option value="ALL">All stages</option>
-                <option value="LEAD">Lead</option>
+                <option value="ALL">{t('All stages') || 'All stages'}</option>
+                <option value="LEAD">{t('Lead') || 'Lead'}</option>
                 <option value="MARKETING_QUALIFIED">MQL</option>
                 <option value="SALES_QUALIFIED">SQL</option>
-                <option value="OPPORTUNITY">Opportunity</option>
-                <option value="CUSTOMER">Customer</option>
+                <option value="OPPORTUNITY">{t('Lead / Opportunity')}</option>
+                <option value="CUSTOMER">{t('Closed Won')}</option>
               </select>
             </div>
 
@@ -229,7 +231,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded text-slate-700 hover:bg-slate-50 font-medium shadow-2xs"
             >
               <Filter size={13} className="text-slate-500" />
-              <span>More filters</span>
+              <span>{t('Filter')}</span>
             </button>
           </div>
 
@@ -240,7 +242,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded text-slate-700 hover:bg-slate-50 font-medium shadow-2xs"
             >
               <SlidersHorizontal size={13} className="text-slate-500" />
-              <span>Edit columns</span>
+              <span>{t('Edit columns') || 'Edit columns'}</span>
             </button>
           </div>
         </div>
@@ -259,15 +261,15 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
                   className="rounded border-slate-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
                 />
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Name & Title</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Email</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Phone Number</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Associated Company</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Lead Status</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Lifecycle Stage</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Contact Owner</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Associated Deals</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">Last Activity</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_item_name') || 'Name & Title'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_contact_email')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_phone')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Company / Account')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Stage / Status')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('Lifecycle Stage') || 'Lifecycle Stage'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_owner')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('sales_pipeline')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700">{t('last_updated')}</th>
             </tr>
           </thead>
 

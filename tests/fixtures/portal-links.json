@@ -1,0 +1,59 @@
+{
+  "seedPortalLinks": [
+    {
+      "title": "AIPX",
+      "description": "AI Product Experience & Enterprise Catalog",
+      "url": "https://aipx.central.co.th",
+      "icon": "sparkles",
+      "category": "CATALOG",
+      "businessUnits": ["CENTRAL", "ROBINSON"],
+      "allowedRoles": ["ADMIN", "SUPERVISOR", "AGENT"],
+      "order": 1,
+      "isActive": true
+    },
+    {
+      "title": "The 1 Portal",
+      "description": "The 1 Loyalty Member Lookup & Points Management",
+      "url": "https://the1.central.co.th/portal",
+      "icon": "award",
+      "category": "LOYALTY",
+      "businessUnits": ["CENTRAL", "CDS", "MUJI", "B2S"],
+      "allowedRoles": ["ADMIN", "SUPERVISOR", "AGENT"],
+      "order": 2,
+      "isActive": true
+    },
+    {
+      "title": "Operation Portal",
+      "description": "Central Retail Omnichannel Logistics & Fulfillment",
+      "url": "https://ops.centralretail.com",
+      "icon": "truck",
+      "category": "OPERATIONS",
+      "businessUnits": ["CENTRAL", "SSP", "MUJI"],
+      "allowedRoles": ["ADMIN", "SUPERVISOR", "AGENT"],
+      "order": 3,
+      "isActive": true
+    },
+    {
+      "title": "QR Portal",
+      "description": "Payment QR Code Generator & Slip Verification",
+      "url": "https://qr.central.co.th",
+      "icon": "qr-code",
+      "category": "PAYMENT",
+      "businessUnits": ["CENTRAL", "CDS", "CENTRAL_BEAUTY_CLUB"],
+      "allowedRoles": ["ADMIN", "SUPERVISOR", "AGENT"],
+      "order": 4,
+      "isActive": true
+    },
+    {
+      "title": "Supervisor Overrun Monitor",
+      "description": "Agent Break Adherence & Overrun Real-Time Monitor",
+      "url": "https://supervisor.central.co.th/adherence",
+      "icon": "clock",
+      "category": "SUPERVISOR",
+      "businessUnits": ["CENTRAL"],
+      "allowedRoles": ["ADMIN", "SUPERVISOR"],
+      "order": 5,
+      "isActive": true
+    }
+  ]
+}

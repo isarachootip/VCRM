@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   Search, 
   Plus, 
@@ -15,20 +16,169 @@ import {
   Briefcase,
   ListFilter,
   BarChart3,
-  ShieldCheck
+  ShieldCheck,
+  MessageSquare,
+  ExternalLink,
+  QrCode,
+  Truck,
+  Award,
+  Globe
 } from 'lucide-react';
+import { useLanguage, Language, SUPPORTED_LANGUAGES } from '@/context/LanguageContext';
 
 interface HubSpotHeaderProps {
   currentTab: string;
   onTabChange: (tab: string) => void;
   onOpenCreateModal?: () => void;
+  selectedBu?: string;
+  onBuChange?: (bu: string) => void;
 }
+
+interface PortalToolLink {
+  id: string;
+  title: string;
+  url: string;
+  icon?: string | null;
+  category?: string | null;
+  businessUnits: string[];
+}
+
+const DEFAULT_PORTAL_TOOLS: PortalToolLink[] = [
+  {
+    id: 'tool_aipx',
+    title: 'AIPX',
+    url: 'https://aipx.central.co.th',
+    icon: 'sparkles',
+    category: 'CATALOG',
+    businessUnits: ['CENTRAL', 'CDS', 'ROBINSON'],
+  },
+  {
+    id: 'tool_the1',
+    title: 'The 1 Portal',
+    url: 'https://the1.central.co.th/portal',
+    icon: 'award',
+    category: 'LOYALTY',
+    businessUnits: [],
+  },
+  {
+    id: 'tool_ops',
+    title: 'Operation Portal',
+    url: 'https://ops.central.co.th',
+    icon: 'settings',
+    category: 'OPERATIONS',
+    businessUnits: [],
+  },
+  {
+    id: 'tool_qr',
+    title: 'QR Portal',
+    url: 'https://qr.central.co.th',
+    icon: 'qr',
+    category: 'PAYMENTS',
+    businessUnits: [],
+  },
+  {
+    id: 'tool_delivery',
+    title: 'Central Delivery Portal',
+    url: 'https://logistics.central.co.th',
+    icon: 'truck',
+    category: 'LOGISTICS',
+    businessUnits: ['CENTRAL', 'CDS'],
+  },
+];
 
 export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
   currentTab,
   onTabChange,
-  onOpenCreateModal
+  onOpenCreateModal,
+  selectedBu = 'ALL',
+  onBuChange,
 }) => {
+  const { t, language, setLanguage } = useLanguage();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [buFilter, setBuFilter] = useState<string>(selectedBu);
+  const [portalTools, setPortalTools] = useState<PortalToolLink[]>(DEFAULT_PORTAL_TOOLS);
+  const [showPortalMenu, setShowPortalMenu] = useState<boolean>(false);
+
+  useEffect(() => {
+    async function loadPortalLinks() {
+      try {
+        const query = buFilter && buFilter !== 'ALL' ? `?bu=${encodeURIComponent(buFilter)}` : '';
+        const res = await fetch(`/api/portal-links${query}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.links && data.links.length > 0) {
+            setPortalTools(data.links);
+          } else {
+            setPortalTools(DEFAULT_PORTAL_TOOLS);
+          }
+        }
+      } catch {
+        // Fallback to static defaults
+        setPortalTools(DEFAULT_PORTAL_TOOLS);
+      }
+    }
+    loadPortalLinks();
+  }, [buFilter]);
+
+  const handleBuSelect = (newBu: string) => {
+    setBuFilter(newBu);
+    if (onBuChange) {
+      onBuChange(newBu);
+    }
+  };
+
+  const handleTabClick = (tab: string) => {
+    if (tab === 'chat') {
+      if (pathname !== '/chat') {
+        router.push('/chat');
+      }
+    } else {
+      if (pathname === '/chat') {
+        router.push(`/?tab=${tab}`);
+      }
+    }
+    onTabChange(tab);
+  };
+
+  const handleLogoClick = () => {
+    if (pathname === '/chat') {
+      router.push('/');
+    }
+    onTabChange('lists');
+  };
+
+  const handleLaunchTool = (url: string) => {
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const renderToolIcon = (iconName?: string | null) => {
+    switch (iconName?.toLowerCase()) {
+      case 'sparkles':
+        return <Sparkles size={12} className="text-amber-400" />;
+      case 'award':
+        return <Award size={12} className="text-purple-400" />;
+      case 'qr':
+        return <QrCode size={12} className="text-blue-400" />;
+      case 'truck':
+        return <Truck size={12} className="text-emerald-400" />;
+      case 'settings':
+        return <Settings size={12} className="text-slate-400" />;
+      default:
+        return <ExternalLink size={12} className="text-orange-400" />;
+    }
+  };
+
+  // Filter tools based on selected BU
+  const displayedTools = portalTools.filter((tool) => {
+    if (buFilter === 'ALL' || !buFilter) return true;
+    if (!tool.businessUnits || tool.businessUnits.length === 0) return true;
+    return tool.businessUnits.some((b) => b.toUpperCase() === buFilter.toUpperCase());
+  });
+
   return (
     <header className="bg-[#1f2937] text-white border-b border-slate-700 select-none text-sm z-30 shrink-0">
       {/* Top Main Navigation Bar */}
@@ -37,7 +187,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
         <div className="flex items-center space-x-1 sm:space-x-4">
           {/* VCRM Brand Logo */}
           <div 
-            onClick={() => onTabChange('lists')}
+            onClick={handleLogoClick}
             className="flex items-center gap-2.5 cursor-pointer pr-2 hover:opacity-95 transition-opacity"
           >
             {/* VCRM Geometric Logo Badge */}
@@ -61,8 +211,25 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
 
           {/* Navigation Links */}
           <nav className="flex items-center space-x-1">
+            {/* Central Chat & Shop Desk Tab */}
             <button
-              onClick={() => onTabChange('lists')}
+              onClick={() => handleTabClick('chat')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+                currentTab === 'chat'
+                  ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs ring-1 ring-orange-500/30'
+                  : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+              }`}
+            >
+              <MessageSquare size={14} className={currentTab === 'chat' ? 'text-orange-400' : 'text-slate-400'} />
+              <span>Central Chat &amp; Shop</span>
+              <span className="bg-emerald-500/20 text-emerald-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Live
+              </span>
+            </button>
+
+            <button
+              onClick={() => handleTabClick('lists')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
                 currentTab === 'lists'
                   ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs'
@@ -70,12 +237,12 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               }`}
             >
               <ListFilter size={14} className={currentTab === 'lists' ? 'text-orange-400' : 'text-slate-400'} />
-              <span>Lists & Segments</span>
+              <span>{t('lists_segments')}</span>
               <span className="bg-orange-500/20 text-orange-300 text-[10px] px-1.5 py-0.2 rounded-full font-bold">25</span>
             </button>
 
             <button
-              onClick={() => onTabChange('contacts')}
+              onClick={() => handleTabClick('contacts')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
                 currentTab === 'contacts'
                   ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs'
@@ -83,11 +250,11 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               }`}
             >
               <Users size={14} className={currentTab === 'contacts' ? 'text-orange-400' : 'text-slate-400'} />
-              <span>Contacts</span>
+              <span>{t('contacts')}</span>
             </button>
 
             <button
-              onClick={() => onTabChange('deals')}
+              onClick={() => handleTabClick('deals')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
                 currentTab === 'deals'
                   ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs'
@@ -95,11 +262,11 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               }`}
             >
               <Briefcase size={14} className={currentTab === 'deals' ? 'text-orange-400' : 'text-slate-400'} />
-              <span>Sales Pipeline</span>
+              <span>{t('sales_pipeline')}</span>
             </button>
 
             <button
-              onClick={() => onTabChange('companies')}
+              onClick={() => handleTabClick('companies')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors hidden lg:flex ${
                 currentTab === 'companies'
                   ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs'
@@ -107,11 +274,11 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               }`}
             >
               <Building2 size={14} className="text-slate-400" />
-              <span>Companies</span>
+              <span>{t('companies')}</span>
             </button>
 
             <button
-              onClick={() => onTabChange('reports')}
+              onClick={() => handleTabClick('reports')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors hidden xl:flex ${
                 currentTab === 'reports'
                   ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs'
@@ -119,7 +286,19 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               }`}
             >
               <BarChart3 size={14} className="text-slate-400" />
-              <span>Reports</span>
+              <span>{t('reports')}</span>
+            </button>
+
+            <button
+              onClick={() => handleTabClick('supervisor')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+                currentTab === 'supervisor'
+                  ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs ring-1 ring-orange-500/30'
+                  : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+              }`}
+            >
+              <ShieldCheck size={14} className={currentTab === 'supervisor' ? 'text-orange-400' : 'text-slate-400'} />
+              <span>Supervisor Hub</span>
             </button>
           </nav>
         </div>
@@ -131,7 +310,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
             <Search className="absolute left-2.5 top-2 text-slate-400" size={14} />
             <input
               type="text"
-              placeholder="Search VCRM (Ctrl+K)..."
+              placeholder={t('search_vcrm')}
               className="bg-slate-800/90 text-xs text-white placeholder-slate-400 rounded pl-8 pr-3 py-1.5 w-44 lg:w-56 focus:outline-none focus:ring-1 focus:ring-orange-400 border border-slate-700"
             />
           </div>
@@ -142,15 +321,36 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
             className="flex items-center gap-1.5 bg-[#ff7a59] hover:bg-[#ff5c35] text-white px-3 py-1.5 rounded text-xs font-semibold shadow-sm transition-all active:scale-95"
           >
             <Plus size={14} strokeWidth={2.5} />
-            <span>Create</span>
+            <span>{t('create')}</span>
             <ChevronDown size={12} className="opacity-80" />
           </button>
 
           {/* VCRM Portal ID badge */}
           <div className="hidden lg:flex items-center gap-1.5 bg-slate-800 px-2.5 py-1 rounded text-[11px] text-slate-300 font-mono border border-slate-700">
             <ShieldCheck size={13} className="text-emerald-400" />
-            <span className="text-slate-400">Portal ID:</span>
+            <span className="text-slate-400">{t('portal_id')}:</span>
             <span className="font-semibold text-orange-300">247092555</span>
+          </div>
+
+          {/* Language Selector Dropdown */}
+          <div className="relative flex items-center">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              className="bg-slate-800 text-xs text-slate-200 border border-slate-700 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-orange-400 cursor-pointer appearance-none pr-6 hover:bg-slate-700/80 transition-colors font-medium h-7"
+              style={{ 
+                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%2394a3b8'><path d='M7 10l5 5 5-5z'/></svg>")`, 
+                backgroundPosition: 'right 4px center', 
+                backgroundSize: '14px', 
+                backgroundRepeat: 'no-repeat' 
+              }}
+            >
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.code.toUpperCase()}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Quick Action Icons */}
@@ -171,6 +371,50 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
               className="w-7 h-7 rounded-full border border-orange-400/80 object-cover ring-1 ring-white/10"
             />
           </div>
+        </div>
+      </div>
+
+      {/* R4: Enterprise Operations Portal Link Hub Navigation Bar */}
+      <div className="bg-slate-900/95 border-t border-slate-800 px-4 py-1.5 flex items-center justify-between overflow-x-auto scrollbar-none text-xs">
+        {/* Left: Portal Brand & Quick Launchers */}
+        <div className="flex items-center space-x-2 shrink-0">
+          <div className="flex items-center gap-1.5 text-slate-400 font-semibold uppercase text-[10px] tracking-wider pr-2 border-r border-slate-700">
+            <Globe size={13} className="text-orange-400" />
+            <span>Portal Hub</span>
+          </div>
+
+          {/* Single-Click Tool Launchers */}
+          <div className="flex items-center gap-1.5">
+            {displayedTools.map((tool) => (
+              <button
+                key={tool.id}
+                onClick={() => handleLaunchTool(tool.url)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700/60 transition-all text-[11px] font-medium active:scale-95 shadow-xs"
+                title={`${tool.title} (${tool.url})`}
+              >
+                {renderToolIcon(tool.icon)}
+                <span>{tool.title}</span>
+                <ExternalLink size={10} className="text-slate-500 hover:text-orange-400" />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: BU Scope Selector */}
+        <div className="flex items-center space-x-2 shrink-0 pl-4">
+          <span className="text-[10px] text-slate-400 font-medium uppercase">Scope:</span>
+          <select
+            value={buFilter}
+            onChange={(e) => handleBuSelect(e.target.value)}
+            className="bg-slate-800 text-[11px] text-slate-200 border border-slate-700 rounded px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange-400 cursor-pointer"
+          >
+            <option value="ALL">All BUs</option>
+            <option value="CENTRAL">Central Dept</option>
+            <option value="CDS">Central Direct</option>
+            <option value="MUJI">Muji</option>
+            <option value="SSP">SuperSports</option>
+            <option value="B2S">B2S</option>
+          </select>
         </div>
       </div>
     </header>

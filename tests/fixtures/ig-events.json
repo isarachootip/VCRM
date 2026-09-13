@@ -1,0 +1,60 @@
+{
+  "mujiFurnitureManualInquiry": {
+    "eventId": "evt_ig_muji_001",
+    "timestamp": "2026-09-12T14:47:00.000Z",
+    "source": {
+      "channel": "IG",
+      "pageId": "muji_thailand",
+      "pageName": "MUJI Thailand Official",
+      "businessUnit": "Muji",
+      "senderId": "ig_user_5544332211",
+      "senderName": "Arak Tanaka",
+      "senderProfileUrl": "https://instagram.mock.local/profiles/arak.jpg"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_ig_778899",
+      "sessionStart": "2026-09-12T14:46:30.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_ig_99887766",
+      "type": "FILE",
+      "text": "รบกวนขอคู่มือประกอบโต๊ะ Oak Dining Table และสอบถามเรื่องการจัดส่งครับ",
+      "media": {
+        "url": "https://storage.mock.local/uploads/order_receipt.pdf",
+        "fileName": "order_receipt.pdf",
+        "mimeType": "application/pdf",
+        "fileSize": 1048576
+      }
+    }
+  },
+  "mujiVideoInquiry": {
+    "eventId": "evt_ig_muji_002",
+    "timestamp": "2026-09-12T14:55:00.000Z",
+    "source": {
+      "channel": "IG",
+      "pageId": "muji_thailand",
+      "pageName": "MUJI Thailand Official",
+      "businessUnit": "Muji",
+      "senderId": "ig_user_5544332211",
+      "senderName": "Arak Tanaka",
+      "senderProfileUrl": "https://instagram.mock.local/profiles/arak.jpg"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_ig_778899",
+      "sessionStart": "2026-09-12T14:46:30.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_ig_99887767",
+      "type": "VIDEO",
+      "text": "ส่งวิดีโอพื้นที่ห้องที่จะวางโต๊ะครับ",
+      "media": {
+        "url": "https://storage.mock.local/uploads/room_space.mp4",
+        "fileName": "room_space.mp4",
+        "mimeType": "video/mp4",
+        "fileSize": 8388608
+      }
+    }
+  }
+}

@@ -4,25 +4,15 @@ import React, { useState } from 'react';
 import { 
   X, 
   Send, 
-  User, 
-  Phone, 
-  Mail, 
-  Calendar, 
-  DollarSign, 
-  Percent, 
   Sparkles, 
   Paperclip, 
   Smile, 
-  Clock,
-  Zap,
-  Building,
-  CheckCircle2,
-  Trash2
+  Zap
 } from 'lucide-react';
-import { CRMItem, StatusType, PriorityType, ActivityItem } from '@/types/crm';
+import { CRMItem, ActivityItem } from '@/types/crm';
 import { StatusPicker } from './StatusPicker';
 import { PriorityPicker } from './PriorityPicker';
-import { STATUS_CONFIGS } from '@/data/mockData';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ItemDrawerProps {
   item: CRMItem | null;
@@ -43,6 +33,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'updates' | 'details'>('updates');
   const [newUpdateText, setNewUpdateText] = useState('');
+  const { t, language } = useLanguage();
 
   if (!item || !groupId) return null;
 
@@ -66,7 +57,11 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
   };
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
   };
 
   const isLead = boardType === 'leads';
@@ -83,7 +78,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">
-                  {boardType.toUpperCase()} Record
+                  {t(boardType)} {t('Record')}
                 </span>
                 {isLead && (
                   <button
@@ -91,7 +86,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                     className="flex items-center gap-1 text-[11px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-2.5 py-0.5 rounded-full transition-colors"
                   >
                     <Zap size={11} className="fill-purple-700" />
-                    <span>Convert to Active Deal</span>
+                    <span>{t('convert_lead')}</span>
                   </button>
                 )}
               </div>
@@ -113,20 +108,20 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
           {/* Quick Property Strip */}
           <div className="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-gray-100 text-xs">
             <div>
-              <span className="text-gray-400 block mb-1">Status / Stage</span>
+              <span className="text-gray-400 block mb-1">{t('Stage / Status')}</span>
               <StatusPicker
                 currentStatus={item.status}
                 onChange={(newSt) => onUpdateItem(groupId, item.id, { status: newSt })}
               />
             </div>
             <div>
-              <span className="text-gray-400 block mb-1">Value / Quota</span>
+              <span className="text-gray-400 block mb-1">{t('Value / Quota')}</span>
               <div className="font-extrabold text-sm text-emerald-600 py-1">
                 {formatCurrency(item.dealValue)}
               </div>
             </div>
             <div>
-              <span className="text-gray-400 block mb-1">Owner</span>
+              <span className="text-gray-400 block mb-1">{t('col_owner')}</span>
               <div className="flex items-center gap-1.5 py-1">
                 <span>{item.owner.avatar}</span>
                 <span className="font-medium text-gray-800 truncate">{item.owner.name}</span>
@@ -144,7 +139,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   : 'border-transparent text-gray-400 hover:text-gray-700'
               }`}
             >
-              Updates & Notes ({item.activities?.length || 0})
+              {t('Updates & Notes')} ({item.activities?.length || 0})
             </button>
             <button
               onClick={() => setActiveTab('details')}
@@ -154,7 +149,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   : 'border-transparent text-gray-400 hover:text-gray-700'
               }`}
             >
-              Details & Strategic Parameters
+              {t('Details & Strategic Parameters')}
             </button>
           </div>
         </div>
@@ -169,7 +164,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   rows={3}
                   value={newUpdateText}
                   onChange={(e) => setNewUpdateText(e.target.value)}
-                  placeholder="Write an update, meeting note, or mention a teammate with @..."
+                  placeholder={t('update_placeholder')}
                   className="w-full text-xs text-gray-800 placeholder:text-gray-400 focus:outline-none resize-none"
                 />
 
@@ -183,7 +178,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                     </button>
                     <button className="flex items-center gap-1 text-[11px] text-purple-600 hover:bg-purple-50 px-2 py-0.5 rounded font-medium">
                       <Sparkles size={12} />
-                      <span>AI Enhance</span>
+                      <span>{t('AI Enhance')}</span>
                     </button>
                   </div>
 
@@ -192,7 +187,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                     disabled={!newUpdateText.trim()}
                     className="bg-[#0073ea] hover:bg-[#0060b9] disabled:opacity-40 text-white text-xs font-semibold px-4 py-1.5 rounded-md flex items-center gap-1.5 transition-all shadow-sm"
                   >
-                    <span>Update</span>
+                    <span>{t('Update')}</span>
                     <Send size={12} />
                   </button>
                 </div>
@@ -201,7 +196,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
               {/* Updates Feed */}
               <div className="space-y-3">
                 <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  Timeline Activity
+                  {t('Timeline Activity')}
                 </h4>
 
                 {(item.activities || []).map((act) => (
@@ -216,14 +211,14 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                       </div>
                     </div>
                     <div className="text-xs text-gray-700 leading-relaxed bg-gray-50/70 p-2.5 rounded-lg border border-gray-100">
-                      {act.action}
+                      {t(act.action)}
                     </div>
                   </div>
                 ))}
 
                 {(!item.activities || item.activities.length === 0) && (
                   <div className="py-8 text-center text-xs text-gray-400">
-                    No updates logged yet. Post the first update above!
+                    {t('No updates logged yet. Post the first update above!')}
                   </div>
                 )}
               </div>
@@ -232,12 +227,12 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
             /* Details Tab */
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm space-y-4 text-xs">
               <h4 className="font-bold text-sm text-gray-900 border-b border-gray-100 pb-2">
-                Company & Contact Information
+                {t('Company & Contact Information')}
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-gray-400 block mb-1">Company / Organization</label>
+                  <label className="text-gray-400 block mb-1">{t('Company / Organization')}</label>
                   <input
                     type="text"
                     value={item.companyName || ''}
@@ -246,7 +241,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Industry</label>
+                  <label className="text-gray-400 block mb-1">{t('Industry')}</label>
                   <input
                     type="text"
                     value={item.industry || ''}
@@ -255,7 +250,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Contact Person</label>
+                  <label className="text-gray-400 block mb-1">{t('col_contact_person')}</label>
                   <input
                     type="text"
                     value={item.contactPerson}
@@ -264,7 +259,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Email Address</label>
+                  <label className="text-gray-400 block mb-1">{t('col_contact_email')}</label>
                   <input
                     type="email"
                     value={item.contactEmail}
@@ -273,7 +268,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Phone Number</label>
+                  <label className="text-gray-400 block mb-1">{t('col_phone')}</label>
                   <input
                     type="text"
                     value={item.contactPhone || ''}
@@ -282,7 +277,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Lead Source</label>
+                  <label className="text-gray-400 block mb-1">{t('Lead Source')}</label>
                   <input
                     type="text"
                     value={item.leadSource || ''}
@@ -293,12 +288,12 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
               </div>
 
               <h4 className="font-bold text-sm text-gray-900 border-b border-gray-100 pb-2 pt-3">
-                Commercial Parameters & Forecast
+                {t('Commercial Parameters & Forecast')}
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-gray-400 block mb-1">Deal Value (THB)</label>
+                  <label className="text-gray-400 block mb-1">{t('col_deal_value')}</label>
                   <input
                     type="number"
                     value={item.dealValue}
@@ -307,7 +302,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Probability (%)</label>
+                  <label className="text-gray-400 block mb-1">{t('col_probability')} (%)</label>
                   <input
                     type="number"
                     min="0"
@@ -318,7 +313,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Target Close Date</label>
+                  <label className="text-gray-400 block mb-1">{t('Target Close Date')}</label>
                   <input
                     type="date"
                     value={item.expectedCloseDate}
@@ -327,7 +322,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="text-gray-400 block mb-1">Priority</label>
+                  <label className="text-gray-400 block mb-1">{t('col_priority')}</label>
                   <PriorityPicker
                     currentPriority={item.priority}
                     onChange={(newPr) => onUpdateItem(groupId, item.id, { priority: newPr })}
@@ -336,7 +331,7 @@ export const ItemDrawer: React.FC<ItemDrawerProps> = ({
               </div>
 
               <div className="pt-2">
-                <label className="text-gray-400 block mb-1">Internal Strategic Notes</label>
+                <label className="text-gray-400 block mb-1">{t('Internal Strategic Notes')}</label>
                 <textarea
                   rows={4}
                   value={item.notes || ''}

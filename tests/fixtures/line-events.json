@@ -1,0 +1,105 @@
+{
+  "textInquiryCentralVip": {
+    "eventId": "evt_line_central_001",
+    "timestamp": "2026-09-12T14:45:00.000Z",
+    "source": {
+      "channel": "LINE",
+      "pageId": "central_department_store",
+      "pageName": "Central Department Store (Official)",
+      "businessUnit": "Central",
+      "senderId": "U1234567890abcdef1234567890abcdef",
+      "senderName": "Somchai Jaidee",
+      "senderProfileUrl": "https://profile.line-scdn.net/mock-profile.jpg"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_line_998877",
+      "sessionStart": "2026-09-12T14:44:50.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_line_88776655",
+      "type": "TEXT",
+      "text": "สวัสดีครับ สอบถามสินค้ากระเป๋ารุ่นใหม่ที่สาขาชิดลม มีของไหมครับ"
+    }
+  },
+  "imageAttachmentCentral": {
+    "eventId": "evt_line_central_002",
+    "timestamp": "2026-09-12T14:46:00.000Z",
+    "source": {
+      "channel": "LINE",
+      "pageId": "central_department_store",
+      "pageName": "Central Department Store (Official)",
+      "businessUnit": "Central",
+      "senderId": "U1234567890abcdef1234567890abcdef",
+      "senderName": "Somchai Jaidee",
+      "senderProfileUrl": "https://profile.line-scdn.net/mock-profile.jpg"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_line_998877",
+      "sessionStart": "2026-09-12T14:44:50.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_line_88776656",
+      "type": "IMAGE",
+      "text": "ส่งภาพรุ่นที่ต้องการเช็คสต็อกครับ",
+      "media": {
+        "url": "https://storage.mock.local/uploads/watch_chidlom.jpg",
+        "fileName": "watch_chidlom.jpg",
+        "mimeType": "image/jpeg",
+        "fileSize": 524288
+      }
+    }
+  },
+  "misdirectedSupersportsInquiry": {
+    "eventId": "evt_line_ssp_003",
+    "timestamp": "2026-09-12T15:00:00.000Z",
+    "source": {
+      "channel": "LINE",
+      "pageId": "central_general_line",
+      "pageName": "Central General LINE",
+      "businessUnit": "Central",
+      "senderId": "U9876543210fedcba9876543210fedcba",
+      "senderName": "Thanaporn Runner",
+      "senderProfileUrl": "https://profile.line-scdn.net/mock-thanaporn.jpg"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_line_ssp_112233",
+      "sessionStart": "2026-09-12T14:59:00.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_line_ssp_001",
+      "type": "TEXT",
+      "text": "อยากสอบถามรองเท้าวิ่งมาราธอน Nike Alphafly 3 มีไซส์ 9.5 US ไหมครับ"
+    }
+  },
+  "audioVoiceMemoLine": {
+    "eventId": "evt_line_voice_004",
+    "timestamp": "2026-09-12T15:10:00.000Z",
+    "source": {
+      "channel": "LINE",
+      "pageId": "central_department_store",
+      "pageName": "Central Department Store (Official)",
+      "businessUnit": "Central",
+      "senderId": "U1234567890abcdef1234567890abcdef",
+      "senderName": "Somchai Jaidee"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_line_voice_4455",
+      "sessionStart": "2026-09-12T15:09:00.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_line_voice_001",
+      "type": "AUDIO",
+      "text": "",
+      "media": {
+        "url": "https://storage.mock.local/uploads/voice_inquiry.m4a",
+        "fileName": "voice_inquiry.m4a",
+        "mimeType": "audio/mp4",
+        "fileSize": 128000
+      }
+    }
+  }
+}

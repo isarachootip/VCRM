@@ -1,0 +1,77 @@
+{
+  "beautyClubImageConsultation": {
+    "eventId": "evt_fb_beauty_001",
+    "timestamp": "2026-09-12T14:46:00.000Z",
+    "source": {
+      "channel": "FB",
+      "pageId": "central_beauty_club",
+      "pageName": "Central Beauty Club",
+      "businessUnit": "Central Beauty Club",
+      "senderId": "fb_psid_9876543210",
+      "senderName": "Kanya Wattana",
+      "senderProfileUrl": "https://graph.facebook.com/v19.0/mock-psid/picture"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_fb_445566",
+      "sessionStart": "2026-09-12T14:45:50.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_fb_11223344",
+      "type": "IMAGE",
+      "text": "ส่งรูปตัวอย่างผิวที่มีรอยแดงค่ะ สนใจโทนเนอร์สูตรอ่อนโยน แนะนำตัวไหนดีคะ",
+      "media": {
+        "url": "https://storage.mock.local/uploads/skin_redness_sample.jpg",
+        "fileName": "skin_redness_sample.jpg",
+        "mimeType": "image/jpeg",
+        "fileSize": 245800
+      }
+    }
+  },
+  "beautyClubTextFollowup": {
+    "eventId": "evt_fb_beauty_002",
+    "timestamp": "2026-09-12T14:48:00.000Z",
+    "source": {
+      "channel": "FB",
+      "pageId": "central_beauty_club",
+      "pageName": "Central Beauty Club",
+      "businessUnit": "Central Beauty Club",
+      "senderId": "fb_psid_9876543210",
+      "senderName": "Kanya Wattana",
+      "senderProfileUrl": "https://graph.facebook.com/v19.0/mock-psid/picture"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_fb_445566",
+      "sessionStart": "2026-09-12T14:45:50.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_fb_11223345",
+      "type": "TEXT",
+      "text": "มีโปรโมชั่นสำหรับลูกค้าใหม่ไหมคะ"
+    }
+  },
+  "b2sBookInquiry": {
+    "eventId": "evt_fb_b2s_003",
+    "timestamp": "2026-09-12T15:20:00.000Z",
+    "source": {
+      "channel": "FB",
+      "pageId": "b2s_thailand_page",
+      "pageName": "B2S Thailand Official",
+      "businessUnit": "B2S",
+      "senderId": "fb_psid_b2s_12345",
+      "senderName": "Nattapong Reader",
+      "senderProfileUrl": "https://graph.facebook.com/v19.0/mock-b2s/picture"
+    },
+    "session": {
+      "sessionId": "zwiz_sess_fb_b2s_9911",
+      "sessionStart": "2026-09-12T15:19:00.000Z",
+      "botState": "AGENT_HANDOFF"
+    },
+    "message": {
+      "messageId": "msg_fb_b2s_001",
+      "type": "TEXT",
+      "text": "มีหนังสือวรรณกรรมแปลเล่มใหม่ของ Haruki Murakami เข้าหรือยังครับ"
+    }
+  }
+}

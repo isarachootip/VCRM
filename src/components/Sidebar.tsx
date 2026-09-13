@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { 
-  Home, 
+  Home as HomeIcon, 
   LayoutGrid, 
   Bell, 
   Inbox, 
@@ -29,6 +29,7 @@ import {
   LucideIcon
 } from 'lucide-react';
 import { CRMBoard } from '@/types/crm';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface SidebarProps {
   currentBoardId: string;
@@ -43,6 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(true);
   const [isServicesOpen, setIsServicesOpen] = useState(true);
+  const { t } = useLanguage();
 
   const salesBoards: { id: string; name: string; icon: LucideIcon; color: string; badge?: string }[] = [
     { id: 'board-5030723273', name: 'Deals & Sales Pipeline', icon: Briefcase, color: 'text-blue-500', badge: 'Active' },
@@ -53,10 +55,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const serviceBoards: { id: string; name: string; icon: LucideIcon; color: string; badge?: string }[] = [
-    { id: 'board-delivery', name: '🚚 ส่งสินค้า (Delivery)', icon: Truck, color: 'text-amber-500', badge: 'Fleet' },
-    { id: 'board-install', name: '🛠️ ส่งและติดตั้ง (Install)', icon: Wrench, color: 'text-blue-500', badge: 'Tech' },
-    { id: 'board-renovate', name: '🏗️ ปรับปรุง/ต่อเติม (Reno)', icon: Hammer, color: 'text-purple-500', badge: 'PM' },
-    { id: 'board-maintain', name: '⚡ ซ่อมบำรุง (Maintenance)', icon: ShieldAlert, color: 'text-rose-500', badge: 'SLA' },
+    { id: 'board-delivery', name: '🚚 Delivery', icon: Truck, color: 'text-amber-500', badge: 'Fleet' },
+    { id: 'board-install', name: '🛠️ Install', icon: Wrench, color: 'text-blue-500', badge: 'Tech' },
+    { id: 'board-renovate', name: '🏗️ Renovate', icon: Hammer, color: 'text-purple-500', badge: 'PM' },
+    { id: 'board-maintain', name: '⚡ Maintenance', icon: ShieldAlert, color: 'text-rose-500', badge: 'SLA' },
   ];
 
   return (
@@ -72,20 +74,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="w-8 h-[1px] bg-gray-700/60 my-1"></div>
 
           {/* Primary Nav Icons */}
-          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-white transition-colors" title="Home">
-            <Home size={18} />
+          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-white transition-colors" title={t('home')}>
+            <HomeIcon size={18} />
           </button>
-          <button className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/15 text-white transition-colors" title="Workspaces">
+          <button className="w-10 h-10 rounded-lg flex items-center justify-center bg-white/15 text-white transition-colors" title={t('workspaces')}>
             <LayoutGrid size={18} />
           </button>
-          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 relative transition-colors" title="Notifications">
+          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 relative transition-colors" title={t('notifications')}>
             <Bell size={18} />
             <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#0073ea]"></span>
           </button>
-          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 transition-colors" title="Inbox / Updates">
+          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 transition-colors" title={t('inbox_updates')}>
             <Inbox size={18} />
           </button>
-          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 transition-colors" title="Favorites">
+          <button className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 text-gray-300 transition-colors" title={t('favorites')}>
             <Star size={18} />
           </button>
         </div>
@@ -124,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="p-2 flex gap-1">
             <div className="flex-1 flex items-center gap-2 px-2.5 py-1.5 bg-[#f5f6f8] rounded-md text-xs text-gray-500 hover:bg-[#ebedf0] cursor-pointer">
               <Search size={14} />
-              <span>Search CRM...</span>
+              <span>{t('search_crm')}</span>
             </div>
             <button className="p-1.5 bg-[#0073ea] text-white rounded-md hover:bg-[#0060b9] transition-colors" title="Add Board">
               <Plus size={14} />
@@ -141,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 <div className="flex items-center gap-1">
                   {isWorkspaceOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span>CRM & Sales</span>
+                  <span>{t('crm_sales')}</span>
                 </div>
                 <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">
                   {salesBoards.length}
@@ -167,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       >
                         <div className="flex items-center gap-2.5 truncate">
                           <Icon size={14} className={isActive ? 'text-[#0073ea]' : 'text-gray-400'} />
-                          <span className="truncate">{board.name}</span>
+                          <span className="truncate">{t(board.id) || board.name}</span>
                         </div>
                         {typeof count === 'number' && (
                           <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.2 rounded font-semibold ml-1">
@@ -189,7 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 <div className="flex items-center gap-1">
                   {isServicesOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span>Field Operations ⚡</span>
+                  <span>{t('field_operations')}</span>
                 </div>
                 <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">
                   {serviceBoards.length}
@@ -215,7 +217,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       >
                         <div className="flex items-center gap-2.5 truncate">
                           <Icon size={14} className={isActive ? 'text-indigo-600' : 'text-gray-400'} />
-                          <span className="truncate">{board.name}</span>
+                          <span className="truncate">{t(board.id) || board.name}</span>
                         </div>
                         {typeof count === 'number' && (
                           <span className="text-[10px] bg-indigo-100/60 text-indigo-700 px-1.5 py-0.2 rounded font-semibold ml-1">
@@ -235,10 +237,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-3 border-t border-[#e6e9ef] flex items-center justify-between text-xs text-gray-500">
           <div className="flex items-center gap-2 hover:text-[#0073ea] cursor-pointer">
             <Settings size={14} />
-            <span>Workspace Settings</span>
+            <span>{t('workspace_settings')}</span>
           </div>
           <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold border border-emerald-200">
-            Enterprise Pro
+            {t('enterprise_pro')}
           </span>
         </div>
       </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import { CRMItem, CRMGroup, StatusType } from '@/types/crm';
 import { STATUS_CONFIGS, PRIORITY_CONFIGS } from '@/data/mockData';
-import { DollarSign, Calendar, User, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface KanbanViewProps {
   groups: CRMGroup[];
@@ -16,6 +16,8 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   onUpdateItemStatus,
   onSelectItem,
 }) => {
+  const { t, language } = useLanguage();
+
   // Collect all items across groups
   const allItemsWithGroup: { item: CRMItem; groupId: string }[] = [];
   groups.forEach((g) => {
@@ -35,14 +37,18 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
   ];
 
   const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat(language === 'th' ? 'th-TH' : language === 'zh' ? 'zh-CN' : 'en-US', { 
+      style: 'currency', 
+      currency: language === 'th' ? 'THB' : language === 'zh' ? 'CNY' : 'USD', 
+      maximumFractionDigits: 0 
+    }).format(val);
   };
 
   return (
     <div className="p-6 overflow-x-auto select-none min-h-[calc(100vh-210px)]">
       <div className="flex gap-4 items-start min-w-max pb-8">
         {stages.map((stage) => {
-          const config = STATUS_CONFIGS[stage];
+          const config = STATUS_CONFIGS[stage] || { label: stage, bgColor: '#c4c4c4' };
           const stageItems = allItemsWithGroup.filter((x) => x.item.status === stage);
           const stageValue = stageItems.reduce((sum, x) => sum + (x.item.dealValue || 0), 0);
 
@@ -59,7 +65,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                       className="w-2.5 h-2.5 rounded-full" 
                       style={{ backgroundColor: config.bgColor }}
                     />
-                    <span className="font-bold text-xs text-gray-800 tracking-tight">{stage}</span>
+                    <span className="font-bold text-xs text-gray-800 tracking-tight">{t(stage)}</span>
                   </div>
                   <span className="text-[11px] font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
                     {stageItems.length}
@@ -74,7 +80,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
               {/* Kanban Cards List */}
               <div className="p-2.5 space-y-2.5 overflow-y-auto flex-1">
                 {stageItems.map(({ item, groupId }) => {
-                  const priorityCfg = PRIORITY_CONFIGS[item.priority];
+                  const priorityCfg = PRIORITY_CONFIGS[item.priority] || { label: item.priority, bgColor: '#c4c4c4' };
                   return (
                     <div
                       key={item.id}
@@ -87,10 +93,10 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                           className="text-[10px] font-bold px-2 py-0.5 rounded text-white"
                           style={{ backgroundColor: priorityCfg.bgColor }}
                         >
-                          {item.priority}
+                          {t(item.priority)}
                         </span>
                         <span className="text-[10px] text-gray-400 font-medium">
-                          {item.probability}% Win Prob
+                          {item.probability}% {t('Probability')}
                         </span>
                       </div>
 
@@ -120,7 +126,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
                       {/* Quick Move Stage dropdown */}
                       <div className="mt-2.5 pt-2 border-t border-dashed border-gray-200 flex items-center justify-between text-[10px] text-gray-500">
-                        <span>Close: {item.expectedCloseDate || 'TBD'}</span>
+                        <span>{t('Close Date')}: {item.expectedCloseDate || 'TBD'}</span>
                         <select
                           value={item.status}
                           onClick={(e) => e.stopPropagation()}
@@ -128,7 +134,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                           className="bg-gray-100 hover:bg-gray-200 text-[10px] rounded px-1 py-0.5 text-gray-700 outline-none font-medium cursor-pointer"
                         >
                           {stages.map((st) => (
-                            <option key={st} value={st}>Move: {st}</option>
+                            <option key={st} value={st}>{t('Move')}: {t(st)}</option>
                           ))}
                         </select>
                       </div>
@@ -138,7 +144,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
 
                 {stageItems.length === 0 && (
                   <div className="py-8 text-center text-xs text-gray-400 italic">
-                    No deals in this stage
+                    {t('No deals in this stage')}
                   </div>
                 )}
               </div>

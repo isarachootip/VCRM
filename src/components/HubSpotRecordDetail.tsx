@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   X, 
   Mail, 
@@ -36,6 +37,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
   onClose,
   onUpdateContact
 }) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'activity' | 'notes' | 'emails' | 'calls' | 'tasks'>('activity');
   const [newNoteText, setNewNoteText] = useState('');
   const [notes, setNotes] = useState(contact.notes || []);
@@ -123,23 +125,23 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               <div className="grid grid-cols-5 gap-1.5 p-1 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <button className="flex flex-col items-center justify-center p-2 rounded hover:bg-orange-100/60 text-slate-700 hover:text-orange-600 transition-colors" title="Add Note">
                   <MessageSquare size={16} />
-                  <span className="text-[10px] mt-1 font-medium">Note</span>
+                  <span className="text-[10px] mt-1 font-medium">{t('Notes')}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center p-2 rounded hover:bg-orange-100/60 text-slate-700 hover:text-orange-600 transition-colors" title="Send Email">
                   <Mail size={16} />
-                  <span className="text-[10px] mt-1 font-medium">Email</span>
+                  <span className="text-[10px] mt-1 font-medium">{t('col_contact_email')}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center p-2 rounded hover:bg-orange-100/60 text-slate-700 hover:text-orange-600 transition-colors" title="Log Call">
                   <Phone size={16} />
-                  <span className="text-[10px] mt-1 font-medium">Call</span>
+                  <span className="text-[10px] mt-1 font-medium">{t('col_phone')}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center p-2 rounded hover:bg-orange-100/60 text-slate-700 hover:text-orange-600 transition-colors" title="Create Task">
                   <CheckSquare size={16} />
-                  <span className="text-[10px] mt-1 font-medium">Task</span>
+                  <span className="text-[10px] mt-1 font-medium">{t('add_item')}</span>
                 </button>
                 <button className="flex flex-col items-center justify-center p-2 rounded hover:bg-orange-100/60 text-slate-700 hover:text-orange-600 transition-colors" title="Schedule Meeting">
                   <Calendar size={16} />
-                  <span className="text-[10px] mt-1 font-medium">Meet</span>
+                  <span className="text-[10px] mt-1 font-medium">{t('Scheduled')}</span>
                 </button>
               </div>
             </div>
@@ -147,22 +149,22 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
             {/* About this Contact Box */}
             <div className="border border-slate-200 rounded-lg p-4 bg-white shadow-2xs space-y-3">
               <h3 className="font-bold text-slate-900 text-sm flex items-center justify-between pb-2 border-b border-slate-100">
-                <span>About this contact</span>
-                <span className="text-slate-400 text-[11px] font-normal">Actions</span>
+                <span>{t('contact_detail')}</span>
+                <span className="text-slate-400 text-[11px] font-normal">{t('col_action')}</span>
               </h3>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Email</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('col_contact_email')}</span>
                 <p className="font-semibold text-[#0066cc] mt-0.5 select-all">{contact.email}</p>
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Phone Number</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('col_phone')}</span>
                 <p className="font-semibold text-slate-800 mt-0.5 select-all">{contact.phone}</p>
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Contact Owner</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('col_owner')}</span>
                 <div className="flex items-center gap-2 mt-1">
                   <img src={contact.owner.avatar} alt={contact.owner.name} className="w-5 h-5 rounded-full object-cover" />
                   <span className="font-semibold text-slate-800">{contact.owner.name}</span>
@@ -170,7 +172,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Lifecycle Stage</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('Lifecycle Stage') || 'Lifecycle Stage'}</span>
                 <select
                   value={lifecycleStage}
                   onChange={(e) => setLifecycleStage(e.target.value as any)}
@@ -202,12 +204,12 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Create Date</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('col_created_at')}</span>
                 <p className="text-slate-700 font-mono mt-0.5">{contact.createDate}</p>
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 font-medium">Last Activity Date</span>
+                <span className="text-[11px] text-slate-500 font-medium">{t('last_updated')}</span>
                 <p className="text-slate-700 font-mono mt-0.5">{contact.lastActivityDate}</p>
               </div>
             </div>
@@ -221,26 +223,26 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
             <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-2xs">
               <div className="flex items-center gap-2 mb-2">
                 <MessageSquare size={14} className="text-orange-500" />
-                <span className="font-bold text-slate-800">Log Note or Quick Update</span>
+                <span className="font-bold text-slate-800">{t('Log Note or Quick Update') || 'Log Note or Quick Update'}</span>
               </div>
               <form onSubmit={handleAddNote} className="space-y-2">
                 <textarea
                   rows={3}
                   value={newNoteText}
                   onChange={(e) => setNewNoteText(e.target.value)}
-                  placeholder="Write a note about this customer (e.g. Next call scheduled, quotation feedback)..."
+                  placeholder={t('notes_placeholder') || 'Write a note about this customer...'}
                   className="w-full p-3 border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-orange-500 focus:outline-none placeholder-slate-400 bg-slate-50/50"
                 />
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2 text-slate-400">
-                    <span className="text-[11px]">Visible to team members</span>
+                    <span className="text-[11px]">{t('Visible to team members') || 'Visible to team members'}</span>
                   </div>
                   <button
                     type="submit"
                     className="flex items-center gap-1.5 px-4 py-1.5 bg-[#ff7a59] hover:bg-[#ff5c35] text-white font-semibold rounded text-xs shadow-xs transition-all active:scale-95"
                   >
                     <Send size={12} />
-                    <span>Save note</span>
+                    <span>{t('save')}</span>
                   </button>
                 </div>
               </form>
@@ -258,7 +260,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
                         : 'border-transparent text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    Activity ({activities.length})
+                    {t('timeline') || 'Activity'} ({activities.length})
                   </button>
                   <button
                     onClick={() => setActiveTab('notes')}
@@ -268,7 +270,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
                         : 'border-transparent text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    Notes ({notes.length})
+                    {t('Notes')} ({notes.length})
                   </button>
                   <button
                     onClick={() => setActiveTab('emails')}
@@ -278,7 +280,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
                         : 'border-transparent text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    Emails (2)
+                    {t('col_contact_email')} (2)
                   </button>
                   <button
                     onClick={() => setActiveTab('calls')}
@@ -288,7 +290,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
                         : 'border-transparent text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    Calls (1)
+                    {t('col_phone')} (1)
                   </button>
                 </div>
 
@@ -333,7 +335,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
                 <div className="flex items-center gap-1.5 font-bold text-slate-900">
                   <Building2 size={14} className="text-amber-600" />
-                  <span>Companies (1)</span>
+                  <span>{t('companies')} (1)</span>
                 </div>
                 <button className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]">+ Add</button>
               </div>
@@ -354,7 +356,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
                 <div className="flex items-center gap-1.5 font-bold text-slate-900">
                   <Briefcase size={14} className="text-purple-600" />
-                  <span>Deals ({contact.associatedDeals?.length || 0})</span>
+                  <span>{t('sales_pipeline')} ({contact.associatedDeals?.length || 0})</span>
                 </div>
                 <button className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]">+ Add deal</button>
               </div>
@@ -386,19 +388,19 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
               <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
                 <div className="flex items-center gap-1.5 font-bold text-slate-900">
                   <Ticket size={14} className="text-emerald-600" />
-                  <span>Tickets ({contact.associatedTickets?.length || 0})</span>
+                  <span>{t('Tickets') || 'Tickets'} ({contact.associatedTickets?.length || 0})</span>
                 </div>
                 <button className="text-orange-600 hover:text-orange-700 font-semibold text-[11px]">+ Add ticket</button>
               </div>
 
               {contact.associatedTickets && contact.associatedTickets.length > 0 ? (
                 <div className="space-y-2">
-                  {contact.associatedTickets.map((t) => (
-                    <div key={t.id} className="p-2 bg-slate-50 border border-slate-200 rounded text-[11px]">
-                      <span className="font-bold text-slate-800">{t.subject}</span>
+                  {contact.associatedTickets.map((tItem) => (
+                    <div key={tItem.id} className="p-2 bg-slate-50 border border-slate-200 rounded text-[11px]">
+                      <span className="font-bold text-slate-800">{tItem.subject}</span>
                       <div className="flex items-center gap-2 mt-1 text-[10px]">
-                        <span className="bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-medium">{t.status}</span>
-                        <span className="text-slate-500">Priority: {t.priority}</span>
+                        <span className="bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-medium">{tItem.status}</span>
+                        <span className="text-slate-500">Priority: {tItem.priority}</span>
                       </div>
                     </div>
                   ))}
@@ -412,7 +414,7 @@ export const HubSpotRecordDetail: React.FC<HubSpotRecordDetailProps> = ({
             <div className="border border-slate-200 rounded-lg p-3.5 bg-white shadow-2xs">
               <div className="flex items-center gap-1.5 font-bold text-slate-900 pb-2 mb-2 border-b border-slate-100">
                 <Tag size={14} className="text-orange-500" />
-                <span>List Memberships (3)</span>
+                <span>{t('associations')} (3)</span>
               </div>
               <div className="space-y-1.5 text-[11px]">
                 <div className="bg-orange-50/70 border border-orange-200 text-orange-800 p-1.5 rounded font-medium">

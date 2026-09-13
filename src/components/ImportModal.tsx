@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X, UploadCloud, FileSpreadsheet, CheckCircle2, AlertCircle } from 'lucide-react';
 import { parseExcelOrCsv } from '@/utils/excelHelper';
 import { CRMItem } from '@/types/crm';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface ImportModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   const [previewItems, setPreviewItems] = useState<Partial<CRMItem>[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -61,8 +63,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               <FileSpreadsheet size={18} />
             </div>
             <div>
-              <h3 className="font-bold text-sm text-gray-900">Import Excel / CSV into CRM</h3>
-              <p className="text-[11px] text-gray-500">Target Group: <span className="font-semibold text-blue-600">{targetGroupName}</span></p>
+              <h3 className="font-bold text-sm text-gray-900">{t('import_title')}</h3>
+              <p className="text-[11px] text-gray-500">{t('target_group')}: <span className="font-semibold text-blue-600">{t(targetGroupName) || targetGroupName}</span></p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-600 rounded-full">
@@ -82,10 +84,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             />
             <UploadCloud size={32} className="mx-auto text-blue-500 mb-2" />
             <div className="text-xs font-bold text-gray-800">
-              {file ? file.name : 'Click or Drag & Drop Excel (.xlsx) / CSV file here'}
+              {file ? file.name : t('select_file')}
             </div>
             <div className="text-[11px] text-gray-400 mt-1">
-              Supports standard column headers: Name, Contact, Email, Phone, Value, Status
+              {t('import_desc')}
             </div>
           </div>
 
@@ -102,10 +104,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold text-gray-700">
-                  Preview Data ({previewItems.length} rows detected)
+                  {t('Preview Data')} ({previewItems.length} {t('items')})
                 </span>
                 <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                  <CheckCircle2 size={13} /> Ready to import
+                  <CheckCircle2 size={13} /> {t('Ready to import')}
                 </span>
               </div>
 
@@ -113,11 +115,11 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 <table className="w-full text-left">
                   <thead className="bg-gray-100 text-gray-600 border-b border-gray-200">
                     <tr>
-                      <th className="px-3 py-1.5">Name</th>
-                      <th className="px-3 py-1.5">Contact</th>
-                      <th className="px-3 py-1.5">Email</th>
-                      <th className="px-3 py-1.5 text-right">Value (THB)</th>
-                      <th className="px-3 py-1.5">Status</th>
+                      <th className="px-3 py-1.5">{t('col_item_name')}</th>
+                      <th className="px-3 py-1.5">{t('col_contact_person')}</th>
+                      <th className="px-3 py-1.5">{t('col_contact_email')}</th>
+                      <th className="px-3 py-1.5 text-right">{t('Value')}</th>
+                      <th className="px-3 py-1.5">{t('col_status')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -129,7 +131,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                         <td className="px-3 py-1.5 text-right font-semibold text-emerald-600">
                           {row.dealValue?.toLocaleString()}
                         </td>
-                        <td className="px-3 py-1.5">{row.status}</td>
+                        <td className="px-3 py-1.5">{t(row.status || '') || row.status}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -137,7 +139,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               </div>
               {previewItems.length > 5 && (
                 <div className="text-[10px] text-gray-400 mt-1 text-center italic">
-                  + and {previewItems.length - 5} more rows...
+                  + {t('and_more_rows').replace('{count}', String(previewItems.length - 5))}
                 </div>
               )}
             </div>
@@ -150,7 +152,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
           >
-            Cancel
+            {t('Cancel')}
           </button>
           <button
             onClick={handleConfirmImport}
@@ -158,7 +160,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             className="px-5 py-2 text-xs font-bold text-white bg-[#0073ea] hover:bg-[#0060b9] disabled:opacity-40 rounded-lg transition-colors shadow-sm flex items-center gap-1.5"
           >
             <CheckCircle2 size={14} />
-            <span>Import {previewItems.length} Records</span>
+            <span>{t('import_excel')} ({previewItems.length})</span>
           </button>
         </div>
       </div>
