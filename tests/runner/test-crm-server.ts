@@ -99,7 +99,7 @@ import {
 import { zwizClient, ZwizClient } from '../../src/lib/zwiz/client';
 import { qualtricsClient, QualtricsClient } from '../../src/lib/qualtrics/client';
 import { createAuditLog } from '../../src/lib/audit/logger';
-import { seedBaseline } from '../../src/app/api/test/reset/route';
+import { seedBaseline } from '../../src/lib/test/seed-baseline';
 import { sweepIdleChats, validateSweepThresholds } from '../../src/lib/cases/idle-sweep';
 import { tagCustomerVip, VipServiceError } from '../../src/lib/customers/vip-service';
 import { processCourierWebhook, getTrackingTimeline } from '../../src/lib/shipping/tracking-service';
