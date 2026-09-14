@@ -26,7 +26,7 @@ interface LanguageContextType {
 const translations: Record<string, Record<string, string>> = {
   en: {
     // Nav tabs
-    'dashboard': 'Dashboard',
+    'dashboard': 'Dashboard (Customer Segments & Sales)',
     'dashboard_overview': 'Executive CRM & Sales Dashboard',
     'total_customers': 'Total Customers',
     'customers_by_category': 'Customers by Category (Donut Chart)',
@@ -281,7 +281,7 @@ const translations: Record<string, Record<string, string>> = {
   },
   th: {
     // Nav tabs
-    'dashboard': 'แดชบอร์ด',
+    'dashboard': 'แดชบอร์ด (Segment ลูกค้า & ยอดขาย)',
     'dashboard_overview': 'แดชบอร์ดภาพรวมการบริหารลูกค้าและยอดขาย',
     'total_customers': 'จำนวนลูกค้าทั้งหมด',
     'customers_by_category': 'สัดส่วนลูกค้าแยกตามประเภท (วงกลม Donut)',
