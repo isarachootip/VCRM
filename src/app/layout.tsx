@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { AuthProvider } from '@/context/AuthContext';
+
 export default function RootLayout({
   children,
 }: {
@@ -17,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased min-h-screen bg-[#f5f6f8] text-[#323338]">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

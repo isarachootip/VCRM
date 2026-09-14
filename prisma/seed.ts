@@ -1,4 +1,5 @@
 import { PrismaClient, BusinessUnit, UserRole, PresenceStatus, ChannelType } from '@prisma/client';
+import { hashPassword } from '../src/lib/auth/password';
 
 const prisma = new PrismaClient();
 
@@ -97,6 +98,54 @@ export async function main() {
       maxChatCapacity: 5,
       maxConcurrentChats: 5,
     },
+    {
+      id: 'user_sysadmin',
+      username: 'sysadmin',
+      email: 'sysadmin@vcrm.internal',
+      name: 'System Administrator',
+      role: UserRole.ADMIN,
+      passwordHash: hashPassword('SysAdmin@2026!'),
+      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      presence: PresenceStatus.ONLINE,
+      maxChatCapacity: 10,
+      maxConcurrentChats: 10,
+    },
+    {
+      id: 'user_admin',
+      username: 'admin',
+      email: 'admin@vcrm.internal',
+      name: 'CRM Administrator',
+      role: UserRole.ADMIN,
+      passwordHash: hashPassword('Admin@2026!'),
+      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      presence: PresenceStatus.ONLINE,
+      maxChatCapacity: 10,
+      maxConcurrentChats: 10,
+    },
+    {
+      id: 'user_manager',
+      username: 'manager',
+      email: 'manager@vcrm.internal',
+      name: 'Sales & Service Manager',
+      role: UserRole.SUPERVISOR,
+      passwordHash: hashPassword('Manager@2026!'),
+      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      presence: PresenceStatus.ONLINE,
+      maxChatCapacity: 5,
+      maxConcurrentChats: 5,
+    },
+    {
+      id: 'user_sales',
+      username: 'sales',
+      email: 'sales@vcrm.internal',
+      name: 'Sales Executive',
+      role: UserRole.AGENT,
+      passwordHash: hashPassword('Sales@2026!'),
+      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB],
+      presence: PresenceStatus.ONLINE,
+      maxChatCapacity: 5,
+      maxConcurrentChats: 5,
+    },
   ];
 
   for (const user of users) {
@@ -104,6 +153,8 @@ export async function main() {
       where: { id: user.id },
       update: {
         email: user.email,
+        username: (user as any).username || null,
+        passwordHash: (user as any).passwordHash || null,
         name: user.name,
         role: user.role,
         businessUnits: user.businessUnits,
@@ -114,6 +165,8 @@ export async function main() {
       create: {
         id: user.id,
         email: user.email,
+        username: (user as any).username || null,
+        passwordHash: (user as any).passwordHash || null,
         name: user.name,
         role: user.role,
         businessUnits: user.businessUnits,

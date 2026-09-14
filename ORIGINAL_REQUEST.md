@@ -287,3 +287,49 @@ Integrity mode: development
 ### Regression & Verification
 - [ ] Complete Phase 3 test suite executes and passes 100% against PostgreSQL.
 - [ ] Full regression suite (Phase 0, Phase 1, Phase 2, Phase 3) executes with 100% pass rate and zero TypeScript compilation errors.
+
+## 2026-09-13T10:18:05Z
+
+แก้ไขปัญหา SSL certificate (Untrusted Root) และ 503 Service Unavailable บนเซิร์ฟเวอร์ `https://vcrmx.online` ที่รัน Coolify บน VPS เพื่อให้ LINE Messaging API Webhook Verify ผ่านได้สำเร็จ
+
+Working directory: c:\atgv\crm_monday
+Integrity mode: development
+
+## ข้อมูลปัจจุบัน
+
+- **โดเมน:** `vcrmx.online` → IP `187.77.147.16`
+- **Platform:** Coolify (self-hosted PaaS) บน VPS Linux — ใช้ Traefik เป็น Reverse Proxy
+- **DNS:** ไม่ทราบผู้ให้บริการ (ให้ตรวจสอบ)
+- **ปัญหา SSL:** `SEC_E_UNTRUSTED_ROOT` — Certificate ยังไม่ได้รับการ Provision จาก Let's Encrypt หรือเป็น self-signed
+- **ปัญหา Server:** HTTP `503 Service Unavailable` — Container ของ VCRM App อาจยังไม่ Running หรือ Traefik ยังไม่ Route ได้ถูกต้อง
+- **เป้าหมาย:** `POST https://vcrmx.online/api/webhooks/line` ต้องตอบกลับ `HTTP 200` จาก LINE Developers Console เมื่อกด Verify
+
+## Requirements
+
+### R1. วิเคราะห์สาเหตุ SSL และ 503 บน Coolify/VPS
+ตรวจสอบสถานะของ Traefik SSL provisioning บน Coolify ว่า Let's Encrypt certificate ถูก issue หรือยัง และหาสาเหตุที่ทำให้ได้รับ 503 (Container ไม่ Running / Port ผิด / Domain config ใน Coolify ไม่ถูกต้อง)
+
+### R2. แก้ไข SSL Certificate ให้ผ่านการตรวจสอบสากล
+Certificate ของ `vcrmx.online` ต้องออกโดย CA ที่ LINE และ Browser ยอมรับ (Let's Encrypt / ZeroSSL ผ่าน Traefik บน Coolify หรือวิธีอื่นที่เหมาะสม) ไม่ใช่ self-signed
+
+### R3. แก้ไขให้ VCRM App ตอบสนองได้ปกติ
+`https://vcrmx.online/api/webhooks/line` ต้องตอบกลับ HTTP 200 OK เมื่อถูก POST จาก LINE (ไม่ 503) ด้วยการตรวจสอบและแก้ไข Coolify deployment config, container health, และ Traefik routing
+
+### R4. สร้างคู่มือขั้นตอนแก้ไขฉบับสมบูรณ์
+หากไม่สามารถแก้ไข VPS โดยตรงได้ ให้จัดทำขั้นตอนวิธีแก้ไขที่ชัดเจน (step-by-step) สำหรับผู้ใช้ที่มี Coolify Dashboard Access เพื่อดำเนินการเองได้ทันที
+
+## Acceptance Criteria
+
+### SSL
+- [ ] `curl.exe https://vcrmx.online` ไม่แสดง error `SEC_E_UNTRUSTED_ROOT` หรือ `SSL certificate problem`
+- [ ] Certificate issuer ต้องไม่ใช่ self-signed (แสดง Let's Encrypt, ZeroSSL หรือ CA อื่นที่ LINE รองรับ)
+
+### Server Availability
+- [ ] `POST https://vcrmx.online/api/webhooks/line` ตอบกลับ HTTP 200 หรือ 401 (ไม่ใช่ 503)
+- [ ] Container ของ VCRM App อยู่ในสถานะ Running / Healthy บน Coolify
+
+### LINE Webhook Verify
+- [ ] กดปุ่ม Verify บน LINE Developers Console → ขึ้นข้อความ `Success` (ไม่ Error)
+
+### คู่มือ (fallback)
+- [ ] มีขั้นตอนวิธีแก้ไขที่ชัดเจนหากต้องทำผ่าน Coolify Dashboard และ VPS SSH โดยตรง

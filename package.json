@@ -6,7 +6,7 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "seed:users": "node --import tsx scripts/seed-users.ts",
     "mock:zwiz": "node --import tsx tests/mocks/zwiz-mock-server.ts",
     "mock:qualtrics": "node --import tsx tests/mocks/qualtrics-mock-server.ts",
     "mock:all": "node --import tsx tests/mocks/index.ts",

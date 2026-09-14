@@ -13,7 +13,9 @@ import { ActivityLogView } from '@/components/ActivityLogView';
 import { DispatchBoardView } from '@/components/DispatchBoardView';
 import { ItemDrawer } from '@/components/ItemDrawer';
 import { ImportModal } from '@/components/ImportModal';
+import { LineSettingsModal } from '@/components/settings/LineSettingsModal';
 import { SupervisorDashboard } from '@/components/supervisor/SupervisorDashboard';
+import { ExecutiveDashboard } from '@/components/dashboard/ExecutiveDashboard';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
 import { INITIAL_BOARDS, TEAM_MEMBERS } from '@/data/mockData';
 import { exportBoardToExcel } from '@/utils/excelHelper';
@@ -22,8 +24,8 @@ import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
 
 function HomeContent() {
   const { t } = useLanguage();
-  // Navigation Mode: 'lists' (HubSpot Object Lists 25 items) | 'contacts' (HubSpot CRM) | 'deals' | 'companies' | 'reports'
-  const [hubspotNavTab, setHubspotNavTab] = useState<string>('lists');
+  // Navigation Mode: 'dashboard' (Executive CRM Dashboard) | 'lists' (HubSpot Object Lists) | 'contacts' | 'deals' | 'companies' | 'reports' | 'supervisor'
+  const [hubspotNavTab, setHubspotNavTab] = useState<string>('dashboard');
 
   // Boards State
   const [allBoards, setAllBoards] = useState<Record<string, CRMBoard>>(INITIAL_BOARDS);
@@ -33,6 +35,7 @@ function HomeContent() {
   const [selectedOwner, setSelectedOwner] = useState('ALL');
   const [selectedItem, setSelectedItem] = useState<{ item: CRMItem; groupId: string } | null>(null);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isLineSettingsOpen, setIsLineSettingsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -71,6 +74,15 @@ function HomeContent() {
         console.error('Failed to load boards from localStorage', e);
       }
       setIsLoaded(true);
+    }
+
+    // Check URL query param for initial tab
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab');
+      if (tabParam) {
+        setHubspotNavTab(tabParam);
+      }
     }
 
     loadData();
@@ -395,10 +407,18 @@ function HomeContent() {
       <HubSpotHeader
         currentTab={hubspotNavTab}
         onTabChange={(tab) => setHubspotNavTab(tab)}
+        onOpenLineSettings={() => setIsLineSettingsOpen(true)}
       />
 
       {/* 2. Main Content Body */}
       <div className="flex-1 flex overflow-hidden">
+        {/* VIEW 0: Executive CRM & Sales Dashboard (Default Landing View) */}
+        {hubspotNavTab === 'dashboard' && (
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <ExecutiveDashboard />
+          </div>
+        )}
+
         {/* VIEW 1: HubSpot Object Lists & Segments View (Clone of https://app-na2.hubspot.com/contacts/247092555/objectLists/views/all?count=25) */}
         {hubspotNavTab === 'lists' && (
           <div className="flex-1 flex flex-col overflow-hidden">
@@ -427,6 +447,7 @@ function HomeContent() {
             <Sidebar
               currentBoardId={currentBoardId}
               onSelectBoard={(id) => setCurrentBoardId(id)}
+              onOpenLineSettings={() => setIsLineSettingsOpen(true)}
               boardsCountMap={Object.keys(allBoards).reduce((acc, key) => {
                 const b = allBoards[key];
                 acc[key] = b ? b.groups.reduce((cnt, g) => cnt + g.items.length, 0) : 0;
@@ -515,6 +536,12 @@ function HomeContent() {
         onClose={() => setIsImportOpen(false)}
         onImport={(items) => handleImportItems(items, currentBoard.groups[0]?.title || 'First Group')}
         targetGroupName={currentBoard.groups[0]?.title || 'First Group'}
+      />
+
+      {/* 5. LINE Messaging API & Channel Settings Modal */}
+      <LineSettingsModal
+        isOpen={isLineSettingsOpen}
+        onClose={() => setIsLineSettingsOpen(false)}
       />
     </div>
   );

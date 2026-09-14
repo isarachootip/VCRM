@@ -35,12 +35,14 @@ interface SidebarProps {
   currentBoardId: string;
   onSelectBoard: (boardId: string) => void;
   boardsCountMap?: Record<string, number>;
+  onOpenLineSettings?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ 
   currentBoardId, 
   onSelectBoard,
-  boardsCountMap = {}
+  boardsCountMap = {},
+  onOpenLineSettings
 }) => {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(true);
   const [isServicesOpen, setIsServicesOpen] = useState(true);
@@ -234,14 +236,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom Sidebar Settings */}
-        <div className="p-3 border-t border-[#e6e9ef] flex items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center gap-2 hover:text-[#0073ea] cursor-pointer">
-            <Settings size={14} />
-            <span>{t('workspace_settings')}</span>
+        <div className="p-3 border-t border-[#e6e9ef] space-y-2">
+          <button
+            type="button"
+            onClick={onOpenLineSettings}
+            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-emerald-50/80 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 transition-colors text-xs font-semibold cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#06C755] animate-pulse"></div>
+              <span>LINE OA Webhook</span>
+            </div>
+            <span className="text-[10px] bg-white text-emerald-700 font-bold px-1.5 py-0.5 rounded shadow-2xs border border-emerald-200">
+              Config
+            </span>
+          </button>
+
+          <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+            <div 
+              onClick={onOpenLineSettings}
+              className="flex items-center gap-2 hover:text-[#0073ea] cursor-pointer"
+            >
+              <Settings size={14} />
+              <span>{t('workspace_settings')}</span>
+            </div>
+            <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold border border-emerald-200">
+              {t('enterprise_pro')}
+            </span>
           </div>
-          <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-bold border border-emerald-200">
-            {t('enterprise_pro')}
-          </span>
         </div>
       </div>
     </div>

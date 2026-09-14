@@ -16,20 +16,26 @@ import {
   Briefcase,
   ListFilter,
   BarChart3,
+  LayoutDashboard,
   ShieldCheck,
   MessageSquare,
   ExternalLink,
   QrCode,
   Truck,
   Award,
-  Globe
+  Globe,
+  LogOut,
+  LogIn,
+  Key
 } from 'lucide-react';
 import { useLanguage, Language, SUPPORTED_LANGUAGES } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 
 interface HubSpotHeaderProps {
   currentTab: string;
   onTabChange: (tab: string) => void;
   onOpenCreateModal?: () => void;
+  onOpenLineSettings?: () => void;
   selectedBu?: string;
   onBuChange?: (bu: string) => void;
 }
@@ -90,6 +96,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
   currentTab,
   onTabChange,
   onOpenCreateModal,
+  onOpenLineSettings,
   selectedBu = 'ALL',
   onBuChange,
 }) => {
@@ -100,6 +107,8 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
   const [buFilter, setBuFilter] = useState<string>(selectedBu);
   const [portalTools, setPortalTools] = useState<PortalToolLink[]>(DEFAULT_PORTAL_TOOLS);
   const [showPortalMenu, setShowPortalMenu] = useState<boolean>(false);
+  const { user, role, logout, isAuthenticated } = useAuth();
+  const [showProfileMenu, setShowProfileMenu] = useState<boolean>(false);
 
   useEffect(() => {
     async function loadPortalLinks() {
@@ -146,7 +155,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
     if (pathname === '/chat') {
       router.push('/');
     }
-    onTabChange('lists');
+    onTabChange('dashboard');
   };
 
   const handleLaunchTool = (url: string) => {
@@ -211,6 +220,19 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
 
           {/* Navigation Links */}
           <nav className="flex items-center space-x-1">
+            {/* Executive CRM Dashboard Tab */}
+            <button
+              onClick={() => handleTabClick('dashboard')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold transition-colors ${
+                currentTab === 'dashboard'
+                  ? 'bg-slate-800 text-orange-400 border border-orange-500/30 shadow-xs ring-1 ring-orange-500/30'
+                  : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+              }`}
+            >
+              <LayoutDashboard size={14} className={currentTab === 'dashboard' ? 'text-orange-400' : 'text-slate-400'} />
+              <span>{t('dashboard')}</span>
+            </button>
+
             {/* Central Chat & Shop Desk Tab */}
             <button
               onClick={() => handleTabClick('chat')}
@@ -359,17 +381,104 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-orange-500 ring-2 ring-slate-800"></span>
           </button>
 
-          <button className="w-8 h-8 rounded hover:bg-slate-800 flex items-center justify-center text-slate-300 transition-colors" title="Settings">
+          <button 
+            type="button"
+            onClick={onOpenLineSettings} 
+            className="w-8 h-8 rounded hover:bg-slate-800 flex items-center justify-center text-slate-300 hover:text-orange-400 transition-colors cursor-pointer" 
+            title="LINE Integration & Settings"
+          >
             <Settings size={16} />
           </button>
 
-          {/* User Profile */}
-          <div className="flex items-center gap-2 pl-1 cursor-pointer">
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces"
-              alt="Admin Profile"
-              className="w-7 h-7 rounded-full border border-orange-400/80 object-cover ring-1 ring-white/10"
-            />
+          {/* User Profile & Auth Menu */}
+          <div className="relative pl-1">
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-slate-800 border border-slate-700/60 transition-colors text-left cursor-pointer"
+                  title="Click to view profile & actions"
+                >
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white text-xs font-bold border border-orange-400/80 shadow-xs">
+                    {user.name ? user.name.charAt(0).toUpperCase() : user.username.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="hidden md:flex flex-col">
+                    <span className="text-xs font-semibold text-slate-200 leading-tight">
+                      {user.name || user.username}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      @{user.username}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider ${
+                      user.role === 'ADMIN'
+                        ? user.username === 'sysadmin'
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                          : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+                        : user.role === 'SUPERVISOR'
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    }`}
+                  >
+                    {user.username === 'sysadmin' ? 'SYSADMIN' : user.role === 'AGENT' ? 'SALES' : user.role}
+                  </span>
+                  <ChevronDown size={12} className="text-slate-400" />
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {showProfileMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-2 z-50 animate-fadeIn">
+                    <div className="px-3 py-2 border-b border-slate-800">
+                      <div className="text-xs font-semibold text-white">{user.name}</div>
+                      <div className="text-[11px] text-slate-400 font-mono truncate">{user.email}</div>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <span className="text-[10px] text-slate-400">Signed in as:</span>
+                        <span className="text-[10px] font-bold text-orange-400 font-mono">@{user.username}</span>
+                      </div>
+                    </div>
+
+                    <div className="py-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          router.push('/login');
+                        }}
+                        className="w-full px-3 py-1.5 text-xs text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <Key size={14} className="text-slate-400" />
+                        <span>Switch Account / Preset</span>
+                      </button>
+                    </div>
+
+                    <div className="pt-1 border-t border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          logout();
+                        }}
+                        className="w-full px-3 py-1.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 flex items-center gap-2 cursor-pointer transition-colors"
+                      >
+                        <LogOut size={14} />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => router.push('/login')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/40 text-xs font-medium transition-colors cursor-pointer"
+              >
+                <LogIn size={14} />
+                <span>Sign In</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
