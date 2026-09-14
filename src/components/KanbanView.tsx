@@ -55,86 +55,86 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
           return (
             <div 
               key={stage}
-              className="w-72 bg-[#f0f2f5] rounded-xl flex flex-col max-h-[calc(100vh-240px)] shadow-sm border border-gray-200/80 shrink-0"
+              className="w-72 bg-muted/40 rounded-2xl flex flex-col max-h-[calc(100vh-240px)] shadow-xs border border-border shrink-0 transition-colors"
             >
               {/* Kanban Column Header */}
-              <div className="p-3 bg-white rounded-t-xl border-b border-gray-200">
+              <div className="p-3.5 bg-card rounded-t-2xl border-b border-border">
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <span 
-                      className="w-2.5 h-2.5 rounded-full" 
+                      className="w-2.5 h-2.5 rounded-full shadow-xs" 
                       style={{ backgroundColor: config.bgColor }}
                     />
-                    <span className="font-bold text-xs text-gray-800 tracking-tight">{t(stage)}</span>
+                    <span className="font-bold text-xs text-foreground tracking-tight">{t(stage)}</span>
                   </div>
-                  <span className="text-[11px] font-semibold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] font-semibold bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
                     {stageItems.length}
                   </span>
                 </div>
 
-                <div className="text-[11px] font-bold text-emerald-600">
+                <div className="text-[11px] font-bold text-emerald-500">
                   {formatCurrency(stageValue)}
                 </div>
               </div>
 
               {/* Kanban Cards List */}
-              <div className="p-2.5 space-y-2.5 overflow-y-auto flex-1">
+              <div className="p-3 space-y-3 overflow-y-auto flex-1">
                 {stageItems.map(({ item, groupId }) => {
                   const priorityCfg = PRIORITY_CONFIGS[item.priority] || { label: item.priority, bgColor: '#c4c4c4' };
                   return (
                     <div
                       key={item.id}
                       onClick={() => onSelectItem(item, groupId)}
-                      className="bg-white p-3 rounded-lg border border-gray-200/90 shadow-sm hover:shadow-md hover:border-blue-400 transition-all cursor-pointer group"
+                      className="bg-card p-3.5 rounded-xl border border-border shadow-xs hover:shadow-md hover:border-violet-500/60 transition-all cursor-pointer group"
                     >
                       {/* Priority Tag */}
                       <div className="flex items-center justify-between mb-2">
                         <span 
-                          className="text-[10px] font-bold px-2 py-0.5 rounded text-white"
+                          className="text-[10px] font-bold px-2 py-0.5 rounded-md text-white shadow-2xs"
                           style={{ backgroundColor: priorityCfg.bgColor }}
                         >
                           {t(item.priority)}
                         </span>
-                        <span className="text-[10px] text-gray-400 font-medium">
+                        <span className="text-[10px] text-muted-foreground font-medium">
                           {item.probability}% {t('Probability')}
                         </span>
                       </div>
 
                       {/* Deal Name */}
-                      <h4 className="font-bold text-xs text-gray-900 leading-snug group-hover:text-[#0073ea] transition-colors mb-1.5 line-clamp-2">
+                      <h4 className="font-bold text-xs text-foreground leading-snug group-hover:text-violet-500 transition-colors mb-1.5 line-clamp-2">
                         {item.name}
                       </h4>
 
                       {/* Customer / Contact */}
-                      <div className="text-[11px] text-gray-500 mb-2 truncate">
+                      <div className="text-[11px] text-muted-foreground mb-2 truncate">
                         👤 {item.contactPerson}
                       </div>
 
                       {/* Value & Owner */}
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
-                        <span className="font-extrabold text-xs text-gray-900">
+                      <div className="flex items-center justify-between pt-2 border-t border-border mt-2">
+                        <span className="font-extrabold text-xs text-foreground">
                           {formatCurrency(item.dealValue)}
                         </span>
                         
                         <div className="flex items-center gap-1.5" title={`Owner: ${item.owner.name}`}>
                           <span className="text-xs">{item.owner.avatar}</span>
-                          <span className="text-[10px] font-medium text-gray-600">
+                          <span className="text-[10px] font-medium text-muted-foreground">
                             {item.owner.name.split(' ')[0]}
                           </span>
                         </div>
                       </div>
 
                       {/* Quick Move Stage dropdown */}
-                      <div className="mt-2.5 pt-2 border-t border-dashed border-gray-200 flex items-center justify-between text-[10px] text-gray-500">
+                      <div className="mt-2.5 pt-2 border-t border-dashed border-border flex items-center justify-between text-[10px] text-muted-foreground">
                         <span>{t('Close Date')}: {item.expectedCloseDate || 'TBD'}</span>
                         <select
                           value={item.status}
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => onUpdateItemStatus(item.id, e.target.value as StatusType)}
-                          className="bg-gray-100 hover:bg-gray-200 text-[10px] rounded px-1 py-0.5 text-gray-700 outline-none font-medium cursor-pointer"
+                          className="bg-muted hover:bg-accent text-[10px] rounded-lg px-2 py-0.5 text-foreground outline-none font-medium cursor-pointer border border-border transition-colors"
                         >
                           {stages.map((st) => (
-                            <option key={st} value={st}>{t('Move')}: {t(st)}</option>
+                            <option key={st} value={st} className="bg-card text-foreground">{t('Move')}: {t(st)}</option>
                           ))}
                         </select>
                       </div>
@@ -143,7 +143,7 @@ export const KanbanView: React.FC<KanbanViewProps> = ({
                 })}
 
                 {stageItems.length === 0 && (
-                  <div className="py-8 text-center text-xs text-gray-400 italic">
+                  <div className="py-8 text-center text-xs text-muted-foreground/60 italic">
                     {t('No deals in this stage')}
                   </div>
                 )}

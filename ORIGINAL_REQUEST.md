@@ -333,3 +333,40 @@ Certificate ของ `vcrmx.online` ต้องออกโดย CA ที่
 
 ### คู่มือ (fallback)
 - [ ] มีขั้นตอนวิธีแก้ไขที่ชัดเจนหากต้องทำผ่าน Coolify Dashboard และ VPS SSH โดยตรง
+
+## 2026-09-14T10:41:35Z
+
+This is a single self-contained fix; keep it small and focused.
+
+Redesign the CRM navigation architecture by migrating all crowded top navigation bars (Main Application tabs, Portal Hub tools, and Scope selectors) into a unified, high-polish Cruip Artifact Left Sidebar navigation, and simplify the Top Header into a sleek, minimal single-line utility bar.
+
+Working directory: c:\atgv\crm_monday
+Integrity mode: development
+
+## Requirements
+
+### R1. Comprehensive Left Sidebar Navigation Migration
+- Consolidate all top navigation menus into the Left Sidebar:
+  - **Core Apps**: Dashboard (Executive Overview), Omni Chat Desk (Live indicator), Contacts & 360°, Lists & Segments, Supervisor Workforce Hub.
+  - **CRM & Sales Pipelines**: Deals & Pipeline (`board-5030723273`), Inbound Leads 2026 (`board-leads`), Enterprise Accounts (`board-accounts`), Contacts & Stakeholders (`board-contacts`), Sales Forecast (`board-growth`).
+  - **Field Services & Logistics**: Delivery Fleet, Installation Tech, Renovation Projects, Maintenance SLA.
+  - **Portal Hub & Tools Group**: AIPX, The 1 Portal, Operation Portal, QR Portal, Central Delivery Portal.
+- Support Business Unit (BU) switching directly within the sidebar workspace header.
+
+### R2. Minimal Cruip Artifact Top Utility Header
+- Eliminate the multi-tiered redundant navigation tabs and secondary sub-headers from the top bar.
+- Retain only essential top utilities: Global Command Search (`⌘K`), `+ Create` action button, Language Switcher, Dark/Light Mode toggle, and User Profile menu.
+
+### R3. Full View Compatibility & Theme Consistency
+- Ensure the Left Sidebar is persistent across all main views (Executive Dashboard, Table View, Kanban View, Contacts 360, Lists View, Chat Desk, Supervisor Hub).
+- Preserve smooth responsiveness, theme tokens (`bg-sidebar`, `border-sidebar-border`, `text-sidebar-foreground`), and active violet highlight styling.
+
+## Acceptance Criteria
+
+### Verification Checklist
+- [ ] Top header is unified into a single clean line with no duplicate app tabs or portal tool sub-bars.
+- [ ] Left sidebar hosts all main application views, sales pipelines, logistics boards, and portal links.
+- [ ] Clicking any item in the left sidebar instantly switches the active view without unexpected layout shifts.
+- [ ] Dark and Light mode switching operates seamlessly across the sidebar and views.
+- [ ] Running `npm run build` succeeds with exit code `0`.
+

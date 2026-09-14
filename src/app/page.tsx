@@ -16,16 +16,41 @@ import { ImportModal } from '@/components/ImportModal';
 import { LineSettingsModal } from '@/components/settings/LineSettingsModal';
 import { SupervisorDashboard } from '@/components/supervisor/SupervisorDashboard';
 import { ExecutiveDashboard } from '@/components/dashboard/ExecutiveDashboard';
+import { ChatDeskView } from '@/components/chat/ChatDeskView';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
 import { INITIAL_BOARDS, TEAM_MEMBERS } from '@/data/mockData';
 import { exportBoardToExcel } from '@/utils/excelHelper';
 import { CheckCircle2, AlertCircle, Sparkles, LayoutList, Kanban, Layers } from 'lucide-react';
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext';
 
+const VALID_TABS = new Set([
+  'dashboard',
+  'chat',
+  'contacts',
+  'lists',
+  'supervisor',
+  'deals',
+  'companies',
+  'reports',
+]);
+
+const VALID_BOARDS = new Set([
+  'board-5030723273',
+  'board-leads',
+  'board-accounts',
+  'board-contacts',
+  'board-growth',
+  'board-delivery',
+  'board-install',
+  'board-renovate',
+  'board-maintain',
+]);
+
 function HomeContent() {
   const { t } = useLanguage();
-  // Navigation Mode: 'dashboard' (Executive CRM Dashboard) | 'lists' (HubSpot Object Lists) | 'contacts' | 'deals' | 'companies' | 'reports' | 'supervisor'
+  // Navigation Mode: 'dashboard' | 'lists' | 'contacts' | 'deals' | 'companies' | 'reports' | 'supervisor' | 'chat'
   const [hubspotNavTab, setHubspotNavTab] = useState<string>('dashboard');
+  const [selectedBu, setSelectedBu] = useState<string>('ALL');
 
   // Boards State
   const [allBoards, setAllBoards] = useState<Record<string, CRMBoard>>(INITIAL_BOARDS);
@@ -38,6 +63,7 @@ function HomeContent() {
   const [isLineSettingsOpen, setIsLineSettingsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const currentBoard = allBoards[currentBoardId] || allBoards['board-5030723273'] || INITIAL_BOARDS['board-5030723273'];
 
@@ -76,12 +102,37 @@ function HomeContent() {
       setIsLoaded(true);
     }
 
-    // Check URL query param for initial tab
+    // Check URL query param for initial tab, board, and bu
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get('tab');
       if (tabParam) {
-        setHubspotNavTab(tabParam);
+        if (VALID_TABS.has(tabParam)) {
+          setHubspotNavTab(tabParam);
+        } else {
+          setHubspotNavTab('dashboard');
+          const url = new URL(window.location.href);
+          url.searchParams.delete('tab');
+          url.searchParams.delete('board');
+          window.history.replaceState(null, '', url.toString());
+          showToast('Unrecognized navigation tab, defaulting to Dashboard');
+        }
+      }
+      const boardParam = urlParams.get('board');
+      if (boardParam) {
+        if (VALID_BOARDS.has(boardParam)) {
+          setCurrentBoardId(boardParam);
+        } else {
+          setCurrentBoardId('board-5030723273');
+          const url = new URL(window.location.href);
+          url.searchParams.set('board', 'board-5030723273');
+          window.history.replaceState(null, '', url.toString());
+          showToast('Unrecognized board ID, defaulting to Deals & Pipeline');
+        }
+      }
+      const buParam = urlParams.get('bu');
+      if (buParam) {
+        setSelectedBu(buParam);
       }
     }
 
@@ -393,70 +444,137 @@ function HomeContent() {
     };
   });
 
+  const handleTabChange = (tab: string) => {
+    setHubspotNavTab(tab);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (tab === 'dashboard') {
+        url.searchParams.delete('tab');
+        url.searchParams.delete('board');
+      } else {
+        url.searchParams.set('tab', tab);
+        if (tab !== 'deals') {
+          url.searchParams.delete('board');
+        }
+      }
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
+  const handleSelectBoard = (id: string) => {
+    setCurrentBoardId(id);
+    setHubspotNavTab('deals');
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', 'deals');
+      url.searchParams.set('board', id);
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
+  const handleBuChange = (bu: string) => {
+    setSelectedBu(bu);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (bu === 'ALL') {
+        url.searchParams.delete('bu');
+      } else {
+        url.searchParams.set('bu', bu);
+      }
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
+  const handleOpenCreateModal = () => {
+    if (hubspotNavTab !== 'deals') {
+      handleTabChange('deals');
+    }
+    if (currentBoard.groups[0]) {
+      handleAddItem(currentBoard.groups[0].id, 'New Item');
+    }
+  };
+
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-white font-sans antialiased text-slate-800">
+    <div className="flex flex-col h-screen overflow-hidden bg-background font-sans antialiased text-foreground">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-xl text-xs animate-bounce border border-slate-700">
-          <CheckCircle2 size={16} className="text-[#ff7a59]" />
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 bg-popover text-popover-foreground px-4 py-2.5 rounded-xl shadow-2xl text-xs animate-bounce border border-border">
+          <CheckCircle2 size={16} className="text-violet-500" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* 1. HubSpot Global Header (Top Navigation with Hub ID: 247092555) */}
+      {/* 1. Global Minimal Single-Line Header */}
       <HubSpotHeader
         currentTab={hubspotNavTab}
-        onTabChange={(tab) => setHubspotNavTab(tab)}
+        onTabChange={handleTabChange}
+        onOpenCreateModal={handleOpenCreateModal}
         onOpenLineSettings={() => setIsLineSettingsOpen(true)}
+        selectedBu={selectedBu}
+        onBuChange={handleBuChange}
+        onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
       />
 
-      {/* 2. Main Content Body */}
+      {/* 2. Main Content Body with Persistent Left Sidebar */}
       <div className="flex-1 flex overflow-hidden">
-        {/* VIEW 0: Executive CRM & Sales Dashboard (Default Landing View) */}
-        {hubspotNavTab === 'dashboard' && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <ExecutiveDashboard />
-          </div>
-        )}
+        {/* Persistent Left Sidebar Navigation */}
+        <Sidebar
+          currentTab={hubspotNavTab}
+          onTabChange={handleTabChange}
+          currentBoardId={currentBoardId}
+          onSelectBoard={handleSelectBoard}
+          onOpenLineSettings={() => setIsLineSettingsOpen(true)}
+          selectedBu={selectedBu}
+          onBuChange={handleBuChange}
+          isMobileOpen={isMobileSidebarOpen}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+          boardsCountMap={Object.keys(allBoards).reduce((acc, key) => {
+            const b = allBoards[key];
+            acc[key] = b ? b.groups.reduce((cnt, g) => cnt + g.items.length, 0) : 0;
+            return acc;
+          }, {} as Record<string, number>)}
+        />
 
-        {/* VIEW 1: HubSpot Object Lists & Segments View (Clone of https://app-na2.hubspot.com/contacts/247092555/objectLists/views/all?count=25) */}
-        {hubspotNavTab === 'lists' && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <HubSpotListsView />
-          </div>
-        )}
+        {/* Right Main Dynamic Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+          {/* VIEW 0: Executive CRM & Sales Dashboard */}
+          {hubspotNavTab === 'dashboard' && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <ExecutiveDashboard selectedBu={selectedBu} onBuChange={handleBuChange} />
+            </div>
+          )}
 
-        {/* VIEW 2: HubSpot Contacts & 3-Column Profile */}
-        {hubspotNavTab === 'contacts' && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <HubSpotContactsView />
-          </div>
-        )}
+          {/* VIEW: Omni Chat Desk */}
+          {hubspotNavTab === 'chat' && (
+            <div className="flex-1 flex overflow-hidden">
+              <ChatDeskView embedded selectedBu={selectedBu} onBuChange={handleBuChange} />
+            </div>
+          )}
 
-        {/* VIEW: Supervisor Workforce & Adherence Center */}
-        {hubspotNavTab === 'supervisor' && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <SupervisorDashboard />
-          </div>
-        )}
+          {/* VIEW 1: HubSpot Object Lists & Segments View */}
+          {hubspotNavTab === 'lists' && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <HubSpotListsView />
+            </div>
+          )}
 
-        {/* VIEW 3: Deals / Sales Pipeline / Field Service Boards */}
-        {(hubspotNavTab === 'deals' || hubspotNavTab === 'companies' || hubspotNavTab === 'reports') && (
-          <div className="flex-1 flex overflow-hidden">
-            {/* Sidebar for Board Navigation */}
-            <Sidebar
-              currentBoardId={currentBoardId}
-              onSelectBoard={(id) => setCurrentBoardId(id)}
-              onOpenLineSettings={() => setIsLineSettingsOpen(true)}
-              boardsCountMap={Object.keys(allBoards).reduce((acc, key) => {
-                const b = allBoards[key];
-                acc[key] = b ? b.groups.reduce((cnt, g) => cnt + g.items.length, 0) : 0;
-                return acc;
-              }, {} as Record<string, number>)}
-            />
+          {/* VIEW 2: HubSpot Contacts & 3-Column Profile */}
+          {hubspotNavTab === 'contacts' && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <HubSpotContactsView />
+            </div>
+          )}
 
-            {/* Board Workspace Area */}
-            <div className="flex-1 flex flex-col min-w-0 bg-[#f5f6f8] overflow-hidden">
+          {/* VIEW: Supervisor Workforce & Adherence Center */}
+          {hubspotNavTab === 'supervisor' && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <SupervisorDashboard selectedBu={selectedBu} onBuChange={handleBuChange} />
+            </div>
+          )}
+
+          {/* VIEW 3: Deals / Sales Pipeline / Field Service Boards */}
+          {(hubspotNavTab === 'deals' || hubspotNavTab === 'companies' || hubspotNavTab === 'reports') && (
+            <div className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
               <BoardHeader
                 currentBoard={currentBoard}
                 activeView={activeView}
@@ -474,7 +592,7 @@ function HomeContent() {
                 onOpenImport={() => setIsImportOpen(true)}
               />
 
-              <div className="flex-1 overflow-y-auto bg-[#f5f6f8]">
+              <div className="flex-1 overflow-y-auto bg-background">
                 {activeView === 'table' && (
                   <TableView
                     currentBoard={currentBoard}
@@ -514,8 +632,8 @@ function HomeContent() {
                 )}
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* 3. Item Detail / Notes Drawer */}
@@ -548,9 +666,5 @@ function HomeContent() {
 }
 
 export default function Home() {
-  return (
-    <LanguageProvider>
-      <HomeContent />
-    </LanguageProvider>
-  );
+  return <HomeContent />;
 }

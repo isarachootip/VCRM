@@ -161,21 +161,21 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#f5f8fa] overflow-hidden text-slate-800">
+    <div className="flex flex-col h-full bg-[#f5f8fa] dark:bg-background overflow-hidden text-slate-800 dark:text-foreground transition-colors">
       {/* 1. HubSpot Sub-Header & Breadcrumb */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 shrink-0">
+      <div className="bg-white dark:bg-card border-b border-slate-200 dark:border-border px-6 py-4 shrink-0 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-muted-foreground font-medium mb-1">
               <span>CRM</span>
               <span>/</span>
-              <span className="text-slate-700">Contacts & Objects</span>
+              <span className="text-slate-700 dark:text-muted-foreground">Contacts & Objects</span>
               <span>/</span>
               <span className="text-orange-600 font-semibold">{t('lists_segments')}</span>
             </div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{t('lists_segments')}</h1>
-              <span className="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight">{t('lists_segments')}</h1>
+              <span className="bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-border">
                 {lists.length} {t('items')}
               </span>
             </div>
@@ -187,23 +187,23 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               onClick={() => {
                 alert('Exporting 25 lists to Excel / CSV format...');
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-muted-foreground bg-white dark:bg-card border border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-accent rounded shadow-2xs transition-colors"
             >
-              <Download size={14} className="text-slate-500" />
+              <Download size={14} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('export_excel')}</span>
             </button>
 
             <button 
               onClick={() => alert('Opening VCRM Excel/CSV List Import Wizard...')}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-muted-foreground bg-white dark:bg-card border border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-accent rounded shadow-2xs transition-colors"
             >
-              <Upload size={14} className="text-slate-500" />
+              <Upload size={14} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('import_excel')}</span>
             </button>
 
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-sm transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-2xs transition-all active:scale-95"
             >
               <Plus size={15} strokeWidth={2.5} />
               <span>{t('create')}</span>
@@ -219,11 +219,11 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
               activeTab === 'all'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
             }`}
           >
             <span>{t('all_lists')}</span>
-            <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">{lists.length}</span>
+            <span className="text-[11px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-1.5 py-0.2 rounded-full font-bold">{lists.length}</span>
           </button>
 
           <button
@@ -231,12 +231,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
               activeTab === 'contacts'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
             }`}
           >
             <Users size={13} />
             <span>{t('contacts')}</span>
-            <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
+            <span className="text-[11px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'CONTACTS').length}
             </span>
           </button>
@@ -246,12 +246,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
               activeTab === 'companies'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
             }`}
           >
             <Building2 size={13} />
             <span>{t('companies')}</span>
-            <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
+            <span className="text-[11px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'COMPANIES').length}
             </span>
           </button>
@@ -261,12 +261,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
               activeTab === 'deals'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
             }`}
           >
             <Briefcase size={13} />
             <span>{t('sales_pipeline')}</span>
-            <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
+            <span className="text-[11px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.objectType === 'DEALS').length}
             </span>
           </button>
@@ -276,12 +276,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
               activeTab === 'my'
                 ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
             }`}
           >
             <Pin size={13} />
             <span>{t('My lists')}</span>
-            <span className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded-full font-bold">
+            <span className="text-[11px] bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground px-1.5 py-0.2 rounded-full font-bold">
               {lists.filter(l => l.createdBy.name.includes('Thanakorn')).length}
             </span>
           </button>
@@ -289,21 +289,21 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
       </div>
 
       {/* 2. Search, Filters & Bulk Actions Toolbar */}
-      <div className="bg-[#f5f8fa] px-6 py-3 border-b border-slate-200 shrink-0">
+      <div className="bg-[#f5f8fa] dark:bg-background px-6 py-3 border-b border-slate-200 dark:border-border shrink-0 transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Search Box */}
           <div className="flex items-center gap-3 flex-1">
             <div className="relative w-full max-w-sm">
-              <Search className="absolute left-3 top-2.5 text-slate-400" size={14} />
+              <Search className="absolute left-3 top-2.5 text-slate-400 dark:text-muted-foreground" size={14} />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('search_lists')}
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded shadow-xs focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 placeholder-slate-400"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-card text-foreground border border-slate-300 dark:border-border rounded shadow-2xs focus:outline-none focus:ring-1 focus:ring-orange-500 placeholder:text-muted-foreground transition-colors"
               />
               {searchTerm && (
-                <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600">
+                <button onClick={() => setSearchTerm('')} className="absolute right-2.5 top-2.5 text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground">
                   <X size={13} />
                 </button>
               )}
@@ -311,31 +311,31 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
 
             {/* Object Type Filter */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium hidden lg:inline">{t('Object Type')}:</span>
+              <span className="text-slate-500 dark:text-muted-foreground font-medium hidden lg:inline">{t('Object Type')}:</span>
               <select
                 value={selectedObjectType}
                 onChange={(e) => setSelectedObjectType(e.target.value)}
-                className="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-2.5 py-1.5 text-xs text-slate-700 dark:text-foreground font-medium focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors"
               >
-                <option value="ALL">{t('All objects') || 'All objects'}</option>
-                <option value="CONTACTS">{t('contacts')}</option>
-                <option value="COMPANIES">{t('companies')}</option>
-                <option value="DEALS">{t('sales_pipeline')}</option>
-                <option value="TICKETS">{t('Tickets') || 'Tickets'}</option>
+                <option value="ALL" className="bg-card text-foreground">{t('All objects') || 'All objects'}</option>
+                <option value="CONTACTS" className="bg-card text-foreground">{t('contacts')}</option>
+                <option value="COMPANIES" className="bg-card text-foreground">{t('companies')}</option>
+                <option value="DEALS" className="bg-card text-foreground">{t('sales_pipeline')}</option>
+                <option value="TICKETS" className="bg-card text-foreground">{t('Tickets') || 'Tickets'}</option>
               </select>
             </div>
 
             {/* List Type Filter */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium hidden lg:inline">{t('List Type')}:</span>
+              <span className="text-slate-500 dark:text-muted-foreground font-medium hidden lg:inline">{t('List Type')}:</span>
               <select
                 value={selectedListType}
                 onChange={(e) => setSelectedListType(e.target.value)}
-                className="bg-white border border-slate-300 rounded px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-2.5 py-1.5 text-xs text-slate-700 dark:text-foreground font-medium focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors"
               >
-                <option value="ALL">{t('All types') || 'All types'}</option>
-                <option value="ACTIVE">{t('Active') || 'Active'}</option>
-                <option value="STATIC">{t('Static') || 'Static'}</option>
+                <option value="ALL" className="bg-card text-foreground">{t('All types') || 'All types'}</option>
+                <option value="ACTIVE" className="bg-card text-foreground">{t('Active') || 'Active'}</option>
+                <option value="STATIC" className="bg-card text-foreground">{t('Static') || 'Static'}</option>
               </select>
             </div>
           </div>
@@ -363,69 +363,69 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               </button>
             </div>
           ) : (
-            <div className="text-xs text-slate-500 font-medium">
-              Showing <span className="font-semibold text-slate-700">{filteredLists.length}</span> of {lists.length} lists
+            <div className="text-xs text-slate-500 dark:text-muted-foreground font-medium">
+              Showing <span className="font-semibold text-slate-700 dark:text-foreground">{filteredLists.length}</span> of {lists.length} lists
             </div>
           )}
         </div>
       </div>
 
       {/* 3. HubSpot Main Data Table */}
-      <div className="flex-1 overflow-auto bg-white">
+      <div className="flex-1 overflow-auto bg-white dark:bg-card transition-colors">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="bg-[#f5f8fa] border-b border-slate-200 text-slate-600 font-semibold select-none sticky top-0 z-10">
+            <tr className="bg-[#f5f8fa] dark:bg-muted/60 border-b border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground font-semibold select-none sticky top-0 z-10 transition-colors">
               <th className="py-3 px-4 w-10">
                 <input
                   type="checkbox"
                   checked={selectedListIds.length === filteredLists.length && filteredLists.length > 0}
                   onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                  className="rounded border-slate-300 dark:border-border text-orange-600 focus:ring-orange-500 cursor-pointer"
                 />
               </th>
               <th 
                 onClick={() => handleSort('name')}
-                className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
+                className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground cursor-pointer hover:bg-slate-200/50 dark:hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-1.5">
                   <span>{t('col_item_name')}</span>
-                  <ArrowUpDown size={12} className="text-slate-400" />
+                  <ArrowUpDown size={12} className="text-slate-400 dark:text-muted-foreground" />
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Object Type')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('List Type')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Object Type')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('List Type')}</th>
               <th 
                 onClick={() => handleSort('size')}
-                className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
+                className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground cursor-pointer hover:bg-slate-200/50 dark:hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-1.5">
                   <span>{t('records')}</span>
-                  <ArrowUpDown size={12} className="text-slate-400" />
+                  <ArrowUpDown size={12} className="text-slate-400 dark:text-muted-foreground" />
                 </div>
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Folder') || 'Folder'}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Created by') || 'Created by'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Folder') || 'Folder'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Created by') || 'Created by'}</th>
               <th 
                 onClick={() => handleSort('lastUpdated')}
-                className="py-3 px-4 font-semibold text-slate-700 cursor-pointer hover:bg-slate-200/50 transition-colors"
+                className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground cursor-pointer hover:bg-slate-200/50 dark:hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-1.5">
                   <span>{t('last_updated')}</span>
-                  <ArrowUpDown size={12} className="text-slate-400" />
+                  <ArrowUpDown size={12} className="text-slate-400 dark:text-muted-foreground" />
                 </div>
               </th>
-              <th className="py-3 px-4 text-right">{t('col_action')}</th>
+              <th className="py-3 px-4 text-right font-semibold text-slate-700 dark:text-foreground">{t('col_action')}</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-border">
             {filteredLists.map((list) => {
               const isSelected = selectedListIds.includes(list.id);
               return (
                 <tr
                   key={list.id}
-                  className={`hover:bg-slate-50/80 transition-colors group ${
-                    isSelected ? 'bg-orange-50/40' : ''
+                  className={`hover:bg-slate-50/80 dark:hover:bg-accent/40 transition-colors group ${
+                    isSelected ? 'bg-orange-50/40 dark:bg-orange-950/20' : ''
                   }`}
                 >
                   {/* Checkbox */}
@@ -434,7 +434,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => handleToggleSelectOne(list.id)}
-                      className="rounded border-slate-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                      className="rounded border-slate-300 dark:border-border text-orange-600 focus:ring-orange-500 cursor-pointer"
                     />
                   </td>
 
@@ -456,7 +456,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
 
                   {/* Object Type Badge */}
                   <td className="py-3 px-4">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 border border-slate-200 text-slate-700">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-muted border border-slate-200 dark:border-border text-slate-700 dark:text-foreground">
                       {getObjectTypeIcon(list.objectType)}
                       <span>{list.objectType}</span>
                     </div>
@@ -465,12 +465,12 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                   {/* List Type Badge */}
                   <td className="py-3 px-4">
                     {list.listType === 'ACTIVE' ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                         <RefreshCw size={11} className="text-emerald-600 animate-spin-slow" />
                         <span>Active (Dynamic)</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-muted text-slate-700 dark:text-muted-foreground border border-slate-200 dark:border-border">
                         <Pin size={11} className="text-slate-500" />
                         <span>Static</span>
                       </span>
@@ -478,13 +478,13 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                   </td>
 
                   {/* Size */}
-                  <td className="py-3 px-4 font-mono font-semibold text-slate-800">
+                  <td className="py-3 px-4 font-mono font-semibold text-slate-800 dark:text-foreground">
                     {list.size.toLocaleString()}
                   </td>
 
                   {/* Folder */}
-                  <td className="py-3 px-4 text-slate-600">
-                    <span className="bg-slate-100 px-2 py-0.5 rounded text-[11px] font-medium text-slate-600">
+                  <td className="py-3 px-4 text-slate-600 dark:text-muted-foreground">
+                    <span className="bg-slate-100 dark:bg-muted px-2 py-0.5 rounded text-[11px] font-medium text-slate-600 dark:text-muted-foreground">
                       {list.folder || 'General'}
                     </span>
                   </td>
@@ -495,14 +495,14 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                       <img
                         src={list.createdBy.avatar}
                         alt={list.createdBy.name}
-                        className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-300"
+                        className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-300 dark:ring-border"
                       />
-                      <span className="text-slate-700 font-medium">{list.createdBy.name}</span>
+                      <span className="text-slate-700 dark:text-foreground font-medium">{list.createdBy.name}</span>
                     </div>
                   </td>
 
                   {/* Last Updated */}
-                  <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
+                  <td className="py-3 px-4 text-slate-500 dark:text-muted-foreground font-mono text-[11px]">
                     {list.lastUpdated}
                   </td>
 
@@ -511,7 +511,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                     <div className="flex items-center justify-end gap-1 opacity-80 group-hover:opacity-100">
                       <button
                         onClick={() => setActiveListModal(list)}
-                        className="p-1.5 hover:bg-slate-200 rounded text-slate-500 hover:text-slate-800"
+                        className="p-1.5 hover:bg-slate-200 dark:hover:bg-accent rounded text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground"
                         title="View list details & filters"
                       >
                         <Edit3 size={13} />
@@ -526,7 +526,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                           };
                           setLists([cloned, ...lists]);
                         }}
-                        className="p-1.5 hover:bg-slate-200 rounded text-slate-500 hover:text-slate-800"
+                        className="p-1.5 hover:bg-slate-200 dark:hover:bg-accent rounded text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground"
                         title="Clone list"
                       >
                         <Copy size={13} />
@@ -535,7 +535,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                         onClick={() => {
                           setLists(lists.filter(l => l.id !== list.id));
                         }}
-                        className="p-1.5 hover:bg-red-100 rounded text-slate-400 hover:text-red-600"
+                        className="p-1.5 hover:bg-red-100 dark:hover:bg-destructive/20 rounded text-slate-400 dark:text-muted-foreground hover:text-red-600 dark:hover:text-destructive"
                         title="Delete list"
                       >
                         <Trash2 size={13} />
@@ -549,10 +549,10 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
         </table>
 
         {filteredLists.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center text-slate-500">
-            <ListFilter size={36} className="text-slate-300 mb-3" />
-            <h3 className="text-base font-semibold text-slate-700">No lists found matching your filter</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm">
+          <div className="flex flex-col items-center justify-center py-16 text-center text-slate-500 dark:text-muted-foreground">
+            <ListFilter size={36} className="text-slate-300 dark:text-muted-foreground mb-3" />
+            <h3 className="text-base font-semibold text-slate-700 dark:text-foreground">No lists found matching your filter</h3>
+            <p className="text-xs text-slate-400 dark:text-muted-foreground mt-1 max-w-sm">
               Try adjusting your search keywords or clear the object and list type filters.
             </p>
             <button
@@ -562,7 +562,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                 setSelectedListType('ALL');
                 setActiveTab('all');
               }}
-              className="mt-4 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded"
+              className="mt-4 px-3 py-1.5 bg-slate-100 dark:bg-muted hover:bg-slate-200 dark:hover:bg-accent text-slate-700 dark:text-foreground text-xs font-semibold rounded"
             >
               Reset all filters
             </button>
@@ -573,7 +573,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
       {/* 4. Modal: Create New List Dialog (HubSpot Style) */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-lg shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-scaleIn">
+          <div className="bg-white dark:bg-card rounded-lg shadow-2xl border border-slate-200 dark:border-border w-full max-w-xl overflow-hidden animate-scaleIn">
             <div className="bg-[#2d3e50] text-white px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-full bg-[#ff7a59] flex items-center justify-center text-white text-xs font-bold">
@@ -592,21 +592,21 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             <form onSubmit={handleCreateList} className="p-6 space-y-4 text-xs">
               {/* List Type Option Cards */}
               <div>
-                <label className="block text-slate-700 font-semibold mb-2">Select List Type</label>
+                <label className="block text-slate-700 dark:text-foreground font-semibold mb-2">Select List Type</label>
                 <div className="grid grid-cols-2 gap-3">
                   <div
                     onClick={() => setNewListType('ACTIVE')}
                     className={`border-2 rounded-lg p-3.5 cursor-pointer transition-all ${
                       newListType === 'ACTIVE'
-                        ? 'border-orange-500 bg-orange-50/50 shadow-xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 shadow-xs'
+                        : 'border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border bg-white dark:bg-card'
                     }`}
                   >
-                    <div className="flex items-center gap-2 font-bold text-slate-900 mb-1">
+                    <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-foreground mb-1">
                       <RefreshCw size={14} className="text-orange-500" />
                       <span>Active list</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground leading-relaxed">
                       Automatically adds or removes records based on filter criteria in real-time.
                     </p>
                   </div>
@@ -615,15 +615,15 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                     onClick={() => setNewListType('STATIC')}
                     className={`border-2 rounded-lg p-3.5 cursor-pointer transition-all ${
                       newListType === 'STATIC'
-                        ? 'border-orange-500 bg-orange-50/50 shadow-xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-950/20 shadow-xs'
+                        : 'border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border bg-white dark:bg-card'
                     }`}
                   >
-                    <div className="flex items-center gap-2 font-bold text-slate-900 mb-1">
-                      <Pin size={14} className="text-slate-600" />
+                    <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-foreground mb-1">
+                      <Pin size={14} className="text-slate-600 dark:text-muted-foreground" />
                       <span>Static list</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground leading-relaxed">
                       Saves a snapshot of specific records. Does not update automatically over time.
                     </p>
                   </div>
@@ -632,11 +632,11 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
 
               {/* Object Type */}
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Object to segment</label>
+                <label className="block text-slate-700 dark:text-foreground font-semibold mb-1">Object to segment</label>
                 <select
                   value={newListObjType}
                   onChange={(e) => setNewListObjType(e.target.value as HubSpotObjectType)}
-                  className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs font-medium text-slate-800 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-3 py-2 text-xs font-medium text-slate-800 dark:text-foreground focus:ring-1 focus:ring-orange-500 focus:outline-none"
                 >
                   <option value="CONTACTS">Contacts (People / Leads)</option>
                   <option value="COMPANIES">Companies (Accounts / Organizations)</option>
@@ -647,36 +647,36 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
 
               {/* List Name */}
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">List name *</label>
+                <label className="block text-slate-700 dark:text-foreground font-semibold mb-1">List name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. VIP Retail Decision Makers Q3 2026"
                   value={newListName}
                   onChange={(e) => setNewListName(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-3 py-2 text-xs text-slate-800 dark:text-foreground focus:ring-1 focus:ring-orange-500 focus:outline-none"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Description (Optional)</label>
+                <label className="block text-slate-700 dark:text-foreground font-semibold mb-1">Description (Optional)</label>
                 <textarea
                   rows={2}
                   placeholder="Explain the purpose and segment rules of this list..."
                   value={newListDesc}
                   onChange={(e) => setNewListDesc(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs text-slate-800 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-3 py-2 text-xs text-slate-800 dark:text-foreground focus:ring-1 focus:ring-orange-500 focus:outline-none"
                 />
               </div>
 
               {/* Folder */}
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Folder</label>
+                <label className="block text-slate-700 dark:text-foreground font-semibold mb-1">Folder</label>
                 <select
                   value={newListFolder}
                   onChange={(e) => setNewListFolder(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded px-3 py-2 text-xs font-medium text-slate-800 focus:ring-1 focus:ring-orange-500 focus:outline-none"
+                  className="w-full bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-3 py-2 text-xs font-medium text-slate-800 dark:text-foreground focus:ring-1 focus:ring-orange-500 focus:outline-none"
                 >
                   <option value="Enterprise Segments">Enterprise Segments</option>
                   <option value="Inbound Campaigns">Inbound Campaigns</option>
@@ -688,11 +688,11 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200 dark:border-border">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded text-xs transition-colors"
+                  className="px-4 py-2 bg-slate-100 dark:bg-muted hover:bg-slate-200 dark:hover:bg-accent text-slate-700 dark:text-foreground font-semibold rounded text-xs transition-colors"
                 >
                   Cancel
                 </button>
@@ -711,7 +711,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
       {/* 5. Modal: View List Details & Filter Breakdown */}
       {activeListModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-lg shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-scaleIn">
+          <div className="bg-white dark:bg-card rounded-lg shadow-2xl border border-slate-200 dark:border-border w-full max-w-2xl overflow-hidden animate-scaleIn">
             <div className="bg-[#2d3e50] text-white px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="p-1 rounded bg-white/10 text-orange-400">
@@ -731,51 +731,51 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
             </div>
 
             <div className="p-6 space-y-4 text-xs">
-              <div className="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200 text-center">
+              <div className="grid grid-cols-3 gap-3 bg-slate-50 dark:bg-muted/40 p-3 rounded-lg border border-slate-200 dark:border-border text-center">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">List Type</span>
-                  <p className="font-bold text-slate-800 mt-0.5">{activeListModal.listType}</p>
+                  <span className="text-[10px] text-slate-500 dark:text-muted-foreground uppercase font-semibold">List Type</span>
+                  <p className="font-bold text-slate-800 dark:text-foreground mt-0.5">{activeListModal.listType}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Total Records</span>
+                  <span className="text-[10px] text-slate-500 dark:text-muted-foreground uppercase font-semibold">Total Records</span>
                   <p className="font-bold text-orange-600 font-mono text-base">{activeListModal.size.toLocaleString()}</p>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-semibold">Created Date</span>
-                  <p className="font-bold text-slate-800 mt-0.5">{activeListModal.createdDate}</p>
+                  <span className="text-[10px] text-slate-500 dark:text-muted-foreground uppercase font-semibold">Created Date</span>
+                  <p className="font-bold text-slate-800 dark:text-foreground mt-0.5">{activeListModal.createdDate}</p>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-800 mb-1">Description & Objective</h4>
-                <p className="text-slate-600 bg-slate-50 p-3 rounded border border-slate-200 leading-relaxed">
+                <h4 className="font-bold text-slate-800 dark:text-foreground mb-1">Description & Objective</h4>
+                <p className="text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted/40 p-3 rounded border border-slate-200 dark:border-border leading-relaxed">
                   {activeListModal.description}
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+                <h4 className="font-bold text-slate-800 dark:text-foreground mb-2 flex items-center gap-1.5">
                   <Filter size={13} className="text-orange-500" />
                   <span>VCRM Filter Rules (AND/OR Logic)</span>
                 </h4>
-                <div className="bg-orange-50/50 border border-orange-200 rounded p-3 space-y-2">
+                <div className="bg-orange-50/50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/40 rounded p-3 space-y-2">
                   <div className="flex items-center gap-2 text-[11px]">
                     <span className="bg-orange-600 text-white px-2 py-0.5 rounded font-bold">Rule 1</span>
-                    <span className="text-slate-800 font-medium">Lifecycle Stage is any of <span className="font-bold text-orange-700">Lead, Opportunity, Customer</span></span>
+                    <span className="text-slate-800 dark:text-foreground font-medium">Lifecycle Stage is any of <span className="font-bold text-orange-700 dark:text-orange-400">Lead, Opportunity, Customer</span></span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px]">
                     <span className="bg-slate-600 text-white px-2 py-0.5 rounded font-bold">AND</span>
-                    <span className="text-slate-800 font-medium">Last Activity Date was less than <span className="font-bold text-slate-900">30 days ago</span></span>
+                    <span className="text-slate-800 dark:text-foreground font-medium">Last Activity Date was less than <span className="font-bold text-slate-900 dark:text-white">30 days ago</span></span>
                   </div>
                   <div className="flex items-center gap-2 text-[11px]">
                     <span className="bg-slate-600 text-white px-2 py-0.5 rounded font-bold">AND</span>
-                    <span className="text-slate-800 font-medium">Country / Region is equal to <span className="font-bold text-slate-900">Thailand (TH)</span></span>
+                    <span className="text-slate-800 dark:text-foreground font-medium">Country / Region is equal to <span className="font-bold text-slate-900 dark:text-white">Thailand (TH)</span></span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                <div className="flex items-center gap-2 text-slate-500">
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-border">
+                <div className="flex items-center gap-2 text-slate-500 dark:text-muted-foreground">
                   <img src={activeListModal.createdBy.avatar} alt="Creator" className="w-5 h-5 rounded-full" />
                   <span>Created by {activeListModal.createdBy.name}</span>
                 </div>
@@ -785,7 +785,7 @@ export const HubSpotListsView: React.FC<HubSpotListsViewProps> = ({
                     onClick={() => {
                       alert(`Exporting "${activeListModal.name}" (${activeListModal.size} records) to Excel.`);
                     }}
-                    className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold rounded text-xs"
+                    className="px-3 py-1.5 bg-white dark:bg-card border border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-accent text-slate-700 dark:text-foreground font-semibold rounded text-xs"
                   >
                     Export Records
                   </button>

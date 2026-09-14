@@ -79,18 +79,18 @@ export const TableView: React.FC<TableViewProps> = ({
         const totalValue = group.items.reduce((sum, i) => sum + (i.dealValue || 0), 0);
 
         return (
-          <div key={group.id} className="rounded-lg bg-white shadow-sm border border-[#e6e9ef] overflow-hidden">
+          <div key={group.id} className="rounded-xl bg-card shadow-xs border border-border overflow-hidden transition-colors">
             {/* Group Header Bar */}
             <div 
-              className="flex items-center justify-between px-4 py-2.5 border-b border-[#e6e9ef] cursor-pointer hover:bg-gray-50/80 transition-colors"
+              className="flex items-center justify-between px-4 py-3 border-b border-border cursor-pointer hover:bg-accent/40 transition-colors"
               onClick={() => onToggleGroupCollapse(group.id)}
             >
-              <div className="flex items-center gap-2">
-                <button className="text-gray-400 hover:text-gray-600">
+              <div className="flex items-center gap-2.5">
+                <button className="text-muted-foreground hover:text-foreground">
                   {group.isCollapsed ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
                 </button>
                 <div 
-                  className="w-3 h-3 rounded-full shrink-0" 
+                  className="w-3 h-3 rounded-full shrink-0 shadow-xs" 
                   style={{ backgroundColor: group.color }}
                 />
                 <h2 
@@ -99,20 +99,20 @@ export const TableView: React.FC<TableViewProps> = ({
                 >
                   {t(group.title) || group.title}
                 </h2>
-                <span className="text-xs text-gray-400 font-normal">
+                <span className="text-xs text-muted-foreground font-normal">
                   ({group.items.length} {t('items')})
                 </span>
               </div>
 
               <div className="flex items-center gap-4 text-xs">
-                <span className="font-semibold text-gray-600">
-                  {t('total_pipeline_value')}: <span className="text-emerald-600 font-bold">{formatCurrency(totalValue)}</span>
+                <span className="font-semibold text-muted-foreground">
+                  {t('total_pipeline_value')}: <span className="text-emerald-500 font-bold">{formatCurrency(totalValue)}</span>
                 </span>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
                   }} 
-                  className="p-1 hover:bg-gray-200 rounded text-gray-400"
+                  className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <MoreHorizontal size={15} />
                 </button>
@@ -125,83 +125,83 @@ export const TableView: React.FC<TableViewProps> = ({
                 <table className="w-full text-left border-collapse text-xs">
                   {/* Table Header */}
                   <thead>
-                    <tr className="bg-[#f5f6f8] text-gray-500 font-medium border-b border-[#e6e9ef]">
-                      <th className="w-8 px-3 py-2 text-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-0" />
+                    <tr className="bg-muted/50 text-muted-foreground font-medium border-b border-border">
+                      <th className="w-8 px-3 py-2.5 text-center">
+                        <input type="checkbox" className="rounded border-border text-violet-600 focus:ring-0 bg-background" />
                       </th>
                       
                       {/* Dynamic Column Headers */}
-                      <th className="px-4 py-2 min-w-[240px] font-semibold text-gray-600">
+                      <th className="px-4 py-2.5 min-w-[240px] font-semibold text-muted-foreground">
                         {t(isLeadsBoard ? 'Lead / Opportunity' : isAccountsBoard ? 'Company / Account' : isContactsBoard ? 'Contact Name' : isGrowthBoard ? 'Sales Representative' : 'Deal / Account')}
                       </th>
 
                       {isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">{t('Job Title / Role')}</th>
+                        <th className="px-3 py-2.5 min-w-[150px] font-semibold text-muted-foreground">{t('Job Title / Role')}</th>
                       )}
 
                       {isAccountsBoard && (
-                        <th className="px-3 py-2 min-w-[150px] font-semibold text-gray-600">{t('Industry')}</th>
+                        <th className="px-3 py-2.5 min-w-[150px] font-semibold text-muted-foreground">{t('Industry')}</th>
                       )}
 
-                      <th className="px-3 py-2 min-w-[140px] font-semibold text-gray-600 text-center">
+                      <th className="px-3 py-2.5 min-w-[140px] font-semibold text-muted-foreground text-center">
                         {t(isAccountsBoard ? 'Account Tier' : isContactsBoard ? 'Role Type' : 'Stage / Status')}
                       </th>
 
-                      <th className="px-3 py-2 min-w-[130px] font-semibold text-gray-600 text-right">
+                      <th className="px-3 py-2.5 min-w-[130px] font-semibold text-muted-foreground text-right">
                         {t(isGrowthBoard ? 'Target Quota (THB)' : 'Value')}
                       </th>
 
                       {!isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[140px] font-semibold text-gray-600">{t('Primary Contact')}</th>
+                        <th className="px-3 py-2.5 min-w-[140px] font-semibold text-muted-foreground">{t('Primary Contact')}</th>
                       )}
 
                       {isContactsBoard && (
-                        <th className="px-3 py-2 min-w-[160px] font-semibold text-gray-600">{t('Organization / Company')}</th>
+                        <th className="px-3 py-2.5 min-w-[160px] font-semibold text-muted-foreground">{t('Organization / Company')}</th>
                       )}
 
-                      <th className="px-3 py-2 min-w-[110px] font-semibold text-gray-600 text-center">{t('Priority')}</th>
-                      <th className="px-3 py-2 min-w-[130px] font-semibold text-gray-600 text-center">{t('Owner')}</th>
-                      <th className="px-3 py-2 min-w-[120px] font-semibold text-gray-600 text-center">{t('Close Date')}</th>
-                      <th className="px-3 py-2 min-w-[110px] font-semibold text-gray-600 text-center">
+                      <th className="px-3 py-2.5 min-w-[110px] font-semibold text-muted-foreground text-center">{t('Priority')}</th>
+                      <th className="px-3 py-2.5 min-w-[130px] font-semibold text-muted-foreground text-center">{t('Owner')}</th>
+                      <th className="px-3 py-2.5 min-w-[120px] font-semibold text-muted-foreground text-center">{t('Close Date')}</th>
+                      <th className="px-3 py-2.5 min-w-[110px] font-semibold text-muted-foreground text-center">
                         {t(isGrowthBoard ? 'Achievement %' : 'Probability')}
                       </th>
 
                       {isLeadsBoard && (
-                        <th className="px-3 py-2 min-w-[130px] font-semibold text-purple-600 text-center">{t('convert')}</th>
+                        <th className="px-3 py-2.5 min-w-[130px] font-semibold text-violet-500 text-center">{t('convert')}</th>
                       )}
 
-                      <th className="w-10 px-2 py-2 text-center"></th>
+                      <th className="w-10 px-2 py-2.5 text-center"></th>
                     </tr>
                   </thead>
 
                   {/* Table Rows */}
-                  <tbody className="divide-y divide-[#e6e9ef]">
+                  <tbody className="divide-y divide-border">
                     {group.items.map((item) => (
                       <tr 
                         key={item.id} 
-                        className="hover:bg-[#f7f9fd] group transition-colors cursor-pointer"
+                        className="hover:bg-accent/30 group transition-colors cursor-pointer"
                         onClick={() => onSelectItem(item, group.id)}
                       >
                         {/* Checkbox */}
                         <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
-                          <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-0" />
+                          <input type="checkbox" className="rounded border-border text-violet-600 focus:ring-0 bg-background" />
                         </td>
 
                         {/* Name + Open Drawer Icon */}
-                        <td className="px-4 py-2 font-medium text-gray-800 flex items-center justify-between gap-2">
+                        <td className="px-4 py-2 font-medium text-foreground flex items-center justify-between gap-2">
                           <input
                             type="text"
                             value={item.name}
                             onClick={(e) => e.stopPropagation()}
                             onChange={(e) => onUpdateItem(group.id, item.id, { name: e.target.value })}
-                            className="bg-transparent hover:bg-white focus:bg-white focus:ring-1 focus:ring-blue-500 rounded px-1.5 py-1 w-full text-xs font-semibold text-[#323338] outline-none"
+                            className="bg-transparent hover:bg-background/80 focus:bg-background focus:ring-1 focus:ring-violet-500 rounded px-1.5 py-1 w-full text-xs font-semibold text-foreground outline-none transition-colors"
                           />
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               onSelectItem(item, group.id);
                             }}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-[#0073ea] hover:bg-blue-50 rounded transition-all shrink-0"
+                            className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-violet-500 hover:bg-violet-500/10 rounded transition-all shrink-0"
                             title="Open Updates / Notes"
                           >
                             <MessageSquare size={14} />
@@ -210,24 +210,24 @@ export const TableView: React.FC<TableViewProps> = ({
 
                         {/* Job Title (if Contacts board) */}
                         {isContactsBoard && (
-                          <td className="px-3 py-2 text-gray-700" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-3 py-2 text-foreground/80" onClick={(e) => e.stopPropagation()}>
                             <input
                               type="text"
                               value={item.jobTitle || 'Decision Maker'}
                               onChange={(e) => onUpdateItem(group.id, item.id, { jobTitle: e.target.value })}
-                              className="bg-transparent hover:bg-white px-1 py-0.5 rounded outline-none w-full"
+                              className="bg-transparent hover:bg-background/80 focus:bg-background px-1.5 py-1 rounded outline-none w-full text-foreground transition-colors"
                             />
                           </td>
                         )}
 
                         {/* Industry (if Accounts board) */}
                         {isAccountsBoard && (
-                          <td className="px-3 py-2 text-gray-700" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-3 py-2 text-foreground/80" onClick={(e) => e.stopPropagation()}>
                             <input
                               type="text"
                               value={item.industry || 'General Industry'}
                               onChange={(e) => onUpdateItem(group.id, item.id, { industry: e.target.value })}
-                              className="bg-transparent hover:bg-white px-1 py-0.5 rounded outline-none w-full"
+                              className="bg-transparent hover:bg-background/80 focus:bg-background px-1.5 py-1 rounded outline-none w-full text-foreground transition-colors"
                             />
                           </td>
                         )}
@@ -246,32 +246,32 @@ export const TableView: React.FC<TableViewProps> = ({
                             type="number"
                             value={item.dealValue}
                             onChange={(e) => onUpdateItem(group.id, item.id, { dealValue: Number(e.target.value) || 0 })}
-                            className="bg-transparent hover:bg-white focus:bg-white focus:ring-1 focus:ring-blue-500 rounded px-1.5 py-1 text-right text-xs font-bold text-gray-800 outline-none w-28"
+                            className="bg-transparent hover:bg-background/80 focus:bg-background focus:ring-1 focus:ring-violet-500 rounded px-1.5 py-1 text-right text-xs font-bold text-foreground outline-none w-28 transition-colors"
                           />
                         </td>
 
                         {/* Primary Contact Person / Company */}
                         {!isContactsBoard && (
-                          <td className="px-3 py-2 text-gray-600" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-3 py-2 text-muted-foreground" onClick={(e) => e.stopPropagation()}>
                             <div className="flex flex-col">
                               <input
                                 type="text"
                                 value={item.contactPerson}
                                 onChange={(e) => onUpdateItem(group.id, item.id, { contactPerson: e.target.value })}
-                                className="bg-transparent hover:bg-white focus:bg-white focus:ring-1 focus:ring-blue-500 rounded px-1 py-0.5 text-xs text-gray-800 outline-none"
+                                className="bg-transparent hover:bg-background/80 focus:bg-background focus:ring-1 focus:ring-violet-500 rounded px-1.5 py-0.5 text-xs text-foreground outline-none transition-colors"
                               />
-                              <span className="text-[10px] text-gray-400 px-1 truncate">{item.contactEmail}</span>
+                              <span className="text-[10px] text-muted-foreground/70 px-1 truncate">{item.contactEmail}</span>
                             </div>
                           </td>
                         )}
 
                         {isContactsBoard && (
-                          <td className="px-3 py-2 text-gray-600 font-semibold" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-3 py-2 text-foreground font-semibold" onClick={(e) => e.stopPropagation()}>
                             <input
                               type="text"
                               value={item.companyName || 'Client Company'}
                               onChange={(e) => onUpdateItem(group.id, item.id, { companyName: e.target.value })}
-                              className="bg-transparent hover:bg-white px-1 py-0.5 rounded outline-none w-full"
+                              className="bg-transparent hover:bg-background/80 focus:bg-background px-1.5 py-1 rounded outline-none w-full text-foreground transition-colors"
                             />
                           </td>
                         )}
@@ -288,36 +288,36 @@ export const TableView: React.FC<TableViewProps> = ({
                         <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
                           <div className="flex items-center justify-center gap-1.5" title={item.owner.name}>
                             <span className="text-sm">{item.owner.avatar}</span>
-                            <span className="text-xs text-gray-700 font-medium truncate max-w-[80px]">
+                            <span className="text-xs text-foreground/80 font-medium truncate max-w-[80px]">
                               {item.owner.name.split(' ')[0]}
                             </span>
                           </div>
                         </td>
 
                         {/* Close Date */}
-                        <td className="px-3 py-2 text-center text-gray-600" onClick={(e) => e.stopPropagation()}>
+                        <td className="px-3 py-2 text-center text-muted-foreground" onClick={(e) => e.stopPropagation()}>
                           <input
                             type="date"
                             value={item.expectedCloseDate}
                             onChange={(e) => onUpdateItem(group.id, item.id, { expectedCloseDate: e.target.value })}
-                            className="bg-transparent hover:bg-white text-[11px] rounded px-1 py-0.5 outline-none cursor-pointer"
+                            className="bg-transparent hover:bg-background/80 text-[11px] rounded px-1.5 py-1 outline-none cursor-pointer text-foreground transition-colors"
                           />
                         </td>
 
                         {/* Probability Progress Bar */}
                         <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                           <div className="flex items-center gap-1.5 justify-center">
-                            <div className="w-14 bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div className="w-14 bg-muted rounded-full h-1.5 overflow-hidden">
                               <div 
                                 className={`h-full rounded-full ${
                                   item.probability >= 80 ? 'bg-emerald-500' :
-                                  item.probability >= 50 ? 'bg-blue-500' :
-                                  item.probability >= 30 ? 'bg-amber-500' : 'bg-red-400'
+                                  item.probability >= 50 ? 'bg-violet-500' :
+                                  item.probability >= 30 ? 'bg-amber-500' : 'bg-rose-500'
                                 }`}
                                 style={{ width: `${item.probability}%` }}
                               />
                             </div>
-                            <span className="text-[10px] font-semibold text-gray-500 w-7 text-right">
+                            <span className="text-[10px] font-semibold text-muted-foreground w-7 text-right">
                               {item.probability}%
                             </span>
                           </div>
@@ -328,7 +328,7 @@ export const TableView: React.FC<TableViewProps> = ({
                           <td className="px-2 py-2 text-center" onClick={(e) => e.stopPropagation()}>
                             <button
                               onClick={() => onConvertLead && onConvertLead(item, group.id)}
-                              className="px-2 py-1 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold rounded text-[11px] border border-purple-200 flex items-center gap-1 mx-auto transition-colors shadow-xs"
+                              className="px-2 py-1 bg-violet-500/10 hover:bg-violet-500/20 text-violet-500 font-bold rounded-lg text-[11px] border border-violet-500/30 flex items-center gap-1 mx-auto transition-colors shadow-xs"
                               title="Convert Lead into Active Deal & Company Account"
                             >
                               <Zap size={11} className="text-amber-500 fill-amber-500" />
@@ -341,7 +341,7 @@ export const TableView: React.FC<TableViewProps> = ({
                         <td className="px-2 py-2 text-center" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => onDeleteItem(group.id, item.id)}
-                            className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all"
+                            className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded transition-all"
                             title="Delete Item"
                           >
                             <Trash2 size={13} />
@@ -351,8 +351,8 @@ export const TableView: React.FC<TableViewProps> = ({
                     ))}
 
                     {/* Quick Add Row Input */}
-                    <tr className="bg-white hover:bg-gray-50/50">
-                      <td className="px-3 py-2 text-center text-gray-300">
+                    <tr className="bg-card hover:bg-accent/20 transition-colors">
+                      <td className="px-3 py-2 text-center text-muted-foreground/40">
                         <Plus size={14} className="mx-auto" />
                       </td>
                       <td colSpan={isLeadsBoard ? 11 : isContactsBoard || isAccountsBoard ? 11 : 10} className="px-2 py-1.5">
@@ -364,7 +364,7 @@ export const TableView: React.FC<TableViewProps> = ({
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') handleAddNewItemSubmit(group.id);
                           }}
-                          className="w-full px-2 py-1 text-xs placeholder:text-gray-400 bg-transparent focus:outline-none focus:bg-white focus:ring-1 focus:ring-blue-500 rounded"
+                          className="w-full px-2 py-1.5 text-xs placeholder:text-muted-foreground/60 bg-transparent focus:outline-none focus:bg-background focus:ring-1 focus:ring-violet-500 rounded text-foreground transition-all"
                         />
                       </td>
                     </tr>
@@ -372,18 +372,18 @@ export const TableView: React.FC<TableViewProps> = ({
 
                   {/* Group Summary Footer */}
                   <tfoot>
-                    <tr className="bg-[#fcfdfe] text-xs font-semibold text-gray-600 border-t border-[#e6e9ef]">
-                      <td className="px-3 py-2 text-center">Σ</td>
-                      <td className="px-4 py-2 text-gray-500 font-normal">
-                        {t('records')}: <strong>{group.items.length} {t('items')}</strong>
+                    <tr className="bg-muted/30 text-xs font-semibold text-muted-foreground border-t border-border">
+                      <td className="px-3 py-2.5 text-center">Σ</td>
+                      <td className="px-4 py-2.5 text-muted-foreground font-normal">
+                        {t('records')}: <strong className="text-foreground">{group.items.length} {t('items')}</strong>
                       </td>
-                      <td className="px-3 py-2 text-center text-gray-400">
+                      <td className="px-3 py-2.5 text-center text-muted-foreground/70">
                         {t('Summary')}
                       </td>
-                      <td className="px-3 py-2 text-right text-emerald-600 font-bold">
+                      <td className="px-3 py-2.5 text-right text-emerald-500 font-bold">
                         {formatCurrency(totalValue)}
                       </td>
-                      <td colSpan={8} className="px-3 py-2 text-gray-400 text-right">
+                      <td colSpan={8} className="px-3 py-2.5 text-muted-foreground/70 text-right">
                         {t('Average')}: {group.items.length ? formatCurrency(totalValue / group.items.length) : formatCurrency(0)}
                       </td>
                     </tr>
@@ -398,25 +398,25 @@ export const TableView: React.FC<TableViewProps> = ({
       {/* Add New Group Button */}
       <div className="pt-2">
         {isAddingGroup ? (
-          <form onSubmit={handleAddNewGroupSubmit} className="flex items-center gap-2 max-w-md bg-white p-2 rounded-lg border border-blue-400 shadow-sm">
+          <form onSubmit={handleAddNewGroupSubmit} className="flex items-center gap-2 max-w-md bg-card p-2 rounded-xl border border-violet-500/40 shadow-sm">
             <input
               type="text"
               placeholder="e.g. 🎯 Enterprise Accounts Q4"
               value={newGroupTitle}
               onChange={(e) => setNewGroupTitle(e.target.value)}
               autoFocus
-              className="flex-1 px-3 py-1.5 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-1 px-3 py-1.5 text-xs bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-1 focus:ring-violet-500"
             />
             <button 
               type="submit" 
-              className="bg-[#0073ea] text-white text-xs px-3 py-1.5 rounded font-medium hover:bg-[#0060b9]"
+              className="bg-violet-600 hover:bg-violet-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
             >
               {t('add_group')}
             </button>
             <button 
               type="button" 
               onClick={() => setIsAddingGroup(false)}
-              className="text-gray-500 text-xs px-2 py-1.5 hover:bg-gray-100 rounded"
+              className="text-muted-foreground text-xs px-2 py-1.5 hover:bg-accent rounded-lg transition-colors"
             >
               {t('Cancel')}
             </button>
@@ -424,7 +424,7 @@ export const TableView: React.FC<TableViewProps> = ({
         ) : (
           <button
             onClick={() => setIsAddingGroup(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-gray-300 text-gray-600 hover:border-[#0073ea] hover:text-[#0073ea] hover:bg-blue-50/40 text-xs font-semibold transition-all shadow-sm bg-white"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-border text-muted-foreground hover:border-violet-500 hover:text-violet-500 hover:bg-violet-500/5 text-xs font-semibold transition-all shadow-xs bg-card"
           >
             <Plus size={16} />
             <span>{t('Add New Group')}</span>

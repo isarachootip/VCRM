@@ -1,45 +1,47 @@
-# Stage 1: Install dependencies
-FROM node:20-alpine AS deps
+﻿# 1. Base Image
+FROM node:20-alpine AS base
+
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# 2. Dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+COPY prisma ./prisma/
 RUN npm ci
 
-# Stage 2: Rebuild the source code
-FROM node:20-alpine AS builder
+# 3. Builder
+FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
-# Dummy DATABASE_URL for prisma generate during build time only
-ENV DATABASE_URL="postgresql://user:pass@localhost:5432/db?schema=public"
-
 RUN npx prisma generate
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
 RUN npm run build
 
-# Stage 3: Production runner
-FROM node:20-alpine AS runner
+# 4. Production Runner
+FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-RUN mkdir -p ./public
-
-# Automatically leverage output traces to reduce image size
+COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
 USER nextjs
 
 EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]

@@ -55,10 +55,10 @@ export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority,
 
       {isOpen && (
         <div 
-          className="absolute z-50 top-full left-0 mt-1 w-36 bg-white rounded-lg shadow-xl border border-gray-200 p-1.5 grid grid-cols-1 gap-1 animate-in fade-in zoom-in-95 duration-100"
+          className="absolute z-50 top-full left-0 mt-1 w-36 bg-popover text-popover-foreground rounded-xl shadow-xl border border-border p-1.5 grid grid-cols-1 gap-1 animate-in fade-in zoom-in-95 duration-100"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="text-[10px] uppercase font-semibold text-gray-400 px-2 py-1">
+          <div className="text-[10px] uppercase font-semibold text-muted-foreground px-2 py-1">
             {t('Priority')}
           </div>
           {priorities.map((p) => {
@@ -71,8 +71,8 @@ export const PriorityPicker: React.FC<PriorityPickerProps> = ({ currentPriority,
                   onChange(p);
                   setIsOpen(false);
                 }}
-                className={`w-full py-1.5 px-2.5 rounded text-xs font-medium flex items-center justify-between transition-all hover:opacity-90 ${
-                  isSelected ? 'ring-2 ring-blue-500 ring-offset-1 font-bold' : ''
+                className={`w-full py-1.5 px-2.5 rounded-lg text-xs font-medium flex items-center justify-between transition-all hover:opacity-90 ${
+                  isSelected ? 'ring-2 ring-violet-500 ring-offset-1 font-bold' : ''
                 }`}
                 style={{ 
                   backgroundColor: config.bgColor,

@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { AuthProvider } from '@/context/AuthContext';
+import { LanguageProvider } from '@/context/LanguageContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 export const metadata: Metadata = {
-  title: "VCRM | Enterprise CRM & Object Lists Engine",
-  description: 'VCRM - OmniService CRM, Lists & Segments Management, and Sales Pipeline',
+  title: "Artifact | Enterprise CRM & Sales OS",
+  description: 'Artifact — Modern Next.js + Shadcn UI Admin CRM, Sales Pipeline & OmniService Desk',
   icons: {
     icon: '/favicon.ico',
   },
 };
-
-import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout({
   children,
@@ -17,9 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased min-h-screen bg-[#f5f6f8] text-[#323338]">
-        <AuthProvider>{children}</AuthProvider>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head />
+      <body className="antialiased min-h-screen bg-background text-foreground selection:bg-violet-500/30 selection:text-violet-200">
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

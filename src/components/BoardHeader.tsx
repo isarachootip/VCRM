@@ -85,15 +85,15 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
   };
 
   return (
-    <div className="bg-white border-b border-[#e6e9ef] px-6 pt-5 pb-0">
+    <div className="bg-card border-b border-border px-6 pt-5 pb-0 text-card-foreground transition-colors">
       {/* Top Breadcrumb & Actions */}
       <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-[#323338] tracking-tight flex items-center gap-2">
+          <h1 className="text-xl font-bold text-foreground tracking-tight flex items-center gap-2">
             {t(currentBoard.id) || currentBoard.name}
-            <Star size={18} className="text-gray-300 hover:text-amber-400 cursor-pointer transition-colors" />
+            <Star size={16} className="text-muted-foreground hover:text-amber-400 cursor-pointer transition-colors" />
           </h1>
-          <span className="text-xs bg-blue-50 text-[#0073ea] font-medium px-2.5 py-0.5 rounded-full border border-blue-200/60">
+          <span className="text-xs bg-violet-500/10 text-violet-600 dark:text-violet-400 font-semibold px-2.5 py-0.5 rounded-md border border-violet-500/20">
             {t(currentBoard.badge || 'CRM Module')}
           </span>
         </div>
@@ -103,46 +103,46 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
           {/* Excel Export Button */}
           <button
             onClick={onExportExcel}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded border border-emerald-200 transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg border border-emerald-500/20 transition-colors shadow-xs"
             title="Export to Excel (.xlsx)"
           >
-            <Download size={14} className="text-emerald-600" />
+            <Download size={13} className="text-emerald-500" />
             <span>{t('export_excel')}</span>
           </button>
 
           {/* Excel / CSV Import Button */}
           <button
             onClick={onOpenImport}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded border border-blue-200 transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-violet-600 dark:text-violet-400 bg-violet-500/10 hover:bg-violet-500/20 rounded-lg border border-violet-500/20 transition-colors shadow-xs"
             title="Import Excel or CSV file"
           >
-            <Upload size={14} className="text-blue-600" />
+            <Upload size={13} className="text-violet-500" />
             <span>{t('import_excel')}</span>
           </button>
 
-          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
-            <Bot size={14} className="text-[#0073ea]" />
+          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-accent rounded-lg border border-border transition-colors">
+            <Bot size={13} className="text-violet-500" />
             <span>{t('Automate')} / 3</span>
           </button>
           
-          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
-            <Share2 size={14} />
+          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-accent rounded-lg border border-border transition-colors">
+            <Share2 size={13} />
             <span>{t('Share')}</span>
           </button>
 
-          <button className="p-1.5 text-gray-500 hover:bg-gray-100 rounded border border-gray-200 transition-colors">
-            <MoreHorizontal size={16} />
+          <button className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg border border-border transition-colors">
+            <MoreHorizontal size={15} />
           </button>
         </div>
       </div>
 
       {/* Description */}
-      <div className="text-xs text-gray-500 pb-4">
+      <div className="text-xs text-muted-foreground pb-4">
         {t(currentBoard.description || '') || currentBoard.description}
       </div>
 
       {/* View Tabs */}
-      <div className="flex items-center gap-1 border-b border-[#e6e9ef] -mb-[1px]">
+      <div className="flex items-center gap-1 border-b border-border -mb-[1px]">
         {views.map((v) => {
           const Icon = v.icon;
           const isActive = activeView === v.id;
@@ -150,13 +150,13 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
             <button
               key={v.id}
               onClick={() => setActiveView(v.id)}
-              className={`flex items-center gap-2 px-3.5 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2.5 text-xs font-medium border-b-2 transition-all cursor-pointer ${
                 isActive
-                  ? 'border-[#0073ea] text-[#0073ea] bg-blue-50/30'
-                  : 'border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300'
+                  ? 'border-violet-600 text-violet-600 dark:text-violet-400 font-semibold bg-violet-500/5'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
               }`}
             >
-              <Icon size={15} />
+              <Icon size={14} className={isActive ? 'text-violet-500' : 'text-muted-foreground'} />
               <span>{v.label}</span>
             </button>
           );
@@ -167,60 +167,60 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
       <div className="py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           {/* New Item Button */}
-          <div className="inline-flex rounded-md shadow-sm">
+          <div className="inline-flex rounded-lg shadow-sm">
             <button
               onClick={onAddNewItem}
-              className="bg-[#0073ea] hover:bg-[#0060b9] text-white px-3.5 py-1.5 rounded-l-md text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="bg-violet-600 hover:bg-violet-700 text-white px-3.5 py-1.5 rounded-l-lg text-xs font-medium flex items-center gap-1.5 transition-colors shadow-violet-500/20"
             >
-              <Plus size={15} />
+              <Plus size={14} />
               <span>{getNewItemLabel()}</span>
             </button>
-            <button className="bg-[#0060b9] hover:bg-[#0050a0] text-white px-2 py-1.5 rounded-r-md text-xs border-l border-blue-400">
-              <ChevronDown size={14} />
+            <button className="bg-violet-700 hover:bg-violet-800 text-white px-2 py-1.5 rounded-r-lg text-xs border-l border-violet-500">
+              <ChevronDown size={13} />
             </button>
           </div>
 
           {/* Search Input */}
           <div className="relative">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
               type="text"
               placeholder={`${t('search_items')}`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white w-64 transition-all"
+              className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 text-foreground placeholder:text-muted-foreground border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary w-64 transition-all"
             />
           </div>
 
           {/* Filter by Person */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <UserCircle size={14} className="text-gray-500" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/40 border border-border rounded-lg text-xs text-foreground hover:bg-accent cursor-pointer">
+            <UserCircle size={14} className="text-muted-foreground" />
             <select
               value={selectedOwner}
               onChange={(e) => setSelectedOwner(e.target.value)}
-              className="bg-transparent text-xs focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs text-foreground focus:outline-none cursor-pointer"
             >
-              <option value="ALL">{t('all_owners')}</option>
-              <option value="Isara Chootip">Isara Chootip</option>
-              <option value="Somchai S.">Somchai S.</option>
-              <option value="Kanya P.">Kanya P.</option>
-              <option value="Anan T.">Anan T.</option>
+              <option value="ALL" className="bg-card text-foreground">{t('all_owners')}</option>
+              <option value="Isara Chootip" className="bg-card text-foreground">Isara Chootip</option>
+              <option value="Somchai S." className="bg-card text-foreground">Somchai S.</option>
+              <option value="Kanya P." className="bg-card text-foreground">Kanya P.</option>
+              <option value="Anan T." className="bg-card text-foreground">Anan T.</option>
             </select>
           </div>
 
           {/* Filter & Sort Buttons */}
-          <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-700 hover:bg-gray-100 transition-colors">
-            <Filter size={13} />
+          <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/40 border border-border rounded-lg text-xs text-foreground hover:bg-accent transition-colors">
+            <Filter size={13} className="text-muted-foreground" />
             <span>{t('Filter')}</span>
           </button>
-          <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-xs text-gray-700 hover:bg-gray-100 transition-colors">
-            <ArrowUpDown size={13} />
+          <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-muted/40 border border-border rounded-lg text-xs text-foreground hover:bg-accent transition-colors">
+            <ArrowUpDown size={13} className="text-muted-foreground" />
             <span>{t('Sort')}</span>
           </button>
         </div>
 
         {/* Metrics Summary Badge */}
-        <div className="flex items-center gap-2 text-xs text-purple-700 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">
+        <div className="flex items-center gap-2 text-xs text-violet-600 dark:text-violet-400 bg-violet-500/10 border border-violet-500/20 px-3 py-1 rounded-full">
           <Sparkles size={13} />
           <span>{t('total_pipeline_value')}: <strong>{formatCurrency(totalValue)}</strong> ({allItems.length} {t('items')})</span>
         </div>

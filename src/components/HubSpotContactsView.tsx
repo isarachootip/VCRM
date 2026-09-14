@@ -107,19 +107,19 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#f5f8fa] overflow-hidden text-slate-800">
+    <div className="flex flex-col h-full bg-[#f5f8fa] dark:bg-background overflow-hidden text-slate-800 dark:text-foreground transition-colors">
       {/* 1. HubSpot Breadcrumb & Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 shrink-0">
+      <div className="bg-white dark:bg-card border-b border-slate-200 dark:border-border px-6 py-4 shrink-0 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1">
+            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-muted-foreground font-medium mb-1">
               <span>CRM</span>
               <span>/</span>
               <span className="text-orange-600 font-semibold">{t('contacts')}</span>
             </div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{t('contacts')}</h1>
-              <span className="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight">{t('contacts')}</h1>
+              <span className="bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-border">
                 {contacts.length} {t('records')}
               </span>
             </div>
@@ -128,23 +128,23 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => alert('Exporting contacts to Excel...')}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-muted-foreground bg-white dark:bg-card border border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-accent rounded shadow-2xs transition-colors"
             >
-              <Download size={14} className="text-slate-500" />
+              <Download size={14} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('export_excel')}</span>
             </button>
 
             <button 
               onClick={() => alert('Importing contacts...')}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded shadow-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-muted-foreground bg-white dark:bg-card border border-slate-300 dark:border-border hover:bg-slate-50 dark:hover:bg-accent rounded shadow-2xs transition-colors"
             >
-              <Upload size={14} className="text-slate-500" />
+              <Upload size={14} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('import_excel')}</span>
             </button>
 
             <button
               onClick={() => alert('Opening Create Contact modal...')}
-              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-sm transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#ff7a59] hover:bg-[#ff5c35] rounded shadow-2xs transition-all active:scale-95"
             >
               <Plus size={15} strokeWidth={2.5} />
               <span>{t('New Contact')}</span>
@@ -161,7 +161,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
               className={`pb-2 font-semibold text-xs border-b-2 transition-colors flex items-center gap-1.5 ${
                 activeViewId === view.id
                   ? 'border-orange-500 text-orange-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
+                  : 'border-transparent text-slate-500 dark:text-muted-foreground hover:text-slate-800 dark:hover:text-foreground'
               }`}
             >
               <span>{t(view.name)}</span>
@@ -169,7 +169,7 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
           ))}
           <button 
             onClick={() => alert('Add new custom view tab')}
-            className="pb-2 text-xs font-medium text-slate-400 hover:text-slate-600 flex items-center gap-1"
+            className="pb-2 text-xs font-medium text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground flex items-center gap-1"
           >
             <Plus size={12} />
             <span>{t('Add View') || 'Add View'}</span>
@@ -178,59 +178,59 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
       </div>
 
       {/* 2. Filter Pills Bar (HubSpot Property Quick Filters) */}
-      <div className="bg-[#f5f8fa] px-6 py-3 border-b border-slate-200 shrink-0">
+      <div className="bg-[#f5f8fa] dark:bg-background px-6 py-3 border-b border-slate-200 dark:border-border shrink-0 transition-colors">
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex flex-wrap items-center gap-2">
             {/* Search Box */}
             <div className="relative w-64">
-              <Search className="absolute left-2.5 top-2 text-slate-400" size={14} />
+              <Search className="absolute left-2.5 top-2 text-slate-400 dark:text-muted-foreground" size={14} />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('search_contacts') || 'Search contacts, company, email...'}
-                className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded shadow-2xs focus:outline-none focus:ring-1 focus:ring-orange-500"
+                className="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-card text-foreground placeholder:text-muted-foreground border border-slate-300 dark:border-border rounded shadow-2xs focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors"
               />
             </div>
 
             {/* Contact Owner Filter Chip */}
-            <div className="flex items-center bg-white border border-slate-300 rounded px-2.5 py-1.5 shadow-2xs">
-              <span className="text-slate-500 mr-1.5 font-medium">{t('col_owner')}:</span>
+            <div className="flex items-center bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-2.5 py-1.5 shadow-2xs transition-colors">
+              <span className="text-slate-500 dark:text-muted-foreground mr-1.5 font-medium">{t('col_owner')}:</span>
               <select
                 value={selectedOwner}
                 onChange={(e) => setSelectedOwner(e.target.value)}
-                className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer"
+                className="bg-transparent font-semibold text-slate-800 dark:text-foreground focus:outline-none cursor-pointer"
               >
-                <option value="ALL">{t('all_owners')}</option>
-                <option value="Thanakorn">Thanakorn W.</option>
-                <option value="Pimchanok">Pimchanok S.</option>
-                <option value="Somchai">Somchai P.</option>
-                <option value="Nattawut">Nattawut K.</option>
+                <option value="ALL" className="bg-card text-foreground">{t('all_owners')}</option>
+                <option value="Thanakorn" className="bg-card text-foreground">Thanakorn W.</option>
+                <option value="Pimchanok" className="bg-card text-foreground">Pimchanok S.</option>
+                <option value="Somchai" className="bg-card text-foreground">Somchai P.</option>
+                <option value="Nattawut" className="bg-card text-foreground">Nattawut K.</option>
               </select>
             </div>
 
             {/* Lifecycle Stage Filter Chip */}
-            <div className="flex items-center bg-white border border-slate-300 rounded px-2.5 py-1.5 shadow-2xs">
-              <span className="text-slate-500 mr-1.5 font-medium">{t('Stage / Status')}:</span>
+            <div className="flex items-center bg-white dark:bg-card border border-slate-300 dark:border-border rounded px-2.5 py-1.5 shadow-2xs transition-colors">
+              <span className="text-slate-500 dark:text-muted-foreground mr-1.5 font-medium">{t('Stage / Status')}:</span>
               <select
                 value={selectedStage}
                 onChange={(e) => setSelectedStage(e.target.value)}
-                className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer"
+                className="bg-transparent font-semibold text-slate-800 dark:text-foreground focus:outline-none cursor-pointer"
               >
-                <option value="ALL">{t('All stages') || 'All stages'}</option>
-                <option value="LEAD">{t('Lead') || 'Lead'}</option>
-                <option value="MARKETING_QUALIFIED">MQL</option>
-                <option value="SALES_QUALIFIED">SQL</option>
-                <option value="OPPORTUNITY">{t('Lead / Opportunity')}</option>
-                <option value="CUSTOMER">{t('Closed Won')}</option>
+                <option value="ALL" className="bg-card text-foreground">{t('All stages') || 'All stages'}</option>
+                <option value="LEAD" className="bg-card text-foreground">{t('Lead') || 'Lead'}</option>
+                <option value="MARKETING_QUALIFIED" className="bg-card text-foreground">MQL</option>
+                <option value="SALES_QUALIFIED" className="bg-card text-foreground">SQL</option>
+                <option value="OPPORTUNITY" className="bg-card text-foreground">{t('Lead / Opportunity')}</option>
+                <option value="CUSTOMER" className="bg-card text-foreground">{t('Closed Won')}</option>
               </select>
             </div>
 
             <button 
               onClick={() => alert('Opening VCRM Advanced Filter Builder (AND/OR Logic)...')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded text-slate-700 hover:bg-slate-50 font-medium shadow-2xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-card border border-slate-300 dark:border-border rounded text-slate-700 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-accent font-medium shadow-2xs transition-colors"
             >
-              <Filter size={13} className="text-slate-500" />
+              <Filter size={13} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('Filter')}</span>
             </button>
           </div>
@@ -239,9 +239,9 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => alert('Opening VCRM Property / Column Customizer Drawer...')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 rounded text-slate-700 hover:bg-slate-50 font-medium shadow-2xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-card border border-slate-300 dark:border-border rounded text-slate-700 dark:text-muted-foreground hover:bg-slate-50 dark:hover:bg-accent font-medium shadow-2xs transition-colors"
             >
-              <SlidersHorizontal size={13} className="text-slate-500" />
+              <SlidersHorizontal size={13} className="text-slate-500 dark:text-muted-foreground" />
               <span>{t('Edit columns') || 'Edit columns'}</span>
             </button>
           </div>
@@ -249,38 +249,38 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
       </div>
 
       {/* 3. Main Contacts Data Table */}
-      <div className="flex-1 overflow-auto bg-white">
+      <div className="flex-1 overflow-auto bg-white dark:bg-card transition-colors">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="bg-[#f5f8fa] border-b border-slate-200 text-slate-600 font-semibold select-none sticky top-0 z-10">
+            <tr className="bg-[#f5f8fa] dark:bg-muted/60 border-b border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground font-semibold select-none sticky top-0 z-10 transition-colors">
               <th className="py-3 px-4 w-10">
                 <input
                   type="checkbox"
                   checked={selectedContactIds.length === filteredContacts.length && filteredContacts.length > 0}
                   onChange={handleSelectAll}
-                  className="rounded border-slate-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                  className="rounded border-slate-300 dark:border-border text-orange-600 focus:ring-orange-500 cursor-pointer"
                 />
               </th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_item_name') || 'Name & Title'}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_contact_email')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_phone')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Company / Account')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Stage / Status')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('Lifecycle Stage') || 'Lifecycle Stage'}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('col_owner')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('sales_pipeline')}</th>
-              <th className="py-3 px-4 font-semibold text-slate-700">{t('last_updated')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('col_item_name') || 'Name & Title'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('col_contact_email')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('col_phone')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Company / Account')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Stage / Status')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('Lifecycle Stage') || 'Lifecycle Stage'}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('col_owner')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('sales_pipeline')}</th>
+              <th className="py-3 px-4 font-semibold text-slate-700 dark:text-foreground">{t('last_updated')}</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-border">
             {filteredContacts.map((contact) => {
               const isSelected = selectedContactIds.includes(contact.id);
               return (
                 <tr
                   key={contact.id}
-                  className={`hover:bg-slate-50/80 transition-colors group cursor-pointer ${
-                    isSelected ? 'bg-orange-50/40' : ''
+                  className={`hover:bg-slate-50/80 dark:hover:bg-accent/40 transition-colors group cursor-pointer ${
+                    isSelected ? 'bg-orange-50/40 dark:bg-orange-950/20' : ''
                   }`}
                   onClick={() => setSelectedContact(contact)}
                 >
@@ -290,38 +290,38 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => handleToggleOne(contact.id)}
-                      className="rounded border-slate-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                      className="rounded border-slate-300 dark:border-border text-orange-600 focus:ring-orange-500 cursor-pointer"
                     />
                   </td>
 
                   {/* Name & Title */}
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold text-[11px] flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-muted text-slate-700 dark:text-foreground font-bold text-[11px] flex items-center justify-center">
                         {contact.firstName.charAt(0)}
                       </div>
                       <div>
-                        <span className="font-semibold text-[#0066cc] hover:underline flex items-center gap-1">
+                        <span className="font-semibold text-[#0066cc] dark:text-blue-400 hover:underline flex items-center gap-1">
                           {contact.name}
                         </span>
-                        <span className="text-[11px] text-slate-500 block">{contact.jobTitle}</span>
+                        <span className="text-[11px] text-slate-500 dark:text-muted-foreground block">{contact.jobTitle}</span>
                       </div>
                     </div>
                   </td>
 
                   {/* Email */}
-                  <td className="py-3 px-4 font-mono text-slate-700">
+                  <td className="py-3 px-4 font-mono text-slate-700 dark:text-muted-foreground">
                     {contact.email}
                   </td>
 
                   {/* Phone */}
-                  <td className="py-3 px-4 font-mono text-slate-700">
+                  <td className="py-3 px-4 font-mono text-slate-700 dark:text-muted-foreground">
                     {contact.phone}
                   </td>
 
                   {/* Company */}
                   <td className="py-3 px-4">
-                    <span className="font-medium text-slate-800 hover:text-orange-600">
+                    <span className="font-medium text-slate-800 dark:text-foreground hover:text-orange-600 dark:hover:text-orange-400">
                       {contact.company.name}
                     </span>
                   </td>
@@ -340,24 +340,24 @@ export const HubSpotContactsView: React.FC<HubSpotContactsViewProps> = () => {
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5">
                       <img src={contact.owner.avatar} alt="Owner" className="w-4 h-4 rounded-full object-cover" />
-                      <span className="text-slate-700 font-medium">{contact.owner.name}</span>
+                      <span className="text-slate-700 dark:text-foreground font-medium">{contact.owner.name}</span>
                     </div>
                   </td>
 
                   {/* Deals */}
                   <td className="py-3 px-4 font-mono">
                     {contact.associatedDeals && contact.associatedDeals.length > 0 ? (
-                      <span className="text-emerald-700 font-bold">
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold">
                         ฿{contact.associatedDeals.reduce((sum, d) => sum + d.amount, 0).toLocaleString()}
-                        <span className="text-slate-400 font-normal ml-1">({contact.associatedDeals.length})</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-normal ml-1">({contact.associatedDeals.length})</span>
                       </span>
                     ) : (
-                      <span className="text-slate-400">-</span>
+                      <span className="text-slate-400 dark:text-muted-foreground">-</span>
                     )}
                   </td>
 
                   {/* Last Activity */}
-                  <td className="py-3 px-4 font-mono text-slate-500 text-[11px]">
+                  <td className="py-3 px-4 font-mono text-slate-500 dark:text-muted-foreground text-[11px]">
                     {contact.lastActivityDate}
                   </td>
                 </tr>

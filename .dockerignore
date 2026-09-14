@@ -1,6 +1,7 @@
-node_modules
+﻿node_modules
 .next
 .git
-.gitignore
-*.md
-.DS_Store
+.agents
+.env*.local
+*.log
+npm-debug.log*

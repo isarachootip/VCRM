@@ -100,36 +100,38 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-4 relative overflow-hidden">
-      {/* Subtle Background Glows */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center items-center p-4 relative overflow-hidden transition-colors">
+      {/* Subtle Background Glows matching Cruip Artifact */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 relative z-10">
+      <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-xl p-8 relative z-10">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20 mb-3">
-            <ShieldCheck className="w-8 h-8 text-white" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-3.5">
+            <svg className="w-7 h-7 text-white fill-current" viewBox="0 0 32 32">
+              <path d="M16 2L3 9v14l13 7 13-7V9L16 2zm0 3.3L26.5 10 16 14.7 5.5 10 16 5.3zM5 12.3l10 4.5v10.9L5 23.2v-10.9zm12 15.4V16.8l10-4.5v10.9l-10 4.5z" />
+            </svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            VCRM <span className="text-xs px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-semibold border border-orange-500/30">Enterprise</span>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            Artifact <span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-500 font-semibold border border-violet-500/25">Enterprise CRM</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Omnichannel Social Commerce & Sales Pipeline
+          <p className="text-xs text-muted-foreground mt-1">
+            Omnichannel Social Commerce & Sales Pipeline OS
           </p>
         </div>
 
         {/* Error / Success Feedback */}
         {errorMessage && (
-          <div className="mb-5 p-3 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <AlertCircle size={16} className="shrink-0 text-rose-400" />
+          <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
+            <AlertCircle size={16} className="shrink-0 text-rose-500" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         {successMessage && (
-          <div className="mb-5 p-3 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2.5 animate-fadeIn">
-            <CheckCircle2 size={16} className="shrink-0 text-emerald-400" />
+          <div className="mb-5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
+            <CheckCircle2 size={16} className="shrink-0 text-emerald-500" />
             <span>{successMessage}</span>
           </div>
         )}
@@ -137,11 +139,11 @@ function LoginForm() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-medium text-foreground mb-1.5">
               Username or Email
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
                 <User size={16} />
               </div>
               <input
@@ -149,7 +151,7 @@ function LoginForm() {
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder="sysadmin, admin, manager, sales"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-slate-100 placeholder-slate-600 rounded-lg pl-9 pr-3 py-2.5 text-sm transition-all outline-none"
+                className="w-full bg-background border border-border focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-foreground placeholder-muted-foreground/60 rounded-xl pl-10 pr-3.5 py-2.5 text-sm transition-all outline-none"
                 required
               />
             </div>
@@ -157,12 +159,12 @@ function LoginForm() {
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-medium text-slate-300">
+              <label className="text-xs font-medium text-foreground">
                 Password
               </label>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
                 <Lock size={16} />
               </div>
               <input
@@ -170,13 +172,13 @@ function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter account password"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-slate-100 placeholder-slate-600 rounded-lg pl-9 pr-10 py-2.5 text-sm transition-all outline-none font-mono"
+                className="w-full bg-background border border-border focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-foreground placeholder-muted-foreground/60 rounded-xl pl-10 pr-10 py-2.5 text-sm transition-all outline-none font-mono"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -186,13 +188,13 @@ function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium py-2.5 px-4 rounded-lg text-sm shadow-md shadow-orange-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-2 active:scale-[0.99]"
+            className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2.5 px-4 rounded-xl text-sm shadow-md shadow-violet-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed mt-2 active:scale-[0.99]"
           >
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
             ) : (
               <>
-                <span>Sign In to VCRM</span>
+                <span>Sign In to Artifact CRM</span>
                 <ArrowRight size={16} />
               </>
             )}
@@ -200,13 +202,13 @@ function LoginForm() {
         </form>
 
         {/* Quick Role Selection Presets */}
-        <div className="mt-8 pt-6 border-t border-slate-800/80">
+        <div className="mt-8 pt-6 border-t border-border">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase flex items-center gap-1.5">
-              <Key size={12} className="text-orange-400" />
+            <span className="text-[11px] font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-1.5">
+              <Key size={12} className="text-violet-500" />
               Quick Fill Credentials
             </span>
-            <span className="text-[10px] text-slate-500">Click to load</span>
+            <span className="text-[10px] text-muted-foreground/70">Click to load</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -218,25 +220,25 @@ function LoginForm() {
                   key={preset.username}
                   type="button"
                   onClick={() => handleSelectPreset(preset)}
-                  className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                  className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-slate-800 border-orange-500/60 ring-1 ring-orange-500/40'
-                      : 'bg-slate-950/60 hover:bg-slate-800/60 border-slate-800 hover:border-slate-700'
+                      ? 'bg-accent border-violet-500/60 ring-1 ring-violet-500/40 shadow-xs'
+                      : 'bg-background hover:bg-accent/50 border-border'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                      <IconComp size={13} className="text-slate-400" />
+                    <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                      <IconComp size={13} className="text-muted-foreground" />
                       {preset.roleName}
                     </span>
                     <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${preset.badgeColor}`}>
                       {preset.roleTag}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 font-mono">
+                  <div className="text-[11px] text-muted-foreground font-mono">
                     @{preset.username}
                   </div>
-                  <div className="text-[10px] text-slate-500 truncate mt-0.5">
+                  <div className="text-[10px] text-muted-foreground/70 truncate mt-0.5">
                     {preset.desc}
                   </div>
                 </button>
@@ -246,8 +248,8 @@ function LoginForm() {
         </div>
       </div>
 
-      <div className="mt-6 text-center text-xs text-slate-500">
-        VCRM Enterprise Platform &bull; Security & RBAC Module
+      <div className="mt-6 text-center text-xs text-muted-foreground">
+        Cruip Artifact Design &bull; Enterprise CRM & Sales OS
       </div>
     </div>
   );

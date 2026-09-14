@@ -42,7 +42,14 @@ interface AdherenceRecord {
   adherenceScore: number;
 }
 
-export const SupervisorDashboard: React.FC = () => {
+export interface SupervisorDashboardProps {
+  selectedBu?: string;
+  onBuChange?: (bu: string) => void;
+}
+
+export const SupervisorDashboard: React.FC<SupervisorDashboardProps> = ({
+  selectedBu = 'ALL',
+}) => {
   const [agents, setAgents] = useState<AgentPresenceItem[]>([]);
   const [adherenceRecords, setAdherenceRecords] = useState<AdherenceRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -110,14 +117,21 @@ export const SupervisorDashboard: React.FC = () => {
     }
   };
 
+  // Filter agents by BU first if selected
+  const buAgents = agents.filter((a) => {
+    if (!selectedBu || selectedBu === 'ALL') return true;
+    if (!a.businessUnits || a.businessUnits.length === 0) return true;
+    return a.businessUnits.some((b) => b.toUpperCase() === selectedBu.toUpperCase());
+  });
+
   // Compute metrics
-  const totalAgents = agents.length;
-  const onlineCount = agents.filter((a) => a.presence === 'ONLINE').length;
-  const onBreakCount = agents.filter(
+  const totalAgents = buAgents.length;
+  const onlineCount = buAgents.filter((a) => a.presence === 'ONLINE').length;
+  const onBreakCount = buAgents.filter(
     (a) => a.presence === 'BREAK' || a.presence === 'LUNCH'
   ).length;
 
-  const overrunAgents = agents.filter((a) => {
+  const overrunAgents = buAgents.filter((a) => {
     if (a.presence !== 'BREAK' && a.presence !== 'LUNCH') return false;
     if (!a.breakExpectedEndAt) return false;
     return currentTime >= new Date(a.breakExpectedEndAt).getTime();
@@ -131,7 +145,7 @@ export const SupervisorDashboard: React.FC = () => {
         )
       : 100;
 
-  const filteredAgents = agents.filter((a) => {
+  const filteredAgents = buAgents.filter((a) => {
     if (filterPresence === 'ALL') return true;
     return a.presence === filterPresence;
   });
@@ -160,17 +174,19 @@ export const SupervisorDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-slate-900 text-slate-100 p-6 overflow-y-auto min-h-screen">
+    <div className="flex-1 bg-background text-foreground p-6 overflow-y-auto min-h-screen transition-colors">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-border">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldAlert className="text-orange-400" size={24} />
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <div className="w-8 h-8 rounded-lg bg-violet-500/15 flex items-center justify-center text-violet-500">
+              <ShieldAlert size={20} />
+            </div>
+            <h1 className="text-xl font-bold text-foreground tracking-tight">
               Supervisor Workforce &amp; Shift Adherence Center
             </h1>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Live shift monitoring, break countdown timers, automated reversion &amp; adherence analytics (R3)
           </p>
         </div>
@@ -179,7 +195,7 @@ export const SupervisorDashboard: React.FC = () => {
           <button
             onClick={fetchData}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-muted hover:bg-accent text-muted-foreground hover:text-foreground text-xs font-semibold border border-border transition-colors cursor-pointer"
           >
             <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
             <span>Refresh</span>
@@ -188,7 +204,7 @@ export const SupervisorDashboard: React.FC = () => {
           <button
             onClick={handleRunSweep}
             disabled={sweeping}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold shadow-md shadow-orange-900/30 transition-all active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold shadow-md shadow-violet-500/25 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             <Zap size={13} className={sweeping ? 'animate-bounce' : ''} />
             <span>{sweeping ? 'Sweeping...' : 'Run Break Sweep'}</span>
@@ -197,11 +213,11 @@ export const SupervisorDashboard: React.FC = () => {
       </div>
 
       {sweepResult && (
-        <div className="mt-4 p-3 rounded-lg bg-orange-950/40 border border-orange-700/50 text-orange-200 text-xs flex items-center justify-between">
+        <div className="mt-4 p-3 rounded-xl bg-violet-500/10 border border-violet-500/25 text-violet-500 text-xs flex items-center justify-between animate-in fade-in duration-200">
           <span>{sweepResult}</span>
           <button
             onClick={() => setSweepResult(null)}
-            className="text-orange-400 hover:text-orange-200 text-sm font-bold"
+            className="text-violet-400 hover:text-violet-200 text-sm font-bold"
           >
             &times;
           </button>
@@ -210,63 +226,63 @@ export const SupervisorDashboard: React.FC = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 my-6">
-        <div className="bg-slate-800/80 border border-slate-700/70 rounded-lg p-4">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+        <div className="bg-card border border-border rounded-2xl p-4 shadow-xs">
+          <div className="flex items-center justify-between text-muted-foreground text-xs font-medium">
             <span>Total Agents</span>
             <Users size={16} />
           </div>
-          <div className="text-2xl font-bold text-white mt-2">{totalAgents}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Configured staff</div>
+          <div className="text-2xl font-bold text-foreground mt-2">{totalAgents}</div>
+          <div className="text-[10px] text-muted-foreground mt-1">Configured staff</div>
         </div>
 
-        <div className="bg-slate-800/80 border border-slate-700/70 rounded-lg p-4">
-          <div className="flex items-center justify-between text-emerald-400 text-xs font-medium">
+        <div className="bg-card border border-border rounded-2xl p-4 shadow-xs">
+          <div className="flex items-center justify-between text-emerald-500 text-xs font-medium">
             <span>Online &amp; Active</span>
             <CheckCircle2 size={16} />
           </div>
-          <div className="text-2xl font-bold text-emerald-400 mt-2">{onlineCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Ready for dispatch</div>
+          <div className="text-2xl font-bold text-emerald-500 mt-2">{onlineCount}</div>
+          <div className="text-[10px] text-muted-foreground mt-1">Ready for dispatch</div>
         </div>
 
-        <div className="bg-slate-800/80 border border-slate-700/70 rounded-lg p-4">
-          <div className="flex items-center justify-between text-amber-400 text-xs font-medium">
+        <div className="bg-card border border-border rounded-2xl p-4 shadow-xs">
+          <div className="flex items-center justify-between text-amber-500 text-xs font-medium">
             <span>On Lunch / Break</span>
             <Coffee size={16} />
           </div>
-          <div className="text-2xl font-bold text-amber-400 mt-2">{onBreakCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Paused dispatch</div>
+          <div className="text-2xl font-bold text-amber-500 mt-2">{onBreakCount}</div>
+          <div className="text-[10px] text-muted-foreground mt-1">Paused dispatch</div>
         </div>
 
-        <div className={`border rounded-lg p-4 transition-colors ${overrunAgents.length > 0 ? 'bg-red-950/40 border-red-600/60' : 'bg-slate-800/80 border-slate-700/70'}`}>
-          <div className="flex items-center justify-between text-red-400 text-xs font-medium">
+        <div className={`border rounded-2xl p-4 shadow-xs transition-colors ${overrunAgents.length > 0 ? 'bg-rose-500/10 border-rose-500/30' : 'bg-card border-border'}`}>
+          <div className="flex items-center justify-between text-rose-500 text-xs font-medium">
             <span>Break Overruns</span>
             <AlertTriangle size={16} className={overrunAgents.length > 0 ? 'animate-bounce' : ''} />
           </div>
-          <div className="text-2xl font-bold text-red-400 mt-2">{overrunAgents.length}</div>
-          <div className="text-[10px] text-red-300/80 mt-1">
+          <div className="text-2xl font-bold text-rose-500 mt-2">{overrunAgents.length}</div>
+          <div className="text-[10px] text-rose-400 mt-1">
             {overrunAgents.length > 0 ? 'Exceeding schedule' : 'Zero violations'}
           </div>
         </div>
 
-        <div className="bg-slate-800/80 border border-slate-700/70 rounded-lg p-4">
-          <div className="flex items-center justify-between text-purple-400 text-xs font-medium">
+        <div className="bg-card border border-border rounded-2xl p-4 shadow-xs">
+          <div className="flex items-center justify-between text-violet-500 text-xs font-medium">
             <span>Shift Adherence</span>
             <TrendingUp size={16} />
           </div>
-          <div className="text-2xl font-bold text-purple-300 mt-2">{avgAdherence}%</div>
-          <div className="text-[10px] text-slate-400 mt-1">Team average score</div>
+          <div className="text-2xl font-bold text-violet-500 mt-2">{avgAdherence}%</div>
+          <div className="text-[10px] text-muted-foreground mt-1">Team average score</div>
         </div>
       </div>
 
       {/* Live Presence & Countdown Timers Grid */}
-      <div className="bg-slate-800/60 border border-slate-700/80 rounded-lg p-5 mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-700/60 gap-3">
+      <div className="bg-card border border-border rounded-2xl p-5 mb-6 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-3">
           <div>
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <Clock size={16} className="text-orange-400" />
+            <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+              <Clock size={16} className="text-violet-500" />
               Live Presence &amp; Break Countdown Timers
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Real-time workforce activity with countdowns and automatic return indicators
             </p>
           </div>
@@ -276,10 +292,10 @@ export const SupervisorDashboard: React.FC = () => {
               <button
                 key={status}
                 onClick={() => setFilterPresence(status)}
-                className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-colors ${
+                className={`px-3 py-1 rounded-xl text-[11px] font-semibold transition-colors cursor-pointer ${
                   filterPresence === status
-                    ? 'bg-orange-500 text-white shadow-xs'
-                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                    ? 'bg-violet-600 text-white shadow-xs'
+                    : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
               >
                 {status}
@@ -296,45 +312,45 @@ export const SupervisorDashboard: React.FC = () => {
             return (
               <div
                 key={agent.id}
-                className={`p-3.5 rounded-lg border transition-all ${
+                className={`p-4 rounded-xl border transition-all ${
                   countdown?.isOverrun
-                    ? 'bg-red-950/20 border-red-500/60 ring-1 ring-red-500/40'
-                    : 'bg-slate-800/90 border-slate-700/60'
+                    ? 'bg-rose-500/10 border-rose-500/40 ring-1 ring-rose-500/30'
+                    : 'bg-muted/30 border-border hover:border-violet-500/40'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xs font-bold text-white">{agent.name}</h3>
-                    <p className="text-[10px] text-slate-400">{agent.email}</p>
+                    <h3 className="text-xs font-bold text-foreground">{agent.name}</h3>
+                    <p className="text-[10px] text-muted-foreground">{agent.email}</p>
                   </div>
 
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
                       agent.presence === 'ONLINE'
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/25'
                         : agent.presence === 'LUNCH'
-                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        ? 'bg-amber-500/15 text-amber-500 border border-amber-500/25'
                         : agent.presence === 'BREAK'
-                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : 'bg-slate-700/60 text-slate-400 border border-slate-600'
+                        ? 'bg-violet-500/15 text-violet-500 border border-violet-500/25'
+                        : 'bg-muted text-muted-foreground border border-border'
                     }`}
                   >
                     {agent.presence}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-700/40">
-                  <span>Active Chats: <strong className="text-white">{agent.activeChatCount}</strong>/{agent.maxConcurrentChats}</span>
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground mt-3 pt-2 border-t border-border">
+                  <span>Active Chats: <strong className="text-foreground">{agent.activeChatCount}</strong>/{agent.maxConcurrentChats}</span>
                   <span className="text-[10px] uppercase font-mono">{agent.role}</span>
                 </div>
 
                 {/* Countdown Timer or Overrun Alert */}
                 {isOnBreak && countdown && (
                   <div
-                    className={`mt-2.5 p-2 rounded text-xs font-semibold flex items-center justify-between ${
+                    className={`mt-2.5 p-2 rounded-lg text-xs font-semibold flex items-center justify-between ${
                       countdown.isOverrun
-                        ? 'bg-red-900/40 text-red-300 border border-red-700/60 animate-pulse'
-                        : 'bg-amber-950/30 text-amber-300 border border-amber-700/40'
+                        ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30 animate-pulse'
+                        : 'bg-amber-500/15 text-amber-500 border border-amber-500/25'
                     }`}
                   >
                     <div className="flex items-center gap-1.5">
@@ -342,7 +358,7 @@ export const SupervisorDashboard: React.FC = () => {
                       <span>{countdown.text}</span>
                     </div>
                     {countdown.isOverrun && (
-                      <span className="text-[9px] bg-red-600 text-white px-1.5 py-0.2 rounded uppercase font-bold tracking-wider">
+                      <span className="text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">
                         Overrun
                       </span>
                     )}
@@ -355,13 +371,13 @@ export const SupervisorDashboard: React.FC = () => {
       </div>
 
       {/* Shift Adherence Summary Table */}
-      <div className="bg-slate-800/60 border border-slate-700/80 rounded-lg p-5">
-        <div className="pb-4 border-b border-slate-700/60">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <TrendingUp size={16} className="text-orange-400" />
+      <div className="bg-card border border-border rounded-2xl p-5 shadow-xs">
+        <div className="pb-4 border-b border-border">
+          <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+            <TrendingUp size={16} className="text-violet-500" />
             Frontline Shift Adherence &amp; Overrun Tracking
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Aggregated break sessions, overrun minutes, and adherence compliance scores
           </p>
         </div>
@@ -369,33 +385,33 @@ export const SupervisorDashboard: React.FC = () => {
         <div className="overflow-x-auto mt-4">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-700 text-slate-400 text-[11px] uppercase tracking-wider">
-                <th className="py-2.5 px-3">Agent</th>
+              <tr className="border-b border-border text-muted-foreground text-[11px] uppercase tracking-wider bg-muted/40">
+                <th className="py-2.5 px-3 rounded-l-lg">Agent</th>
                 <th className="py-2.5 px-3">Status</th>
                 <th className="py-2.5 px-3">Total Breaks</th>
                 <th className="py-2.5 px-3">Break Duration</th>
                 <th className="py-2.5 px-3">Overrun</th>
                 <th className="py-2.5 px-3">Auto-Reverts</th>
-                <th className="py-2.5 px-3">Adherence Score</th>
+                <th className="py-2.5 px-3 rounded-r-lg">Adherence Score</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800 text-slate-200">
+            <tbody className="divide-y divide-border text-foreground">
               {adherenceRecords.map((record) => (
-                <tr key={record.agentId} className="hover:bg-slate-800/40 transition-colors">
+                <tr key={record.agentId} className="hover:bg-accent/40 transition-colors">
                   <td className="py-3 px-3">
-                    <div className="font-semibold text-white">{record.agentName}</div>
-                    <div className="text-[10px] text-slate-400">{record.email}</div>
+                    <div className="font-semibold text-foreground">{record.agentName}</div>
+                    <div className="text-[10px] text-muted-foreground">{record.email}</div>
                   </td>
                   <td className="py-3 px-3">
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
                         record.presence === 'ONLINE'
-                          ? 'bg-emerald-500/20 text-emerald-400'
+                          ? 'bg-emerald-500/15 text-emerald-500'
                           : record.presence === 'LUNCH'
-                          ? 'bg-amber-500/20 text-amber-400'
+                          ? 'bg-amber-500/15 text-amber-500'
                           : record.presence === 'BREAK'
-                          ? 'bg-blue-500/20 text-blue-400'
-                          : 'bg-slate-700 text-slate-400'
+                          ? 'bg-violet-500/15 text-violet-500'
+                          : 'bg-muted text-muted-foreground'
                       }`}
                     >
                       {record.presence}
@@ -405,9 +421,9 @@ export const SupervisorDashboard: React.FC = () => {
                   <td className="py-3 px-3 font-medium">{record.totalBreakMinutes} min</td>
                   <td className="py-3 px-3 font-medium">
                     {record.overrunMinutes > 0 ? (
-                      <span className="text-red-400 font-bold">+{record.overrunMinutes} min</span>
+                      <span className="text-rose-500 font-bold">+{record.overrunMinutes} min</span>
                     ) : (
-                      <span className="text-emerald-400">0 min</span>
+                      <span className="text-emerald-500">0 min</span>
                     )}
                   </td>
                   <td className="py-3 px-3 font-medium">{record.autoRevertedCount} times</td>
@@ -416,22 +432,22 @@ export const SupervisorDashboard: React.FC = () => {
                       <span
                         className={`font-bold ${
                           record.adherenceScore >= 90
-                            ? 'text-emerald-400'
+                            ? 'text-emerald-500'
                             : record.adherenceScore >= 75
-                            ? 'text-amber-400'
-                            : 'text-red-400'
+                            ? 'text-amber-500'
+                            : 'text-rose-500'
                         }`}
                       >
                         {record.adherenceScore}%
                       </span>
-                      <div className="w-16 h-1.5 rounded-full bg-slate-700 overflow-hidden">
+                      <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             record.adherenceScore >= 90
                               ? 'bg-emerald-500'
                               : record.adherenceScore >= 75
                               ? 'bg-amber-500'
-                              : 'bg-red-500'
+                              : 'bg-rose-500'
                           }`}
                           style={{ width: `${record.adherenceScore}%` }}
                         ></div>
