@@ -7,7 +7,7 @@ export interface AuthUser {
   username: string;
   email: string;
   name: string;
-  role: 'ADMIN' | 'SUPERVISOR' | 'AGENT';
+  role: 'SYSADMIN' | 'ADMIN' | 'SUPERVISOR' | 'SALES';
   businessUnits: string[];
   passwordHash: string;
   presence?: 'ONLINE' | 'OFFLINE';
@@ -24,7 +24,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     username: 'sysadmin',
     email: 'sysadmin@vcrm.internal',
     name: 'System Administrator',
-    role: 'ADMIN',
+    role: 'SYSADMIN',
     businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB', 'MUJI', 'SSP', 'B2S'],
   },
   {
@@ -48,7 +48,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     username: 'sales',
     email: 'sales@vcrm.internal',
     name: 'Sales Executive',
-    role: 'AGENT',
+    role: 'SALES',
     businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB'],
   },
 ];
@@ -179,3 +179,148 @@ export function listUsers(): Omit<AuthUser, 'passwordHash'>[] {
   const users = loadUsers();
   return Object.values(users).map(({ passwordHash: _, ...safe }) => safe);
 }
+
+/**
+ * Create a new user
+ */
+export function createUser(
+  data: {
+    username: string;
+    email: string;
+    name: string;
+    role: 'SYSADMIN' | 'ADMIN' | 'SUPERVISOR' | 'SALES';
+    businessUnits?: string[];
+    password?: string;
+  }
+): { success: boolean; user?: Omit<AuthUser, 'passwordHash'>; error?: string } {
+  const { username, email, name, role, businessUnits = ['CENTRAL'], password } = data;
+
+  if (!username || !email || !name || !role) {
+    return { success: false, error: 'Username, email, name, and role are required' };
+  }
+
+  const cleanUsername = username.trim().toLowerCase();
+  const cleanEmail = email.trim().toLowerCase();
+
+  const users = loadUsers();
+  for (const existing of Object.values(users)) {
+    if (existing.username.toLowerCase() === cleanUsername) {
+      return { success: false, error: `Username '${username}' is already taken` };
+    }
+    if (existing.email.toLowerCase() === cleanEmail) {
+      return { success: false, error: `Email '${email}' is already registered` };
+    }
+  }
+
+  const rawPass = password && password.length >= 6 ? password : 'Password@2026!';
+  const id = `user_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+  const now = new Date().toISOString();
+
+  const newUser: AuthUser = {
+    id,
+    username: username.trim(),
+    email: email.trim(),
+    name: name.trim(),
+    role,
+    businessUnits: businessUnits.length > 0 ? businessUnits : ['CENTRAL'],
+    passwordHash: hashPassword(rawPass),
+    presence: 'ONLINE',
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  users[id] = newUser;
+  saveUsers(users);
+
+  const { passwordHash: _, ...userSafe } = newUser;
+  return { success: true, user: userSafe };
+}
+
+/**
+ * Update user details
+ */
+export function updateUser(
+  id: string,
+  updates: {
+    name?: string;
+    email?: string;
+    username?: string;
+    role?: 'SYSADMIN' | 'ADMIN' | 'SUPERVISOR' | 'SALES';
+    businessUnits?: string[];
+    presence?: 'ONLINE' | 'OFFLINE';
+    password?: string;
+  }
+): { success: boolean; user?: Omit<AuthUser, 'passwordHash'>; error?: string } {
+  const users = loadUsers();
+  const user = users[id];
+  if (!user) {
+    return { success: false, error: `User with ID '${id}' not found` };
+  }
+
+  // Check username uniqueness if changed
+  if (updates.username && updates.username.trim().toLowerCase() !== user.username.toLowerCase()) {
+    const cleanUsername = updates.username.trim().toLowerCase();
+    for (const other of Object.values(users)) {
+      if (other.id !== id && other.username.toLowerCase() === cleanUsername) {
+        return { success: false, error: `Username '${updates.username}' is already in use` };
+      }
+    }
+    user.username = updates.username.trim();
+  }
+
+  // Check email uniqueness if changed
+  if (updates.email && updates.email.trim().toLowerCase() !== user.email.toLowerCase()) {
+    const cleanEmail = updates.email.trim().toLowerCase();
+    for (const other of Object.values(users)) {
+      if (other.id !== id && other.email.toLowerCase() === cleanEmail) {
+        return { success: false, error: `Email '${updates.email}' is already in use` };
+      }
+    }
+    user.email = updates.email.trim();
+  }
+
+  if (updates.name !== undefined) user.name = updates.name.trim();
+  if (updates.role !== undefined) user.role = updates.role;
+  if (updates.businessUnits !== undefined) user.businessUnits = updates.businessUnits;
+  if (updates.presence !== undefined) user.presence = updates.presence;
+  if (updates.password && updates.password.length >= 6) {
+    user.passwordHash = hashPassword(updates.password);
+  }
+
+  user.updatedAt = new Date().toISOString();
+  saveUsers(users);
+
+  const { passwordHash: _, ...userSafe } = user;
+  return { success: true, user: userSafe };
+}
+
+/**
+ * Delete a user
+ */
+export function deleteUser(id: string): { success: boolean; error?: string } {
+  const users = loadUsers();
+  const target = users[id];
+  if (!target) {
+    return { success: false, error: `User with ID '${id}' not found` };
+  }
+
+  // Prevent deleting the last SYSADMIN or last ADMIN
+  if (target.role === 'SYSADMIN') {
+    const sysadminCount = Object.values(users).filter((u) => u.role === 'SYSADMIN').length;
+    if (sysadminCount <= 1) {
+      return { success: false, error: 'Cannot delete the only remaining System Administrator account' };
+    }
+  }
+  if (target.role === 'ADMIN') {
+    const adminCount = Object.values(users).filter((u) => u.role === 'ADMIN').length;
+    if (adminCount <= 1) {
+      return { success: false, error: 'Cannot delete the only remaining CRM Administrator account' };
+    }
+  }
+
+  delete users[id];
+  saveUsers(users);
+  return { success: true };
+}
+
+

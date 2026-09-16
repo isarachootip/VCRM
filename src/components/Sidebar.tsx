@@ -26,7 +26,10 @@ import {
   Award, 
   QrCode, 
   Layers,
-  X
+  X,
+  BookOpen,
+  GraduationCap,
+  UserCog
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -89,6 +92,7 @@ export interface SidebarProps {
   onSelectBoard: (boardId: string) => void;
   boardsCountMap?: Record<string, number>;
   onOpenLineSettings?: () => void;
+  onOpenSOPManual?: () => void;
   selectedBu?: string;
   onBuChange?: (bu: string) => void;
   isMobileOpen?: boolean;
@@ -102,6 +106,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectBoard,
   boardsCountMap = {},
   onOpenLineSettings,
+  onOpenSOPManual,
   selectedBu = 'ALL',
   onBuChange,
   isMobileOpen = false,
@@ -239,6 +244,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: ShieldAlert, 
       badge: 'Hub' 
     },
+    { 
+      id: 'users', 
+      name: 'User Management', 
+      shortName: 'Users',
+      icon: UserCog, 
+      badge: 'Admin' 
+    },
   ];
 
   // CRM & Sales Pipelines
@@ -297,11 +309,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center justify-between p-2 rounded-xl bg-sidebar-accent/50 hover:bg-sidebar-accent border border-sidebar-border/60 transition-colors">
               <div className="flex items-center gap-2.5 overflow-hidden">
                 <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center text-white font-black text-xs shrink-0 shadow-xs shadow-violet-500/20">
-                  A
+                  V
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="font-semibold text-xs tracking-tight truncate text-sidebar-foreground">
-                    Artifact CRM
+                    VCRMX
                   </span>
                   <span className="text-[10px] text-muted-foreground truncate">
                     Enterprise Sales OS
@@ -309,7 +321,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-[9px] bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold px-1.5 py-0.5 rounded border border-violet-500/20">
+                <span className="text-[9px] bg-violet-500/10 text-violet-600 font-bold px-1.5 py-0.5 rounded border border-violet-500/20">
                   {selectedBu === 'ALL' ? 'GLOBAL' : selectedBu}
                 </span>
                 {onCloseMobile && (
@@ -375,7 +387,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {filteredCoreApps.length > 0 && (
               <div>
                 <div className="px-2 py-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  {t('Main Menu') || 'Core Apps'}
+                  {t('main_menu') || 'Core Apps'}
                 </div>
                 <div className="mt-1 space-y-0.5 pl-1">
                   {filteredCoreApps.map((app) => {
@@ -599,18 +611,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
       </div>
 
-      {/* Cruip Artifact Sidebar Footer */}
+      {/* VCRMX Sidebar Footer */}
       <div className="p-3 border-t border-sidebar-border/60 space-y-2">
+        {onOpenSOPManual && (
+          <button
+            type="button"
+            onClick={onOpenSOPManual}
+            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-violet-500/10 hover:bg-violet-500/15 text-violet-700 border border-violet-500/25 transition-colors text-xs font-semibold cursor-pointer shadow-2xs"
+          >
+            <div className="flex items-center gap-2">
+              <GraduationCap size={14} className="text-violet-600" />
+              <span>คู่มือระบบ (SOP Guide)</span>
+            </div>
+            <span className="text-[10px] bg-white text-violet-600 font-bold px-1.5 py-0.5 rounded border border-violet-500/20">
+              SOP
+            </span>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={onOpenLineSettings}
-          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors text-xs font-medium cursor-pointer"
+          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/15 text-emerald-700 border border-emerald-500/20 transition-colors text-xs font-medium cursor-pointer"
         >
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span>LINE OA Webhook</span>
           </div>
-          <span className="text-[10px] bg-background text-emerald-600 dark:text-emerald-400 font-bold px-1.5 py-0.5 rounded border border-emerald-500/20 shadow-2xs">
+          <span className="text-[10px] bg-background text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-500/20 shadow-2xs">
             Live
           </span>
         </button>
@@ -623,8 +651,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Settings size={13} />
             <span>{t('workspace_settings') || 'Workspace Settings'}</span>
           </div>
-          <span className="text-[10px] bg-violet-500/10 text-violet-600 dark:text-violet-400 px-1.5 py-0.5 rounded font-bold border border-violet-500/20">
-            Artifact Pro
+          <span className="text-[10px] bg-violet-500/10 text-violet-600 px-1.5 py-0.5 rounded font-bold border border-violet-500/20">
+            VCRMX Pro
           </span>
         </div>
       </div>

@@ -15,8 +15,10 @@ import { ItemDrawer } from '@/components/ItemDrawer';
 import { ImportModal } from '@/components/ImportModal';
 import { LineSettingsModal } from '@/components/settings/LineSettingsModal';
 import { SupervisorDashboard } from '@/components/supervisor/SupervisorDashboard';
+import { UserManagementView } from '@/components/users/UserManagementView';
 import { ExecutiveDashboard } from '@/components/dashboard/ExecutiveDashboard';
 import { ChatDeskView } from '@/components/chat/ChatDeskView';
+import { SOPGuideModal } from '@/components/sop/SOPGuideModal';
 import { CRMBoard, CRMGroup, CRMItem, ActiveView, StatusType } from '@/types/crm';
 import { INITIAL_BOARDS, TEAM_MEMBERS } from '@/data/mockData';
 import { exportBoardToExcel } from '@/utils/excelHelper';
@@ -29,6 +31,7 @@ const VALID_TABS = new Set([
   'contacts',
   'lists',
   'supervisor',
+  'users',
   'deals',
   'companies',
   'reports',
@@ -51,6 +54,7 @@ function HomeContent() {
   // Navigation Mode: 'dashboard' | 'lists' | 'contacts' | 'deals' | 'companies' | 'reports' | 'supervisor' | 'chat'
   const [hubspotNavTab, setHubspotNavTab] = useState<string>('dashboard');
   const [selectedBu, setSelectedBu] = useState<string>('ALL');
+  const [isSOPModalOpen, setIsSOPModalOpen] = useState<boolean>(false);
 
   // Boards State
   const [allBoards, setAllBoards] = useState<Record<string, CRMBoard>>(INITIAL_BOARDS);
@@ -510,6 +514,7 @@ function HomeContent() {
         onTabChange={handleTabChange}
         onOpenCreateModal={handleOpenCreateModal}
         onOpenLineSettings={() => setIsLineSettingsOpen(true)}
+        onOpenSOPManual={() => setIsSOPModalOpen(true)}
         selectedBu={selectedBu}
         onBuChange={handleBuChange}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
@@ -524,6 +529,7 @@ function HomeContent() {
           currentBoardId={currentBoardId}
           onSelectBoard={handleSelectBoard}
           onOpenLineSettings={() => setIsLineSettingsOpen(true)}
+          onOpenSOPManual={() => setIsSOPModalOpen(true)}
           selectedBu={selectedBu}
           onBuChange={handleBuChange}
           isMobileOpen={isMobileSidebarOpen}
@@ -572,6 +578,13 @@ function HomeContent() {
             </div>
           )}
 
+          {/* VIEW: User Management & Access Control */}
+          {hubspotNavTab === 'users' && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <UserManagementView selectedBu={selectedBu} onBuChange={handleBuChange} />
+            </div>
+          )}
+
           {/* VIEW 3: Deals / Sales Pipeline / Field Service Boards */}
           {(hubspotNavTab === 'deals' || hubspotNavTab === 'companies' || hubspotNavTab === 'reports') && (
             <div className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
@@ -590,6 +603,7 @@ function HomeContent() {
                 }}
                 onExportExcel={handleExportExcel}
                 onOpenImport={() => setIsImportOpen(true)}
+                onOpenSOPManual={() => setIsSOPModalOpen(true)}
               />
 
               <div className="flex-1 overflow-y-auto bg-background">
@@ -660,6 +674,14 @@ function HomeContent() {
       <LineSettingsModal
         isOpen={isLineSettingsOpen}
         onClose={() => setIsLineSettingsOpen(false)}
+      />
+
+      {/* 6. System SOP Guide & Workflow Manual Modal */}
+      <SOPGuideModal
+        isOpen={isSOPModalOpen}
+        onClose={() => setIsSOPModalOpen(false)}
+        currentTab={hubspotNavTab}
+        currentBoardId={currentBoardId}
       />
     </div>
   );

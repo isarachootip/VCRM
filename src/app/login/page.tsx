@@ -108,13 +108,11 @@ function LoginForm() {
       <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-xl p-8 relative z-10">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-3.5">
-            <svg className="w-7 h-7 text-white fill-current" viewBox="0 0 32 32">
-              <path d="M16 2L3 9v14l13 7 13-7V9L16 2zm0 3.3L26.5 10 16 14.7 5.5 10 16 5.3zM5 12.3l10 4.5v10.9L5 23.2v-10.9zm12 15.4V16.8l10-4.5v10.9l-10 4.5z" />
-            </svg>
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-violet-600 to-purple-500 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-3.5 text-white font-black text-2xl">
+            V
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            Artifact <span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-500 font-semibold border border-violet-500/25">Enterprise CRM</span>
+            VCRMX <span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-600 font-semibold border border-violet-500/25">Enterprise CRM</span>
           </h1>
           <p className="text-xs text-muted-foreground mt-1">
             Omnichannel Social Commerce & Sales Pipeline OS
@@ -194,7 +192,7 @@ function LoginForm() {
               <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
             ) : (
               <>
-                <span>Sign In to Artifact CRM</span>
+                <span>Sign In to VCRMX</span>
                 <ArrowRight size={16} />
               </>
             )}
@@ -249,7 +247,7 @@ function LoginForm() {
       </div>
 
       <div className="mt-6 text-center text-xs text-muted-foreground">
-        Cruip Artifact Design &bull; Enterprise CRM & Sales OS
+        VCRMX Enterprise &bull; Omnichannel CRM & Sales OS
       </div>
     </div>
   );

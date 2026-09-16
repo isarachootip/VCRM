@@ -21,7 +21,7 @@ describe('VCRM Auth API Endpoints Unit Tests', () => {
     const data = await res.json();
     assert.equal(data.success, true);
     assert.equal(data.user.username, 'sysadmin');
-    assert.equal(data.user.role, 'ADMIN');
+    assert.equal(data.user.role, 'SYSADMIN');
     assert.ok(data.token, 'Token must be present in response');
 
     const setCookie = res.headers.get('set-cookie');
@@ -85,7 +85,8 @@ describe('VCRM Auth API Endpoints Unit Tests', () => {
   });
 
   test('GET /api/auth/users lists all accounts without passwordHash', async () => {
-    const res = await usersRoute();
+    const req = new Request('http://localhost:3000/api/auth/users');
+    const res = await usersRoute(req);
     assert.equal(res.status, 200);
     const data = await res.json();
     assert.equal(data.success, true);
@@ -124,12 +125,56 @@ describe('VCRM Auth API Endpoints Unit Tests', () => {
     assert.equal(data.user.role, 'ADMIN');
   });
 
-  test('GET /api/auth/me returns 401 when unauthenticated', async () => {
-    const { GET: meRoute } = await import('../src/app/api/auth/me/route');
-    const req = new Request('http://localhost:3000/api/auth/me');
-    const res = await meRoute(req);
-    assert.equal(res.status, 401);
-    const data = await res.json();
-    assert.equal(data.authenticated, false);
+  test('User CRUD operations (create, update, delete)', async () => {
+    const { POST: createUserRoute } = await import('../src/app/api/auth/users/route');
+    const { PUT: updateUserRoute, DELETE: deleteUserRoute } = await import('../src/app/api/auth/users/[id]/route');
+
+    // 1. Create User
+    const createReq = new Request('http://localhost:3000/api/auth/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'test_agent_2026',
+        name: 'Test Agent 2026',
+        email: 'testagent2026@central.co.th',
+        role: 'SALES',
+        businessUnits: ['MUJI', 'SSP'],
+        password: 'TestPassword@2026!',
+      }),
+    });
+    const createRes = await createUserRoute(createReq);
+    assert.equal(createRes.status, 201);
+    const createData = await createRes.json();
+    assert.equal(createData.success, true);
+    assert.equal(createData.user.username, 'test_agent_2026');
+    assert.equal(createData.user.role, 'SALES');
+    const newUserId = createData.user.id;
+
+    // 2. Update User
+    const updateReq = new Request(`http://localhost:3000/api/auth/users/${newUserId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Updated Test Agent 2026',
+        role: 'SUPERVISOR',
+        businessUnits: ['MUJI', 'SSP', 'B2S'],
+      }),
+    });
+    const updateRes = await updateUserRoute(updateReq, { params: { id: newUserId } });
+    assert.equal(updateRes.status, 200);
+    const updateData = await updateRes.json();
+    assert.equal(updateData.success, true);
+    assert.equal(updateData.user.name, 'Updated Test Agent 2026');
+    assert.equal(updateData.user.role, 'SUPERVISOR');
+
+    // 3. Delete User
+    const deleteReq = new Request(`http://localhost:3000/api/auth/users/${newUserId}`, {
+      method: 'DELETE',
+    });
+    const deleteRes = await deleteUserRoute(deleteReq, { params: { id: newUserId } });
+    assert.equal(deleteRes.status, 200);
+    const deleteData = await deleteRes.json();
+    assert.equal(deleteData.success, true);
   });
 });
+

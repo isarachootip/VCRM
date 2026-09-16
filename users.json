@@ -4,7 +4,7 @@
     "username": "sysadmin",
     "email": "sysadmin@vcrm.internal",
     "name": "System Administrator",
-    "role": "ADMIN",
+    "role": "SYSADMIN",
     "businessUnits": [
       "CENTRAL",
       "CDS",
@@ -16,7 +16,7 @@
     "passwordHash": "0027be2748c6c303264db04978822417:a653918a6f24d19c291adfc0495765dd3be540552c9c00ae24ba17ecb31640e77e72c329672647437313bd5cfea5e26b5c834ad3740434ad75d305a756ea5076",
     "presence": "ONLINE",
     "createdAt": "2026-09-13T11:33:16.428Z",
-    "updatedAt": "2026-09-13T11:33:16.428Z"
+    "updatedAt": "2026-09-17T00:00:00.000Z"
   },
   "user_admin": {
     "id": "user_admin",
@@ -35,7 +35,7 @@
     "passwordHash": "c7cdb034d3dd2e04b6f195b90b089c09:199416849509c2dfb2c67d0bfffb5e79afdc74e518c17f385bbcdb21809df02167967ffaecc718ff7cd67fada360c4cfe24d1ef4290f9dba2202ff0c1f17bb27",
     "presence": "ONLINE",
     "createdAt": "2026-09-13T11:33:16.428Z",
-    "updatedAt": "2026-09-13T11:33:16.428Z"
+    "updatedAt": "2026-09-17T00:00:00.000Z"
   },
   "user_manager": {
     "id": "user_manager",
@@ -51,17 +51,17 @@
       "SSP",
       "B2S"
     ],
-    "passwordHash": "b1988876c6eb9803d79b0fc835f4964b:d6b78b96fae23addd75787fb7470e131e2bc8e3b60179a48c9045c13a96227a4fa1e691983e18a9900a98a93ed23728a9ccd0ea5a07a7d300b019712c8830679",
+    "passwordHash": "797f8752198099f0fbccf5a73a074ab2:487c6fe2fc6993972f9906d8af447b06b6233a51b4c046f0458275e9e37c69119d83f62d698b6d2af0b41d9a09c312407d6197d397951fb9a6d690aaae6e93e0",
     "presence": "ONLINE",
     "createdAt": "2026-09-13T11:33:16.428Z",
-    "updatedAt": "2026-09-13T11:45:42.004Z"
+    "updatedAt": "2026-09-17T00:00:00.000Z"
   },
   "user_sales": {
     "id": "user_sales",
     "username": "sales",
     "email": "sales@vcrm.internal",
     "name": "Sales Executive",
-    "role": "AGENT",
+    "role": "SALES",
     "businessUnits": [
       "CENTRAL",
       "CDS",
@@ -70,6 +70,6 @@
     "passwordHash": "2394572fa2589af59888a01d186fe86c:a0f57c9759e29b6f86620a06f8c2599aca36952a2f4f6a28b88e18c9a99d337b220a393c0c18925a2356fc7465e4ab51b90f22d1c3edcfee8582137035454836",
     "presence": "ONLINE",
     "createdAt": "2026-09-13T11:33:16.428Z",
-    "updatedAt": "2026-09-13T11:45:04.063Z"
+    "updatedAt": "2026-09-17T00:00:00.000Z"
   }
 }

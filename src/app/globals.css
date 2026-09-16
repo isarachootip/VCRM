@@ -34,37 +34,6 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 262.1 83.3% 57.8%;
   }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 6.5%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 6.5%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 263.4 70% 50.4%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 263.4 70% 50.4%;
-
-    --sidebar: 240 10% 4.5%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 263.4 70% 50.4%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 263.4 70% 50.4%;
-  }
 }
 
 @layer base {
@@ -72,12 +41,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-violet-500/30 selection:text-violet-200;
+    @apply bg-background text-foreground antialiased selection:bg-violet-500/30 selection:text-violet-900;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Custom Artifact Scrollbars */
+/* Custom VCRMX Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -96,25 +65,25 @@
   background: hsl(var(--muted-foreground) / 0.45);
 }
 
-/* Artifact UI Helpers */
-.artifact-glass {
+/* VCRMX UI Helpers */
+.artifact-glass, .vcrmx-glass {
   background: hsl(var(--background) / 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-.artifact-card {
+.artifact-card, .vcrmx-card {
   @apply bg-card text-card-foreground rounded-2xl border border-border transition-all duration-200;
 }
 
-.artifact-card:hover {
+.artifact-card:hover, .vcrmx-card:hover {
   @apply border-border/80 shadow-card;
 }
 
-.artifact-gradient-border {
+.artifact-gradient-border, .vcrmx-gradient-border {
   position: relative;
 }
-.artifact-gradient-border::after {
+.artifact-gradient-border::after, .vcrmx-gradient-border::after {
   content: '';
   position: absolute;
   inset: 0;

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { HubSpotHeader } from '@/components/HubSpotHeader';
 import { Sidebar } from '@/components/Sidebar';
+import { SOPGuideModal } from '@/components/sop/SOPGuideModal';
 import { QueueFilterBar, CaseListItem } from '@/components/chat/QueueFilterBar';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { CaseDetailSidebar, CaseDetail } from '@/components/chat/CaseDetailSidebar';
@@ -23,6 +24,7 @@ export function ChatDeskView({ embedded = false, selectedBu: externalBu, onBuCha
   // Queue & Filters
   const [cases, setCases] = useState<CaseListItem[]>([]);
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
+  const [isSOPModalOpen, setIsSOPModalOpen] = useState(false);
   const [internalBU, setInternalBU] = useState<string>('ALL');
   const selectedBU = externalBu !== undefined ? externalBu : internalBU;
   const setSelectedBU = (bu: string) => {
@@ -376,6 +378,7 @@ export function ChatDeskView({ embedded = false, selectedBu: externalBu, onBuCha
           const buParam = selectedBU !== 'ALL' ? `&bu=${selectedBU}` : '';
           router.push(`/?tab=deals${buParam}`);
         }}
+        onOpenSOPManual={() => setIsSOPModalOpen(true)}
         selectedBu={selectedBU}
         onBuChange={(bu) => setSelectedBU(bu)}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
@@ -395,6 +398,7 @@ export function ChatDeskView({ embedded = false, selectedBu: externalBu, onBuCha
           onSelectBoard={() => {
             // Sidebar.handleBoardClick already navigates cleanly to /?tab=deals&board=...&bu=...
           }}
+          onOpenSOPManual={() => setIsSOPModalOpen(true)}
           selectedBu={selectedBU}
           onBuChange={(bu) => setSelectedBU(bu)}
           isMobileOpen={isMobileSidebarOpen}
@@ -402,6 +406,14 @@ export function ChatDeskView({ embedded = false, selectedBu: externalBu, onBuCha
         />
         {content}
       </div>
+
+      {/* SOP Guide Modal */}
+      <SOPGuideModal
+        isOpen={isSOPModalOpen}
+        onClose={() => setIsSOPModalOpen(false)}
+        currentTab="chat"
+        currentBoardId="board-5030723273"
+      />
     </div>
   );
 }

@@ -20,6 +20,7 @@ import {
   ChevronDown,
   Download,
   Upload,
+  BookOpen,
   LucideIcon
 } from 'lucide-react';
 import { ActiveView, CRMBoard } from '@/types/crm';
@@ -36,6 +37,7 @@ interface BoardHeaderProps {
   onAddNewItem: () => void;
   onExportExcel: () => void;
   onOpenImport: () => void;
+  onOpenSOPManual?: () => void;
 }
 
 export const BoardHeader: React.FC<BoardHeaderProps> = ({
@@ -49,6 +51,7 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
   onAddNewItem,
   onExportExcel,
   onOpenImport,
+  onOpenSOPManual,
 }) => {
   const { t, language } = useLanguage();
 
@@ -119,6 +122,19 @@ export const BoardHeader: React.FC<BoardHeaderProps> = ({
             <Upload size={13} className="text-violet-500" />
             <span>{t('import_excel')}</span>
           </button>
+
+          {/* SOP Guide Button */}
+          {onOpenSOPManual && (
+            <button
+              type="button"
+              onClick={onOpenSOPManual}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-violet-700 bg-violet-500/10 hover:bg-violet-500/20 rounded-lg border border-violet-500/30 transition-colors shadow-xs cursor-pointer"
+              title="เปิดคู่มือระบบ (SOP Guide) ประจำบอร์ดนี้"
+            >
+              <BookOpen size={13} className="text-violet-600" />
+              <span>คู่มือ SOP</span>
+            </button>
+          )}
 
           <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-accent rounded-lg border border-border transition-colors">
             <Bot size={13} className="text-violet-500" />

@@ -8,22 +8,21 @@ import {
   Bell, 
   Settings, 
   ChevronDown,
-  Sun,
-  Moon,
   LogOut,
   LogIn,
   Key,
-  Menu
+  Menu,
+  BookOpen
 } from 'lucide-react';
 import { useLanguage, Language, SUPPORTED_LANGUAGES } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 
 export interface HubSpotHeaderProps {
   currentTab?: string;
   onTabChange?: (tab: string) => void;
   onOpenCreateModal?: () => void;
   onOpenLineSettings?: () => void;
+  onOpenSOPManual?: () => void;
   selectedBu?: string;
   onBuChange?: (bu: string) => void;
   onToggleMobileSidebar?: () => void;
@@ -34,6 +33,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
   onTabChange,
   onOpenCreateModal,
   onOpenLineSettings,
+  onOpenSOPManual,
   selectedBu = 'ALL',
   onBuChange,
   onToggleMobileSidebar,
@@ -42,7 +42,6 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
   const pathname = usePathname();
   const { language, setLanguage, t } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
-  const { resolvedTheme, toggleTheme } = useTheme();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,7 +71,7 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
     <header className="bg-card/95 backdrop-blur-md text-card-foreground border-b border-border select-none text-sm z-30 shrink-0 sticky top-0 transition-colors">
       {/* Sleek Minimal Single-Line Utility Header Bar */}
       <div className="flex items-center justify-between px-4 h-14">
-        {/* Left: Artifact Brand Logo & Title */}
+        {/* Left: VCRMX Brand Logo & Title */}
         <div className="flex items-center space-x-1 sm:space-x-3">
           {onToggleMobileSidebar && (
             <button
@@ -88,16 +87,16 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
           <div 
             onClick={handleLogoClick}
             className="flex items-center gap-2.5 cursor-pointer pr-2 group transition-opacity"
-            title="Artifact CRM Home"
+            title="VCRMX Home"
           >
-            {/* Artifact Signature Geometric Logo Badge */}
+            {/* VCRMX Signature Geometric Logo Badge */}
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-500 to-purple-400 flex items-center justify-center text-white shadow-md shadow-violet-500/20 font-black text-base ring-1 ring-white/20 group-hover:scale-105 transition-transform">
-              <span className="tracking-tighter font-extrabold text-white text-base">A</span>
+              <span className="tracking-tighter font-extrabold text-white text-base">V</span>
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-foreground text-sm tracking-tight leading-none flex items-center gap-1.5">
-                Artifact CRM
-                <span className="text-[10px] bg-violet-500/10 text-violet-600 dark:text-violet-400 font-semibold px-1.5 py-0.5 rounded-md border border-violet-500/20">
+                VCRMX
+                <span className="text-[10px] bg-violet-500/10 text-violet-600 font-semibold px-1.5 py-0.5 rounded-md border border-violet-500/20">
                   Enterprise
                 </span>
               </span>
@@ -108,9 +107,9 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right: Essential Top Utilities (Search ⌘K, + Create, Theme Toggle, Language Switcher, Notifications, Settings, Profile) */}
+        {/* Right: Essential Top Utilities (Search ⌘K, + Create, Language Switcher, Notifications, Settings, Profile) */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Artifact Global Command Search (⌘K) */}
+          {/* VCRMX Global Command Search (⌘K) */}
           <div className="relative hidden md:flex items-center">
             <Search className="absolute left-2.5 text-muted-foreground pointer-events-none" size={13} />
             <input
@@ -141,15 +140,18 @@ export const HubSpotHeader: React.FC<HubSpotHeaderProps> = ({
             <ChevronDown size={12} className="opacity-80" />
           </button>
 
-          {/* Theme Toggle Button (Dark / Light Mode) */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="w-8 h-8 rounded-lg border border-border hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-            title={`Switch to ${resolvedTheme === 'dark' ? 'Light' : 'Dark'} mode`}
-          >
-            {resolvedTheme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
+          {/* SOP System Manual Guide Button */}
+          {onOpenSOPManual && (
+            <button
+              type="button"
+              onClick={onOpenSOPManual}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-500/10 hover:bg-violet-500/20 text-violet-700 font-semibold border border-violet-500/30 text-xs transition-colors cursor-pointer shadow-2xs"
+              title="เปิดคู่มือระบบ (SOP Guide) ประจำหน้านี้"
+            >
+              <BookOpen size={13} className="text-violet-600" />
+              <span className="hidden sm:inline">คู่มือระบบ SOP</span>
+            </button>
+          )}
 
           {/* Language Switcher Dropdown */}
           <div className="relative flex items-center">

@@ -44,11 +44,12 @@ const translations: Record<string, Record<string, string>> = {
     'sales_pipeline': 'Sales Pipeline',
     'companies': 'Companies',
     'reports': 'Reports',
-    'search_vcrm': 'Search VCRM (Ctrl+K)...',
+    'search_vcrm': 'Search VCRMX (Ctrl+K)...',
     'create': 'Create',
     'portal_id': 'Portal ID',
     
     // Sidebar
+    'main_menu': 'Core Apps',
     'crm_sales': 'CRM & Sales',
     'field_operations': 'Field Operations ⚡',
     'workspace_settings': 'Workspace Settings',
@@ -299,11 +300,12 @@ const translations: Record<string, Record<string, string>> = {
     'sales_pipeline': 'ขั้นตอนการขาย',
     'companies': 'บริษัท',
     'reports': 'รายงาน',
-    'search_vcrm': 'ค้นหา VCRM (Ctrl+K)...',
+    'search_vcrm': 'ค้นหา VCRMX (Ctrl+K)...',
     'create': 'สร้างใหม่',
     'portal_id': 'รหัสพอร์ทัล',
     
     // Sidebar
+    'main_menu': 'เมนูหลัก',
     'crm_sales': 'CRM & การขาย',
     'field_operations': 'งานบริการหน้างาน ⚡',
     'workspace_settings': 'ตั้งค่าพื้นที่ทำงาน',
@@ -554,11 +556,12 @@ const translations: Record<string, Record<string, string>> = {
     'sales_pipeline': '销售管道',
     'companies': '公司',
     'reports': '分析报告',
-    'search_vcrm': '搜索 VCRM (Ctrl+K)...',
+    'search_vcrm': '搜索 VCRMX (Ctrl+K)...',
     'create': '创建',
     'portal_id': '门户 ID',
     
     // Sidebar
+    'main_menu': '核心应用',
     'crm_sales': 'CRM 与销售',
     'field_operations': '现场服务运营 ⚡',
     'workspace_settings': '工作区设置',
@@ -809,11 +812,12 @@ const translations: Record<string, Record<string, string>> = {
     'sales_pipeline': 'セールスパイプライン',
     'companies': '企業',
     'reports': '分析レポート',
-    'search_vcrm': 'VCRMを検索 (Ctrl+K)...',
+    'search_vcrm': 'VCRMXを検索 (Ctrl+K)...',
     'create': '新規作成',
     'portal_id': 'ポータルID',
     
     // Sidebar
+    'main_menu': 'コアアプリ',
     'crm_sales': 'CRM & セールス',
     'field_operations': 'フィールド業務 ⚡',
     'workspace_settings': 'ワークスペース設定',

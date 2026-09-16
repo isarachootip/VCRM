@@ -5,8 +5,8 @@ import { LanguageProvider } from '@/context/LanguageContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
 export const metadata: Metadata = {
-  title: "Artifact | Enterprise CRM & Sales OS",
-  description: 'Artifact — Modern Next.js + Shadcn UI Admin CRM, Sales Pipeline & OmniService Desk',
+  title: "VCRMX | Enterprise CRM & Sales OS",
+  description: 'VCRMX — Modern Next.js + Shadcn UI Admin CRM, Sales Pipeline & OmniService Desk',
   icons: {
     icon: '/favicon.ico',
   },
@@ -18,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="light" suppressHydrationWarning>
       <head />
-      <body className="antialiased min-h-screen bg-background text-foreground selection:bg-violet-500/30 selection:text-violet-200">
+      <body className="antialiased min-h-screen bg-background text-foreground selection:bg-violet-500/30 selection:text-violet-900">
         <ThemeProvider>
           <LanguageProvider>
             <AuthProvider>{children}</AuthProvider>

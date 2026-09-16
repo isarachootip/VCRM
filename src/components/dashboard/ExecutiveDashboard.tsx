@@ -333,8 +333,8 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
           <div>
             <h1 className="text-lg font-bold text-foreground tracking-tight flex items-center gap-2">
               <span>{language === 'th' ? 'แดชบอร์ดภาพรวมการบริหารลูกค้าและยอดขาย' : t('dashboard_overview')}</span>
-              <span className="text-[10px] bg-violet-500/10 text-violet-600 dark:text-violet-400 font-semibold px-2 py-0.5 rounded-full border border-violet-500/20">
-                ARTIFACT 2026
+              <span className="text-[10px] bg-violet-500/10 text-violet-600 font-semibold px-2 py-0.5 rounded-full border border-violet-500/20">
+                VCRMX 2026
               </span>
             </h1>
             <p className="text-xs text-muted-foreground">
