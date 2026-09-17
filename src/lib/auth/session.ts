@@ -33,7 +33,7 @@ export function createSessionToken(user: {
     email: user.email,
     name: user.name,
     role: user.role,
-    businessUnits: user.businessUnits || ['CENTRAL'],
+    businessUnits: user.businessUnits || ['MUJI'],
     issuedAt: now,
     expiresAt: now + SESSION_MAX_AGE_SECONDS * 1000,
   };

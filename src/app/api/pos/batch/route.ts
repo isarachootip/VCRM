@@ -12,13 +12,13 @@ export async function POST(request: NextRequest) {
       result = await processBatchUpload(csvText, {
         fileName: `pos_batch_${Date.now()}.csv`,
         uploadedBy: request.headers.get('x-uploaded-by') || 'supervisor',
-        businessUnit: request.headers.get('x-business-unit') || 'Central',
+        businessUnit: request.headers.get('x-business-unit') || 'Muji',
       });
     } else if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData();
       const file = formData.get('file') as File | null;
       const uploadedBy = (formData.get('uploadedBy') as string) || 'supervisor';
-      const businessUnit = (formData.get('businessUnit') as string) || 'Central';
+      const businessUnit = (formData.get('businessUnit') as string) || 'Muji';
 
       if (!file) {
         return NextResponse.json(

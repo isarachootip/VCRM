@@ -3,7 +3,7 @@
  * Path: src/lib/payments/service.ts
  *
  * Implements:
- * - Multi-BU account routing (Central, Muji [1st Priority], SSP, B2S).
+ * - Multi-BU account routing (Muji [1st Priority], SSP, B2S).
  * - processPaymentWebhook: validation, quotation resolution, idempotency check,
  *   BU segregation check, exact amount matching vs discrepancy, Zwiz outbound confirmation, audit logging.
  * - Bank slip submission (recordPayment) and supervisor verification (verifySlip).

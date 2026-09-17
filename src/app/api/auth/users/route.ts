@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       email,
       name,
       role,
-      businessUnits: Array.isArray(businessUnits) ? businessUnits : ['CENTRAL'],
+      businessUnits: Array.isArray(businessUnits) ? businessUnits : ['MUJI'],
       password,
     });
 

@@ -3,7 +3,7 @@
  * Path: src/lib/shipping/courier.ts
  *
  * Implements:
- * - Tracking number validation regexes for Kerry, Flash, and Central Express
+ * - Tracking number validation regexes for Kerry and Flash
  * - Carrier tracking number generator
  * - Tracking portal URL builders
  * - HTTP 422 rejection for invalid tracking formats
@@ -40,9 +40,6 @@ export function normalizeCarrier(carrier: string | ShippingCarrier): ShippingCar
   if (norm === 'FLASH' || norm === 'FLS' || norm === 'FLASH_EXPRESS') {
     return ShippingCarrier.FLASH;
   }
-  if (norm === 'CENTRAL_EXPRESS' || norm === 'CENTRAL' || norm === 'CTEX' || norm === 'CDS' || norm === 'CTX') {
-    return ShippingCarrier.CENTRAL_EXPRESS;
-  }
   return norm as ShippingCarrier;
 }
 
@@ -50,7 +47,6 @@ export function normalizeCarrier(carrier: string | ShippingCarrier): ShippingCar
  * Validates tracking number against carrier-specific regex patterns.
  * - Kerry: KEX/SHP/KER prefix + 8-12 alphanumeric + optional TH suffix, or 10-13 digits.
  * - Flash: TH or FLS prefix + 10-14 alphanumeric chars.
- * - Central Express: CTEX/CTX tracking format (e.g. CTEX-YYYY-XXXXXXTH or CTX + alphanumeric + TH).
  */
 export function validateTrackingNumber(carrier: string | ShippingCarrier, trackingNumber: string): boolean {
   if (!trackingNumber || typeof trackingNumber !== 'string') {
@@ -68,13 +64,6 @@ export function validateTrackingNumber(carrier: string | ShippingCarrier, tracki
 
     case ShippingCarrier.FLASH:
       return /^(TH|FLS)[0-9A-Z]{10,14}$/i.test(track);
-
-    case ShippingCarrier.CENTRAL_EXPRESS:
-      return (
-        /^(CTEX|CTX)-?[0-9A-Z]{4,14}(TH)?$/i.test(track) ||
-        /^(CTEX|CTX)-?[0-9]{4}-?[0-9]{6,8}(TH)?$/i.test(track) ||
-        /^(CTEX|CTX)[0-9A-Z]{8,12}$/i.test(track)
-      );
 
     default:
       return false;
@@ -106,19 +95,12 @@ export function generateTrackingNumber(carrier: string | ShippingCarrier): strin
       return `KEX${seq}TH`;
     }
 
-    case ShippingCarrier.FLASH: {
+    case ShippingCarrier.FLASH:
+    default: {
       // Flash format: TH + 10-12 alphanumeric
       const seq = `${now.slice(-7)}${rand4}`;
       const suffixLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
       return `TH${seq}${suffixLetter}`;
-    }
-
-    case ShippingCarrier.CENTRAL_EXPRESS:
-    default: {
-      // Central Express format: CTEX-YYYY-XXXXXXTH
-      const year = new Date().getFullYear();
-      const rand6 = Math.floor(100000 + Math.random() * 900000).toString();
-      return `CTEX-${year}-${rand6}TH`;
     }
   }
 }
@@ -135,11 +117,8 @@ export function getTrackingPortalUrl(carrier: string | ShippingCarrier, tracking
       return `https://th.kerryexpress.com/th/track/?track=${encoded}`;
 
     case ShippingCarrier.FLASH:
-      return `https://www.flashexpress.co.th/tracking/?se=${encoded}`;
-
-    case ShippingCarrier.CENTRAL_EXPRESS:
     default:
-      return `https://delivery.central.co.th/track/${encoded}`;
+      return `https://www.flashexpress.co.th/tracking/?se=${encoded}`;
   }
 }
 

@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
   }
 
   // 5. Source extraction & defaults (T2.1.2, T2.1.4)
-  const parsedBU = parseBusinessUnit(source?.businessUnit) || BusinessUnit.CENTRAL;
+  const parsedBU = parseBusinessUnit(source?.businessUnit) || BusinessUnit.MUJI;
   const parsedChannel = parseChannel(rawChannel) || ChannelType.LINE;
   const senderId = source?.senderId || `guest_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 

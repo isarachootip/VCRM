@@ -25,7 +25,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     email: 'sysadmin@vcrm.internal',
     name: 'System Administrator',
     role: 'SYSADMIN',
-    businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
   {
     id: 'user_admin',
@@ -33,7 +33,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     email: 'admin@vcrm.internal',
     name: 'CRM Administrator',
     role: 'ADMIN',
-    businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
   {
     id: 'user_manager',
@@ -41,7 +41,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     email: 'manager@vcrm.internal',
     name: 'Sales & Service Manager',
     role: 'SUPERVISOR',
-    businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
   {
     id: 'user_sales',
@@ -49,7 +49,7 @@ export const DEFAULT_USERS: Omit<AuthUser, 'passwordHash' | 'createdAt' | 'updat
     email: 'sales@vcrm.internal',
     name: 'Sales Executive',
     role: 'SALES',
-    businessUnits: ['CENTRAL', 'CDS', 'CENTRAL_BEAUTY_CLUB'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
 ];
 
@@ -193,7 +193,7 @@ export function createUser(
     password?: string;
   }
 ): { success: boolean; user?: Omit<AuthUser, 'passwordHash'>; error?: string } {
-  const { username, email, name, role, businessUnits = ['CENTRAL'], password } = data;
+  const { username, email, name, role, businessUnits = ['MUJI'], password } = data;
 
   if (!username || !email || !name || !role) {
     return { success: false, error: 'Username, email, name, and role are required' };
@@ -222,7 +222,7 @@ export function createUser(
     email: email.trim(),
     name: name.trim(),
     role,
-    businessUnits: businessUnits.length > 0 ? businessUnits : ['CENTRAL'],
+    businessUnits: businessUnits.length > 0 ? businessUnits : ['MUJI'],
     passwordHash: hashPassword(rawPass),
     presence: 'ONLINE',
     createdAt: now,

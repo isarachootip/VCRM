@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       name: body.name,
       content: body.content,
       category: body.category || 'GENERAL',
-      businessUnit: body.businessUnit || 'Central',
+      businessUnit: body.businessUnit || 'Muji',
       channel: body.channel || 'ALL',
       description: body.description || '',
     });

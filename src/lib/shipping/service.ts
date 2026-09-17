@@ -147,7 +147,7 @@ export async function createShippingFulfillment(input: CreateShippingInput) {
   // Resolve carrier
   const resolvedCarrier: ShippingCarrier = input.carrier
     ? normalizeCarrier(input.carrier)
-    : ShippingCarrier.CENTRAL_EXPRESS;
+    : ShippingCarrier.FLASH;
 
   // Resolve tracking number
   let trackingNumber = input.trackingNumber?.trim();
@@ -419,7 +419,7 @@ export async function generateShippingLabelHtml(
 
     // Generate simulated fallback fulfillment for label preview
     const customer = q.customer;
-    const carrier = ShippingCarrier.CENTRAL_EXPRESS;
+    const carrier = ShippingCarrier.FLASH;
     const trackingNo = generateTrackingNumber(carrier);
     f = {
       id: 'preview_fulfillment',
@@ -468,7 +468,7 @@ function renderA4ShippingLabelHtml(quotation: any, fulfillment: any): string {
       ? 'Kerry Express (Thailand)'
       : fulfillment.carrier === ShippingCarrier.FLASH
       ? 'Flash Express (Thailand)'
-      : 'Central Express Logistics';
+      : 'Flash Express (Thailand)';
 
   return `<!DOCTYPE html>
 <html lang="th">
@@ -607,7 +607,7 @@ function renderA4ShippingLabelHtml(quotation: any, fulfillment: any): string {
   <!-- Header -->
   <div class="header">
     <div>
-      <div class="brand-title">CENTRAL RETAIL</div>
+      <div class="brand-title">VCRM OMNICHANNEL</div>
       <div class="doc-type">ใบส่งสินค้าและใบปะหน้าพัสดุ (Packing Slip &amp; Shipping Manifest)</div>
     </div>
     <div style="text-align: right;">
@@ -620,10 +620,10 @@ function renderA4ShippingLabelHtml(quotation: any, fulfillment: any): string {
   <div class="meta-box">
     <div class="meta-col">
       <h4>ผู้ส่ง (Ship From)</h4>
-      <div style="font-weight: 700;">Central Department Store (E-Ordering Hub)</div>
+      <div style="font-weight: 700;">VCRM E-Ordering Hub</div>
       <div>1027 ถนนเพลินจิต แขวงลุมพินี เขตปทุมวัน</div>
       <div>กรุงเทพมหานคร 10330</div>
-      <div>โทร: 02-793-7000 (Central Customer Care)</div>
+      <div>โทร: 02-793-7000 (Customer Care)</div>
     </div>
     <div class="meta-col">
       <h4>ผู้รับ (Ship To)</h4>
@@ -729,7 +729,7 @@ function renderThermal4x6LabelHtml(quotation: any, fulfillment: any): string {
       ? 'KERRY EXPRESS'
       : fulfillment.carrier === ShippingCarrier.FLASH
       ? 'FLASH EXPRESS'
-      : 'CENTRAL EXPRESS';
+      : 'FLASH EXPRESS';
 
   return `<!DOCTYPE html>
 <html lang="th">
@@ -850,7 +850,7 @@ function renderThermal4x6LabelHtml(quotation: any, fulfillment: any): string {
     <div class="header-row">
       <div>
         <div class="carrier-title">${carrierName}</div>
-        <div style="font-size: 9px; font-weight: bold;">CENTRAL CHAT &amp; SHOP</div>
+        <div style="font-size: 9px; font-weight: bold;">VCRM OMNICHANNEL</div>
       </div>
       <div>
         <div class="routing-code">${fulfillment.postalCode}</div>
@@ -873,7 +873,7 @@ function renderThermal4x6LabelHtml(quotation: any, fulfillment: any): string {
 
     <!-- Ship From Sender -->
     <div class="sender-section">
-      <strong>ผู้ส่ง (FROM):</strong> Central Department Store (Chidlom Hub)<br>
+      <strong>ผู้ส่ง (FROM):</strong> VCRM E-Ordering Hub<br>
       1027 Ploenchit Rd, Lumpini, Pathumwan, Bangkok 10330<br>
       Tel: 02-793-7000
     </div>

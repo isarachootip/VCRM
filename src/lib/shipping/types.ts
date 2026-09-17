@@ -3,7 +3,7 @@
  * Path: src/lib/shipping/types.ts
  */
 
-export type CourierCarrier = 'KERRY' | 'FLASH' | 'CENTRAL_EXPRESS';
+export type CourierCarrier = 'KERRY' | 'FLASH';
 
 export type CourierStatus =
   | 'PACKED'
@@ -13,7 +13,7 @@ export type CourierStatus =
   | 'DELIVERED'
   | 'DELIVERY_FAILED';
 
-export const VALID_CARRIERS: readonly CourierCarrier[] = ['KERRY', 'FLASH', 'CENTRAL_EXPRESS'] as const;
+export const VALID_CARRIERS: readonly CourierCarrier[] = ['KERRY', 'FLASH'] as const;
 
 export const VALID_STATUSES: readonly CourierStatus[] = [
   'PACKED',
@@ -92,7 +92,7 @@ export class TrackingServiceError extends Error {
 export class CarrierValidationError extends TrackingServiceError {
   constructor(carrier: string, message?: string) {
     super(
-      message || `INVALID_CARRIER: Invalid carrier code '${carrier}'. Supported carriers: KERRY, FLASH, CENTRAL_EXPRESS`,
+      message || `INVALID_CARRIER: Invalid carrier code '${carrier}'. Supported carriers: KERRY, FLASH`,
       422,
       'INVALID_CARRIER',
       { carrier }

@@ -196,7 +196,7 @@ export async function POST(request: NextRequest) {
         if (!activeCase) {
           // Find or create default queue for LINE
           let targetQueue = await prisma.queue.findFirst({
-            where: { businessUnit: BusinessUnit.CENTRAL },
+            where: { businessUnit: BusinessUnit.MUJI },
           });
 
           if (!targetQueue) {
@@ -206,10 +206,10 @@ export async function POST(request: NextRequest) {
           if (!targetQueue) {
             targetQueue = await prisma.queue.create({
               data: {
-                id: 'queue_line_central',
-                code: 'queue_line_central',
-                name: 'LINE Central Support',
-                businessUnit: BusinessUnit.CENTRAL,
+                id: 'queue_line_muji',
+                code: 'queue_line_muji',
+                name: 'LINE Muji Support',
+                businessUnit: BusinessUnit.MUJI,
                 slaResponseMin: 15,
                 slaResolveMin: 120,
               },
@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
               title: `LINE Chat: ${senderName}`,
               status: CaseStatus.OPEN,
               priority: PriorityLevel.MEDIUM,
-              businessUnit: BusinessUnit.CENTRAL,
+              businessUnit: BusinessUnit.MUJI,
               channel: ChannelType.LINE,
               pageId: 'line_oa',
               page: 'LINE Official Account',

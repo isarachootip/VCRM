@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
     const recipientId = body.recipientId || body.channelUserId || body.customerId;
     const text = body.text || body.message || body.content;
     const rawChannel = body.channel || 'LINE';
-    const rawBU = body.businessUnit || body.bu || 'Central';
-    const pageId = body.pageId || 'central_official';
+    const rawBU = body.businessUnit || body.bu || 'Muji';
+    const pageId = body.pageId || 'muji_official';
     const agentId = body.agentId || body.ownerId || null;
     const caseId = body.caseId;
     const templateId = body.templateId;
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     const trimmedText = text.trim();
     const parsedChannel = parseChannel(rawChannel) || ChannelType.LINE;
-    const parsedBU = parseBusinessUnit(rawBU) || BusinessUnit.CENTRAL;
+    const parsedBU = parseBusinessUnit(rawBU) || BusinessUnit.MUJI;
 
     // 1. Resolve or create Customer
     let customer = await prisma.customer.findFirst({
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
           channel: parsedChannel,
           pageId,
           status: CaseStatus.IN_PROGRESS,
-          queueId: queue ? queue.id : 'queue_central_sales',
+          queueId: queue ? queue.id : 'queue_muji_furniture',
           ownerId: agentId || null,
           customerId: customer.id,
         },

@@ -46,7 +46,7 @@ export interface The1LookupParams {
   identifier?: string | null;
 }
 
-// Built-in loyalty test fixtures for Central The 1 simulation
+// Built-in loyalty test fixtures for The 1 loyalty simulation
 const THE1_REGISTRY: Record<string, Partial<The1MemberProfile>> = {
   '0812345678': {
     memberId: 'T1-99887766',
@@ -147,7 +147,7 @@ const THE1_REGISTRY: Record<string, Partial<The1MemberProfile>> = {
 };
 
 /**
- * Standard Central Group point redemption conversion:
+ * Standard point redemption conversion:
  * 8 Points = 1 THB cash discount (e.g. 800 points = 100 THB)
  */
 export function calculatePointsValueThb(points: number): number {
@@ -164,7 +164,7 @@ export function calculatePointsNeededForDiscount(discountThb: number): number {
 
 /**
  * Calculates loyalty points earned on a purchase:
- * Standard Central rule: 25 THB spent = 1 Point earned
+ * Standard rule: 25 THB spent = 1 Point earned
  */
 export function calculatePointsEarned(grandTotal: number): number {
   if (!grandTotal || grandTotal <= 0) return 0;
