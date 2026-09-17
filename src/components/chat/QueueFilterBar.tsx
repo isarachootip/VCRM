@@ -67,8 +67,6 @@ export interface QueueFilterBarProps {
 
 const BUSINESS_UNITS = [
   { id: 'ALL', label: 'All BUs' },
-  { id: 'Central', label: 'Central' },
-  { id: 'Central Beauty Club', label: 'Beauty Club' },
   { id: 'Muji', label: 'Muji' },
   { id: 'SSP', label: 'Supersports (SSP)' },
   { id: 'B2S', label: 'B2S' },
@@ -270,7 +268,7 @@ export const QueueFilterBar: React.FC<QueueFilterBarProps> = ({
               Omnichannel Queues
             </h2>
             <p className="text-[11px] text-slate-500">
-              Central Chat &amp; Shop Desk
+              Omnichannel Sales Desk
             </p>
           </div>
         </div>
@@ -461,7 +459,7 @@ export const QueueFilterBar: React.FC<QueueFilterBarProps> = ({
                 {/* Row 4: Business Unit & Status */}
                 <div className="flex items-center justify-between pt-1 border-t border-slate-100/60 mt-1.5 text-[10px]">
                   <span className="text-slate-500 font-medium truncate max-w-[140px]" title={item.businessUnit || item.bu}>
-                    🏢 {item.businessUnit || item.bu || 'Central'}
+                    🏢 {item.businessUnit || item.bu || 'General'}
                   </span>
                   {renderStatusBadge(item.status)}
                 </div>

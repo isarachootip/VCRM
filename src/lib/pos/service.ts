@@ -506,7 +506,7 @@ export async function processBatchUpload(
   let tickets: PosTicketPayload[] = [];
   let fileName = meta.fileName || `pos_batch_${Date.now()}.csv`;
   let uploadedBy = meta.uploadedBy || 'supervisor';
-  let businessUnit = meta.businessUnit || 'Central';
+  let businessUnit = meta.businessUnit || 'Muji';
 
   // 1. Ingest input
   if (typeof input === 'string' || Buffer.isBuffer(input)) {

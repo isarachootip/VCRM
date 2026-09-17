@@ -46,15 +46,15 @@ const DEFAULT_PORTAL_TOOLS: PortalToolLink[] = [
   {
     id: 'tool_aipx',
     title: 'AIPX',
-    url: 'https://aipx.central.co.th',
+    url: 'https://aipx.vcrm.internal',
     icon: 'sparkles',
     category: 'CATALOG',
-    businessUnits: ['CENTRAL', 'CDS', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
   {
     id: 'tool_the1',
     title: 'The 1 Portal',
-    url: 'https://the1.central.co.th/portal',
+    url: 'https://the1.vcrm.internal/portal',
     icon: 'award',
     category: 'LOYALTY',
     businessUnits: [],
@@ -62,26 +62,26 @@ const DEFAULT_PORTAL_TOOLS: PortalToolLink[] = [
   {
     id: 'tool_ops',
     title: 'Operation Portal',
-    url: 'https://ops.central.co.th',
+    url: 'https://ops.vcrm.internal',
     icon: 'settings',
     category: 'OPERATIONS',
-    businessUnits: ['CENTRAL', 'CDS', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
   {
     id: 'tool_qr',
     title: 'QR Portal',
-    url: 'https://qr.central.co.th',
+    url: 'https://qr.vcrm.internal',
     icon: 'qr',
     category: 'PAYMENTS',
     businessUnits: [],
   },
   {
     id: 'tool_delivery',
-    title: 'Central Delivery Portal',
-    url: 'https://logistics.central.co.th',
+    title: 'Delivery Portal',
+    url: 'https://logistics.vcrm.internal',
     icon: 'truck',
     category: 'LOGISTICS',
-    businessUnits: ['CENTRAL', 'CDS', 'MUJI', 'SSP', 'B2S'],
+    businessUnits: ['MUJI', 'SSP', 'B2S'],
   },
 ];
 
@@ -350,8 +350,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="bg-sidebar text-sidebar-foreground text-[11px] font-semibold border border-sidebar-border/70 rounded-md px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-violet-500 cursor-pointer hover:bg-sidebar-accent/50 transition-colors"
             >
               <option value="ALL">All BUs</option>
-              <option value="CENTRAL">Central Dept</option>
-              <option value="CDS">Central Direct</option>
               <option value="MUJI">Muji</option>
               <option value="SSP">SuperSports</option>
               <option value="B2S">B2S</option>
@@ -576,7 +574,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         rel="noopener noreferrer"
                         onClick={() => onCloseMobile?.()}
                         aria-label={`${tool.title} (opens external portal in new tab)`}
-                        title={`${tool.title} - External Central Retail Tool (${tool.url})`}
+                        title={`${tool.title} - External Portal Tool (${tool.url})`}
                         className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground border border-transparent transition-all cursor-pointer group"
                       >
                         <div className="flex items-center gap-2 truncate">

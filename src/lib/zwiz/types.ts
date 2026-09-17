@@ -6,8 +6,6 @@
 export type SocialChannel = 'LINE' | 'FB' | 'IG' | 'FACEBOOK' | 'INSTAGRAM' | string;
 
 export type BusinessUnitName =
-  | 'Central'
-  | 'Central Beauty Club'
   | 'Muji'
   | 'SSP'
   | 'B2S'

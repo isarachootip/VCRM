@@ -33,9 +33,6 @@ export type UserWithoutHash = Omit<AuthUser, 'passwordHash'>;
 export type UserRole = 'SYSADMIN' | 'ADMIN' | 'SUPERVISOR' | 'SALES';
 
 const ALL_BU_OPTIONS = [
-  { id: 'CENTRAL', label: 'Central Department Store' },
-  { id: 'CDS', label: 'Central Direct Sales' },
-  { id: 'CENTRAL_BEAUTY_CLUB', label: 'Central Beauty Club' },
   { id: 'MUJI', label: 'MUJI Retail' },
   { id: 'SSP', label: 'SuperSports (SSP)' },
   { id: 'B2S', label: 'B2S Book & Stationery' },
@@ -123,7 +120,7 @@ export const UserManagementView: React.FC<UserManagementViewProps> = ({
     name: '',
     email: '',
     role: 'SALES',
-    businessUnits: ['CENTRAL'],
+    businessUnits: ['MUJI'],
     password: '',
   });
 
@@ -210,7 +207,7 @@ export const UserManagementView: React.FC<UserManagementViewProps> = ({
       name: '',
       email: '',
       role: 'SALES',
-      businessUnits: selectedBuFilter !== 'ALL' ? [selectedBuFilter] : ['CENTRAL'],
+      businessUnits: selectedBuFilter !== 'ALL' ? [selectedBuFilter] : ['MUJI'],
       password: '',
     });
     setErrorMessage(null);
@@ -225,7 +222,7 @@ export const UserManagementView: React.FC<UserManagementViewProps> = ({
       name: user.name,
       email: user.email,
       role: user.role as UserRole,
-      businessUnits: user.businessUnits || ['CENTRAL'],
+      businessUnits: user.businessUnits || ['MUJI'],
       password: '',
     });
     setErrorMessage(null);
@@ -252,7 +249,7 @@ export const UserManagementView: React.FC<UserManagementViewProps> = ({
       let updated: string[];
       if (exists) {
         updated = prev.businessUnits.filter((id) => id !== buId);
-        if (updated.length === 0) updated = ['CENTRAL'];
+        if (updated.length === 0) updated = ['MUJI'];
       } else {
         updated = [...prev.businessUnits, buId];
       }
@@ -799,7 +796,7 @@ export const UserManagementView: React.FC<UserManagementViewProps> = ({
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="e.g. john@central.co.th"
+                    placeholder="e.g. john@company.co.th"
                     className="w-full pl-9 pr-3 py-2 bg-background border border-border rounded-xl text-xs text-foreground focus:ring-1 focus:ring-violet-500 focus:outline-none"
                   />
                 </div>

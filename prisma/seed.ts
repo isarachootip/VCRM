@@ -9,56 +9,6 @@ export async function main() {
   // 1. SEED AGENT USERS
   const users = [
     {
-      id: 'agent_sarah',
-      email: 'sarah.connor@central.co.th',
-      name: 'Sarah Connor',
-      role: UserRole.AGENT,
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.CDS],
-      presence: PresenceStatus.ONLINE,
-      maxChatCapacity: 5,
-      maxConcurrentChats: 5,
-    },
-    {
-      id: 'agent_sarah_01',
-      email: 'sarah.01@central.co.th',
-      name: 'Sarah Connor (Sales & Support)',
-      role: UserRole.AGENT,
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.CDS],
-      presence: PresenceStatus.ONLINE,
-      maxChatCapacity: 5,
-      maxConcurrentChats: 5,
-    },
-    {
-      id: 'agent_sarah_connor',
-      email: 'sarah.connor.vip@central.co.th',
-      name: 'Sarah Connor (VIP Luxury)',
-      role: UserRole.AGENT,
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.CDS],
-      presence: PresenceStatus.ONLINE,
-      maxChatCapacity: 5,
-      maxConcurrentChats: 5,
-    },
-    {
-      id: 'agent_ploi',
-      email: 'ploi.beauty@central.co.th',
-      name: 'Ploi Beauty Specialist',
-      role: UserRole.AGENT,
-      businessUnits: [BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.CENTRAL],
-      presence: PresenceStatus.ONLINE,
-      maxChatCapacity: 5,
-      maxConcurrentChats: 5,
-    },
-    {
-      id: 'agent_ploi_02',
-      email: 'ploi.02@central.co.th',
-      name: 'Ploi Specialist 02',
-      role: UserRole.AGENT,
-      businessUnits: [BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.CENTRAL],
-      presence: PresenceStatus.ONLINE,
-      maxChatCapacity: 5,
-      maxConcurrentChats: 5,
-    },
-    {
       id: 'agent_ken',
       email: 'ken.tanaka@muji.co.th',
       name: 'Ken Tanaka',
@@ -105,7 +55,7 @@ export async function main() {
       name: 'System Administrator',
       role: UserRole.ADMIN,
       passwordHash: hashPassword('SysAdmin@2026!'),
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      businessUnits: [BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
       presence: PresenceStatus.ONLINE,
       maxChatCapacity: 10,
       maxConcurrentChats: 10,
@@ -117,7 +67,7 @@ export async function main() {
       name: 'CRM Administrator',
       role: UserRole.ADMIN,
       passwordHash: hashPassword('Admin@2026!'),
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      businessUnits: [BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
       presence: PresenceStatus.ONLINE,
       maxChatCapacity: 10,
       maxConcurrentChats: 10,
@@ -129,7 +79,7 @@ export async function main() {
       name: 'Sales & Service Manager',
       role: UserRole.SUPERVISOR,
       passwordHash: hashPassword('Manager@2026!'),
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB, BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
+      businessUnits: [BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
       presence: PresenceStatus.ONLINE,
       maxChatCapacity: 5,
       maxConcurrentChats: 5,
@@ -141,7 +91,7 @@ export async function main() {
       name: 'Sales Executive',
       role: UserRole.AGENT,
       passwordHash: hashPassword('Sales@2026!'),
-      businessUnits: [BusinessUnit.CENTRAL, BusinessUnit.CDS, BusinessUnit.CENTRAL_BEAUTY_CLUB],
+      businessUnits: [BusinessUnit.MUJI, BusinessUnit.SSP, BusinessUnit.B2S],
       presence: PresenceStatus.ONLINE,
       maxChatCapacity: 5,
       maxConcurrentChats: 5,
@@ -196,46 +146,6 @@ export async function main() {
 
   // 2. SEED QUEUES
   const queues = [
-    {
-      id: 'queue_central_general',
-      name: 'Central General Inquiry',
-      code: 'queue_central_general',
-      businessUnit: BusinessUnit.CENTRAL,
-      description: 'General inquiry and omni-commerce queue for Central Department Store',
-      slaResponseMin: 15,
-      slaResolveMin: 120,
-      agentId: 'agent_sarah',
-    },
-    {
-      id: 'queue_central_sales',
-      name: 'Central Sales & Orders',
-      code: 'queue_central_sales',
-      businessUnit: BusinessUnit.CENTRAL,
-      description: 'Central Department Store sales desk and omnichannel ordering queue',
-      slaResponseMin: 15,
-      slaResolveMin: 120,
-      agentId: 'agent_sarah_01',
-    },
-    {
-      id: 'queue_central_luxury',
-      name: 'Central Luxury Personal Shopper',
-      code: 'queue_central_luxury',
-      businessUnit: BusinessUnit.CENTRAL,
-      description: 'High-touch personal shopper queue for Central Luxury brands',
-      slaResponseMin: 5,
-      slaResolveMin: 60,
-      agentId: 'agent_sarah',
-    },
-    {
-      id: 'queue_beauty_advisory',
-      name: 'Central Beauty Club Advisory',
-      code: 'queue_beauty_advisory',
-      businessUnit: BusinessUnit.CENTRAL_BEAUTY_CLUB,
-      description: 'Skincare, cosmetics and fragrance consultation desk',
-      slaResponseMin: 10,
-      slaResolveMin: 90,
-      agentId: 'agent_ploi',
-    },
     {
       id: 'queue_muji_furniture',
       name: 'Muji Furniture & Interior',
@@ -304,57 +214,11 @@ export async function main() {
       },
     });
 
-    // Ensure both agent_sarah and agent_sarah_01 are members of central queues
-    if (q.id === 'queue_central_sales' || q.id === 'queue_central_general') {
-      const aliasAgentId = q.agentId === 'agent_sarah' ? 'agent_sarah_01' : 'agent_sarah';
-      await prisma.queueMember.upsert({
-        where: {
-          queueId_userId: {
-            queueId: queue.id,
-            userId: aliasAgentId,
-          },
-        },
-        update: {},
-        create: {
-          queueId: queue.id,
-          userId: aliasAgentId,
-        },
-      });
-    }
-
     console.log(`  ✓ Queue seeded: ${queue.name} [${queue.code}] with agent ${q.agentId}`);
   }
 
   // 3. SEED QUALTRICS SURVEY CONFIGURATIONS
   const surveyConfigs = [
-    {
-      queueCode: 'queue_central_general',
-      businessUnit: BusinessUnit.CENTRAL,
-      qualtricsSurveyId: 'SV_qualtrics_central_general',
-      surveyId: 'SV_qualtrics_central_general',
-      cooldownHours: 24,
-    },
-    {
-      queueCode: 'queue_central_sales',
-      businessUnit: BusinessUnit.CENTRAL,
-      qualtricsSurveyId: 'SV_qualtrics_central_general',
-      surveyId: 'SV_qualtrics_central_general',
-      cooldownHours: 24,
-    },
-    {
-      queueCode: 'queue_central_luxury',
-      businessUnit: BusinessUnit.CENTRAL,
-      qualtricsSurveyId: 'SV_qualtrics_central_luxury',
-      surveyId: 'SV_qualtrics_central_luxury',
-      cooldownHours: 24,
-    },
-    {
-      queueCode: 'queue_beauty_advisory',
-      businessUnit: BusinessUnit.CENTRAL_BEAUTY_CLUB,
-      qualtricsSurveyId: 'SV_qualtrics_beauty_advisory',
-      surveyId: 'SV_qualtrics_beauty_advisory',
-      cooldownHours: 24,
-    },
     {
       queueCode: 'queue_muji_furniture',
       businessUnit: BusinessUnit.MUJI,

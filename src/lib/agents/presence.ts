@@ -317,7 +317,7 @@ export async function updateAgentPresence(
     user = await prisma.user.create({
       data: {
         id: input.userId,
-        email: `${input.userId}@central.co.th`,
+        email: `${input.userId}@vcrm.internal`,
         name: input.userId.replace(/^user_/, '').replace(/_/g, ' ').toUpperCase(),
         role: UserRole.AGENT,
         presence: newPresence,

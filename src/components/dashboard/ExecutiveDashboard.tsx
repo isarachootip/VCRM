@@ -209,8 +209,6 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
 
   // Business Unit Revenue Distribution
   const buRevenues = [
-    { bu: 'CENTRAL', name: 'Central Department Store', revenue: 18500000, share: 37.8, color: '#ff7a59' },
-    { bu: 'CDS', name: 'Central Direct & E-Shop', revenue: 12400000, share: 25.3, color: '#3b82f6' },
     { bu: 'MUJI', name: 'Muji Thailand', revenue: 8200000, share: 16.8, color: '#ef4444' },
     { bu: 'SSP', name: 'SuperSports Outlet', revenue: 5820000, share: 11.9, color: '#10b981' },
     { bu: 'B2S', name: 'B2S Books & Stationery', revenue: 4000000, share: 8.2, color: '#8b5cf6' },
@@ -223,7 +221,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
       orderNumber: 'QT-2026-0892',
       customerName: 'Siam Paragon Enterprise Retail Group',
       customerType: 'Enterprise & VIP',
-      businessUnit: 'Central Dept',
+      businessUnit: 'Muji',
       amount: 1250000,
       status: 'PAID',
       channel: 'STORE',
@@ -234,7 +232,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
       orderNumber: 'QT-2026-0891',
       customerName: 'Bangkok Tech Park Co., Ltd.',
       customerType: 'Corporate & SME',
-      businessUnit: 'CDS',
+      businessUnit: 'SSP',
       amount: 850000,
       status: 'PAID',
       channel: 'LINE',
@@ -256,7 +254,7 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
       orderNumber: 'QT-2026-0889',
       customerName: 'คุณวรปรัชญ์ เกียรติไพศาล',
       customerType: 'Enterprise & VIP',
-      businessUnit: 'Central Dept',
+      businessUnit: 'B2S',
       amount: 480000,
       status: 'PENDING',
       channel: 'FACEBOOK',
@@ -311,8 +309,6 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
     );
 
     const matchesBu = selectedBu === 'ALL' || (
-      (selectedBu === 'CENTRAL' && ord.businessUnit.includes('Central Dept')) ||
-      (selectedBu === 'CDS' && ord.businessUnit.includes('Central Direct')) ||
       (selectedBu === 'MUJI' && ord.businessUnit.includes('Muji')) ||
       (selectedBu === 'SSP' && ord.businessUnit.includes('SuperSports')) ||
       (selectedBu === 'B2S' && ord.businessUnit.includes('B2S')) ||
@@ -357,8 +353,6 @@ export const ExecutiveDashboard: React.FC<ExecutiveDashboardProps> = ({
               className="bg-transparent font-semibold text-foreground focus:outline-none cursor-pointer text-xs"
             >
               <option value="ALL" className="bg-card text-foreground">All BUs (ทุกกลุ่มธุรกิจ)</option>
-              <option value="CENTRAL" className="bg-card text-foreground">Central Dept (ห้างสรรพสินค้าเซ็นทรัล)</option>
-              <option value="CDS" className="bg-card text-foreground">Central Direct (CDS Online)</option>
               <option value="MUJI" className="bg-card text-foreground">Muji Thailand</option>
               <option value="SSP" className="bg-card text-foreground">SuperSports</option>
               <option value="B2S" className="bg-card text-foreground">B2S</option>

@@ -1,5 +1,5 @@
 /**
- * Database Types for Omnichannel Social Commerce CRM (Central Chat & Shop)
+ * Database Types for Omnichannel Social Commerce CRM
  * Milestone M1 - Relational Database Foundation (R5)
  */
 
@@ -14,9 +14,6 @@ export type PresenceStatus = 'ONLINE' | 'OFFLINE' | 'LUNCH' | 'BREAK';
 export type ChannelType = 'LINE' | 'FACEBOOK' | 'INSTAGRAM' | 'WEB';
 
 export type BusinessUnit =
-  | 'CENTRAL'
-  | 'CDS'
-  | 'CENTRAL_BEAUTY_CLUB'
   | 'MUJI'
   | 'SSP'
   | 'B2S';

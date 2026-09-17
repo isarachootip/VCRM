@@ -29,21 +29,10 @@ export const BU_MERCHANT_ACCOUNTS: Record<string, BuMerchantAccountConfig> = {
     secretKey: process.env.SECRET_PAY_MUJI_01 || 'SECRET_PAY_MUJI_01',
     displayName: 'Muji Retail Thailand',
   },
-  CENTRAL: {
-    merchantId: 'MERCHANT_CENTRAL_01',
-    billerId: '010753600026901',
-    priority: 2,
-    businessUnit: 'Central',
-    prismaBU: BusinessUnit.CENTRAL,
-    settlementAccount: '001-1-77880-1',
-    bankName: 'KBank',
-    secretKey: process.env.SECRET_PAY_CENTRAL_01 || 'SECRET_PAY_CENTRAL_01',
-    displayName: 'Central Department Store Ltd',
-  },
   SSP: {
     merchantId: 'MERCHANT_SSP_01',
     billerId: '010753600026903',
-    priority: 3,
+    priority: 2,
     businessUnit: 'SSP',
     prismaBU: BusinessUnit.SSP,
     settlementAccount: '101-2-66550-3',
@@ -54,7 +43,7 @@ export const BU_MERCHANT_ACCOUNTS: Record<string, BuMerchantAccountConfig> = {
   B2S: {
     merchantId: 'MERCHANT_B2S_01',
     billerId: '010753600026904',
-    priority: 4,
+    priority: 3,
     businessUnit: 'B2S',
     prismaBU: BusinessUnit.B2S,
     settlementAccount: '050-4-55440-4',
@@ -66,22 +55,18 @@ export const BU_MERCHANT_ACCOUNTS: Record<string, BuMerchantAccountConfig> = {
 
 // Aliases for case-insensitivity and alternative naming
 BU_MERCHANT_ACCOUNTS['Muji'] = BU_MERCHANT_ACCOUNTS.MUJI;
-BU_MERCHANT_ACCOUNTS['Central'] = BU_MERCHANT_ACCOUNTS.CENTRAL;
-BU_MERCHANT_ACCOUNTS['CDS'] = BU_MERCHANT_ACCOUNTS.CENTRAL;
 BU_MERCHANT_ACCOUNTS['SUPERSPORTS'] = BU_MERCHANT_ACCOUNTS.SSP;
-BU_MERCHANT_ACCOUNTS['CENTRAL_BEAUTY_CLUB'] = BU_MERCHANT_ACCOUNTS.CENTRAL;
 
 /**
- * Normalizes any business unit input string into a standardized uppercase key (MUJI, CENTRAL, SSP, B2S).
+ * Normalizes any business unit input string into a standardized uppercase key (MUJI, SSP, B2S).
  */
-export function normalizeBusinessUnit(bu?: string | null): 'MUJI' | 'CENTRAL' | 'SSP' | 'B2S' {
-  if (!bu) return 'CENTRAL';
+export function normalizeBusinessUnit(bu?: string | null): 'MUJI' | 'SSP' | 'B2S' {
+  if (!bu) return 'MUJI';
   const clean = bu.toUpperCase().trim().replace(/[\s_-]+/g, '');
   if (clean === 'MUJI') return 'MUJI';
   if (clean === 'SSP' || clean === 'SUPERSPORTS') return 'SSP';
   if (clean === 'B2S') return 'B2S';
-  if (clean.includes('CENTRAL') || clean === 'CDS') return 'CENTRAL';
-  return 'CENTRAL';
+  return 'MUJI';
 }
 
 /**
@@ -96,9 +81,8 @@ export function toPrismaBusinessUnit(bu?: string | null): BusinessUnit {
       return BusinessUnit.SSP;
     case 'B2S':
       return BusinessUnit.B2S;
-    case 'CENTRAL':
     default:
-      return BusinessUnit.CENTRAL;
+      return BusinessUnit.MUJI;
   }
 }
 
@@ -107,7 +91,7 @@ export function toPrismaBusinessUnit(bu?: string | null): BusinessUnit {
  */
 export function getBuMerchantAccount(bu?: string | null): BuMerchantAccountConfig {
   const norm = normalizeBusinessUnit(bu);
-  return BU_MERCHANT_ACCOUNTS[norm] || BU_MERCHANT_ACCOUNTS.CENTRAL;
+  return BU_MERCHANT_ACCOUNTS[norm] || BU_MERCHANT_ACCOUNTS.MUJI;
 }
 
 /**

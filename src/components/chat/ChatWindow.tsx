@@ -48,7 +48,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           <MessageSquare size={32} />
         </div>
         <h2 className="text-lg font-extrabold text-slate-800 tracking-tight">
-          Central Chat &amp; Shop Unified Desk
+          Omnichannel Chat &amp; Shop Unified Desk
         </h2>
         <p className="text-xs text-slate-500 max-w-sm mt-1 leading-relaxed">
           Select an active customer conversation from the queue on the left to start responding, reviewing session traffic, or collaborating via staff whisper notes.
@@ -57,7 +57,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         <div className="mt-6 grid grid-cols-3 gap-3 max-w-md w-full text-left">
           <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-xs">
             <span className="text-[10px] font-bold text-[#06C755] uppercase block">LINE OA</span>
-            <p className="text-xs font-semibold text-slate-700 mt-0.5">Central Chat&amp;Shop</p>
+            <p className="text-xs font-semibold text-slate-700 mt-0.5">Chat &amp; Shop</p>
           </div>
           <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-xs">
             <span className="text-[10px] font-bold text-[#0084FF] uppercase block">Facebook</span>

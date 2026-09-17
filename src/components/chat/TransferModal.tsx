@@ -26,13 +26,9 @@ export interface TransferModalProps {
 }
 
 const AVAILABLE_QUEUES = [
-  { id: 'queue_central_general', name: 'Central Customer Service (CS)', team: 'CS', bu: 'Central' },
-  { id: 'queue_central_luxury', name: 'Central Online Fulfillment (COL)', team: 'COL', bu: 'Central' },
-  { id: 'queue_central_sales', name: 'Central Chat & Shop Sales', team: 'CHAT_AND_SHOP', bu: 'Central' },
-  { id: 'queue_beauty_advisory', name: 'Beauty Club Specialist', team: 'CHAT_AND_SHOP', bu: 'Central Beauty Club' },
-  { id: 'queue_muji_sales', name: 'Muji Department Advisory', team: 'CHAT_AND_SHOP', bu: 'Muji' },
-  { id: 'queue_ssp_sales', name: 'Supersports Athletic Gear', team: 'CHAT_AND_SHOP', bu: 'SSP' },
-  { id: 'queue_b2s_sales', name: 'B2S Books & Stationery', team: 'CHAT_AND_SHOP', bu: 'B2S' },
+  { id: 'queue_muji_furniture', name: 'Muji Furniture & Interior', team: 'CHAT_AND_SHOP', bu: 'Muji' },
+  { id: 'queue_ssp_specialist', name: 'Supersports Athletic Gear', team: 'CHAT_AND_SHOP', bu: 'SSP' },
+  { id: 'queue_b2s_general', name: 'B2S Books & Stationery', team: 'CHAT_AND_SHOP', bu: 'B2S' },
 ];
 
 const PRESET_REASONS = [
@@ -52,12 +48,12 @@ export const TransferModal: React.FC<TransferModalProps> = ({
   caseNumber,
   caseTitle,
   currentQueueId,
-  currentBU = 'Central',
+  currentBU = 'Muji',
   sessionStartTime,
   onTransferred,
 }) => {
-  const [targetTeam, setTargetTeam] = useState<'CS' | 'COL' | 'CHAT_AND_SHOP'>('CS');
-  const [targetQueueId, setTargetQueueId] = useState('queue_central_general');
+  const [targetTeam, setTargetTeam] = useState<'CS' | 'COL' | 'CHAT_AND_SHOP'>('CHAT_AND_SHOP');
+  const [targetQueueId, setTargetQueueId] = useState('queue_muji_furniture');
   const [transferReason, setTransferReason] = useState(PRESET_REASONS[0]);
   const [contextSummary, setContextSummary] = useState('');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -203,7 +199,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
                     : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                Central Online (COL)
+                Fulfillment (COL)
               </button>
               <button
                 type="button"

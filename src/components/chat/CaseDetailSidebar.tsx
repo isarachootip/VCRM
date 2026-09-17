@@ -147,7 +147,7 @@ export const CaseDetailSidebar: React.FC<CaseDetailSidebarProps> = ({
         ? 'KERRY'
         : caseData.quotations.find((q: any) => q.posTicketNumber)!.posTicketNumber!.startsWith('TH')
         ? 'FLASH'
-        : 'CENTRAL_EXPRESS',
+        : 'FLASH',
       status: 'IN_TRANSIT',
     } : null) ||
     (caseData.trackingNumber ? {
@@ -173,7 +173,7 @@ export const CaseDetailSidebar: React.FC<CaseDetailSidebarProps> = ({
   }, [activeFulfillment?.trackingNumber]);
 
   const handleCopyTrackingLink = (trackingNumber: string, trackingUrl?: string) => {
-    const url = trackingUrl || `https://delivery.central.co.th/track/${encodeURIComponent(trackingNumber)}`;
+    const url = trackingUrl || `https://th.kerryexpress.com/en/track/?track=${encodeURIComponent(trackingNumber)}`;
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       navigator.clipboard.writeText(url);
     }
@@ -688,8 +688,8 @@ export const CaseDetailSidebar: React.FC<CaseDetailSidebarProps> = ({
                           ? 'Kerry Express'
                           : activeFulfillment.carrier === 'FLASH'
                           ? 'Flash Express'
-                          : activeFulfillment.carrier === 'CENTRAL_EXPRESS'
-                          ? 'Central Express'
+                          : activeFulfillment.carrier === 'FLASH'
+                          ? 'Flash Express'
                           : activeFulfillment.carrier || 'Kerry Express'}
                       </span>
                     </div>
@@ -711,7 +711,7 @@ export const CaseDetailSidebar: React.FC<CaseDetailSidebarProps> = ({
                         <a
                           href={
                             activeFulfillment.trackingUrl ||
-                            `https://delivery.central.co.th/track/${encodeURIComponent(activeFulfillment.trackingNumber)}`
+                            `https://th.kerryexpress.com/en/track/?track=${encodeURIComponent(activeFulfillment.trackingNumber)}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"

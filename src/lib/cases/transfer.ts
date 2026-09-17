@@ -68,15 +68,9 @@ export interface TransferCaseResult {
  * Queue to Team and BU lookup mapping
  */
 const QUEUE_METADATA_MAP: Record<string, { team: string; bu: BusinessUnit }> = {
-  queue_central_sales: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.CENTRAL },
-  queue_central_general: { team: 'CS', bu: BusinessUnit.CENTRAL },
-  queue_central_luxury: { team: 'COL', bu: BusinessUnit.CENTRAL },
-  queue_cs_support: { team: 'CS', bu: BusinessUnit.CENTRAL },
-  queue_col_fulfillment: { team: 'COL', bu: BusinessUnit.CENTRAL },
-  queue_beauty_advisory: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.CENTRAL_BEAUTY_CLUB },
-  queue_muji_sales: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.MUJI },
-  queue_ssp_sales: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.SSP },
-  queue_b2s_sales: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.B2S },
+  queue_muji_furniture: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.MUJI },
+  queue_ssp_specialist: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.SSP },
+  queue_b2s_general: { team: 'CHAT_AND_SHOP', bu: BusinessUnit.B2S },
 };
 
 /**
